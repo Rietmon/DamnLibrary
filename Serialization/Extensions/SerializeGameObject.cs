@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Rietmon.Common.Behaviours;
-using Rietmon.Common.Extensions;
-using Rietmon.Common.Serialization;
+using Rietmon.Behaviours;
+using Rietmon.Extensions;
+using Rietmon.Serialization;
 using UnityEngine;
 
 [RequireComponent(typeof(SerializableObject))]

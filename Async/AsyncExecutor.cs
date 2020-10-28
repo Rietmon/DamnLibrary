@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
-using Rietmon.Common.Behaviours;
+using Rietmon.Behaviours;
 
-namespace Rietmon.Common.Async
+namespace Rietmon.Async
 {
     public class AsyncExecutor : UnityBehaviour
     {

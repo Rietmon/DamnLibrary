@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Rietmon.Common.Behaviours;
+using Rietmon.Behaviours;
 using UnityEngine;
 
-namespace Rietmon.Common.Serialization
+namespace Rietmon.Serialization
 {
     [AddComponentMenu("Serialization/SerializationObject")]
     public class SerializableObject : UnityBehaviour

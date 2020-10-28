@@ -3,7 +3,7 @@
 
 using UnityEditor;
 
-namespace Rietmon.Common.Game
+namespace Rietmon.Game
 {
 	[CustomEditor(typeof(MeshDecal)), CanEditMultipleObjects]
 	public class MeshDecalEditor : UnityEditor.Editor

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Rietmon.Common.Behaviours
+namespace Rietmon.Behaviours
 {
     public abstract class UnityBehaviour : MonoBehaviour
     {

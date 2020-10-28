@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Rietmon.Common.Extensions
+namespace Rietmon.Extensions
 {
     public static class Vector3Extensions
     {

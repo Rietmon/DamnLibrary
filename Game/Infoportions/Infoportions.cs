@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Rietmon.Common.Behaviours;
-using Rietmon.Common.Serialization;
+using Rietmon.Behaviours;
+using Rietmon.Serialization;
 
-namespace Rietmon.Common.Game
+namespace Rietmon.Game
 {
     public class Infoportions : UnityBehaviour, ISerializableComponent
     {

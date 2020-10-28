@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Rietmon.Common.Attributes
+namespace Rietmon.Attributes
 {
     public class ReadOnlyAttribute : PropertyAttribute
     {

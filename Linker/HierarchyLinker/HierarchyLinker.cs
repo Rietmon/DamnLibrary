@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Rietmon.Common.Linker
+namespace Rietmon.Linker
 {
     [Serializable]
     public class HierarchyLinker<T>

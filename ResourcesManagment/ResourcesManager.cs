@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-namespace Rietmon.Common.ResourcesManagement
+namespace Rietmon.ResourcesManagement
 {
     public static class ResourcesManager
     {

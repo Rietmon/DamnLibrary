@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Rietmon.Common.Behaviours;
-using Rietmon.Common.Serialization;
+using Rietmon.Behaviours;
+using Rietmon.Serialization;
 using UnityEngine;
 
 public class SerializeTransform : UnityBehaviour, ISerializableComponent

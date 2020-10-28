@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rietmon.Common.Async
+namespace Rietmon.Async
 {
     public class AsyncHandler
     {

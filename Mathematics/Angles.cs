@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Rietmon.Common.Mathematics
+namespace Rietmon.Mathematics
 {
     public static class Angles
     {

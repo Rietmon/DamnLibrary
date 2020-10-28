@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Rietmon.Common.Game
+namespace Rietmon.Game
 {
     public class TransformWrapper
     {

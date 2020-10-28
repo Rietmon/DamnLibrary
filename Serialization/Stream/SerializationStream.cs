@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace Rietmon.Common.Serialization
+namespace Rietmon.Serialization
 {
     public class SerializationStream
     {
@@ -55,7 +55,6 @@ namespace Rietmon.Common.Serialization
             }
         
             Debug.LogError($"Cannot convert to bytes unsupported type: {typeof(T)}!");
-
             return null;
         }
 

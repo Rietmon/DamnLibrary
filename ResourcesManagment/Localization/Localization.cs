@@ -1,9 +1,10 @@
-﻿using System;
+﻿#if ENABLE_LOCALIZATION
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 
-namespace Rietmon.ResourcesManagment.Localization
+namespace Rietmon.ResourcesManagement.Localization
 {
     public sealed class Localization 
     {
@@ -74,3 +75,4 @@ namespace Rietmon.ResourcesManagment.Localization
         }
     }
 }
+#endif

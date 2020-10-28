@@ -1,4 +1,4 @@
-﻿namespace Rietmon.Common.Serialization
+﻿namespace Rietmon.Serialization
 {
     public interface ISerializableComponent
     {

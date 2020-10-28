@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Rietmon.Common.Game
+namespace Rietmon.Game
 {
     public class ColorWrapper
     {

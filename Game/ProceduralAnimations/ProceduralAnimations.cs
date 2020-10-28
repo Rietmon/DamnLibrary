@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
-using Rietmon.Common.Behaviours;
+using Rietmon.Behaviours;
 using UnityEngine;
 
-namespace Rietmon.Common.Game
+namespace Rietmon.Game
 {
     public class ProceduralAnimations : UnityBehaviour
     {

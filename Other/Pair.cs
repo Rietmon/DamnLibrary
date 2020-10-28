@@ -1,8 +1,7 @@
 ﻿using System;
-using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Rietmon.Common
+namespace Rietmon
 {
     [Serializable]
     public class Pair<T1, T2>

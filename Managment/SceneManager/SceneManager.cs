@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Rietmon.Common.Managment
+namespace Rietmon.Managment
 {
     public static class SceneManager
     {

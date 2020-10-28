@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Rietmon.Common.Linker
+namespace Rietmon.Linker
 {
     [Serializable]
     public class HierarchyLinkerContainer<T>

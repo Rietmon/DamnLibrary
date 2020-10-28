@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Rietmon.Common.Behaviours;
+using Rietmon.Behaviours;
 using UnityEngine;
 
-namespace Rietmon.Common.Serialization
+namespace Rietmon.Serialization
 {
     public class Serialization : UnityBehaviour
     {

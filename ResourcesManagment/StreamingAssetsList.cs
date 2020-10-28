@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Rietmon.Common.ResourcesManagement
+namespace Rietmon.ResourcesManagement
 {
     [CreateAssetMenu(fileName = "StreamingAssetsList", menuName = "Game/Assets/StreamingAssetsList")]
     public class StreamingAssetsList : ScriptableObject

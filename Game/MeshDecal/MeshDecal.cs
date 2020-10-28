@@ -2,10 +2,10 @@
 // This code is licensed under MIT license (see LICENSE for details)
 
 using System.Collections.Generic;
-using Rietmon.Common.Behaviours;
+using Rietmon.Behaviours;
 using UnityEngine;
 
-namespace Rietmon.Common.Game
+namespace Rietmon.Game
 {
 	[ExecuteInEditMode]
 	public class MeshDecal : UnityBehaviour

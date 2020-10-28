@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rietmon.Common.Extensions
+namespace Rietmon.Extensions
 {
     public static class ArrayExtensions
     {
