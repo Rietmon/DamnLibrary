@@ -7,16 +7,22 @@ namespace Rietmon.Serialization
 {
     public class Serialization : UnityBehaviour
     {
-        public const byte Version = 1;
+        public const short Version = 1;
         
         public static Serialization Instance { get; private set; }
     
         [SerializeReference] private UnityBehaviour[] serializableComponents;
 
+        private static readonly List<ISerializable> serializables = new List<ISerializable>();
+
         private void Awake()
         {
             Instance = this;
         }
+
+        public static void AddToSerializables(ISerializable serializable) => serializables.Add(serializable);
+
+        public static void RemoveFromSerializables(ISerializable serializable) => serializables.Remove(serializable);
     
         public static byte[] Serialize()
         {
@@ -27,9 +33,10 @@ namespace Rietmon.Serialization
             var components = Instance.serializableComponents;
 
             foreach (var component in components)
-            {
                 ((ISerializableComponent)component).Serialize(stream);
-            }
+
+            foreach (var serializable in serializables)
+                serializable.Serialize(stream);
 
             return stream.ToArray();
         }
@@ -38,15 +45,16 @@ namespace Rietmon.Serialization
         {
             var stream = new SerializationStream(bytes);
 
-            var version = stream.Read<byte>();
+            var version = stream.Read<short>();
             stream.Version = version;
 
             var components = Instance.serializableComponents;
         
             foreach (var component in components)
-            {
                 ((ISerializableComponent)component).Deserialize(stream);
-            }
+            
+            foreach (var serializable in serializables)
+                serializable.Deserialize(stream);
         }
 
         // EDITOR METHODS

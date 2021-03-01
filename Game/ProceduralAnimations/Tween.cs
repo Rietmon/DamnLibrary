@@ -5,15 +5,15 @@ using UnityEngine;
 
 namespace Rietmon.Game
 {
-    public class ProceduralAnimations : UnityBehaviour
+    public class Tween : UnityBehaviour
     {
-        private static ProceduralAnimations Instance
+        private static Tween Instance
         {
             get
             {
                 if (!instance)
                 {
-                    instance = new GameObject("ObjectAnimations").AddComponent<ProceduralAnimations>();
+                    instance = new GameObject("Tween").AddComponent<Tween>();
                 
                     DontDestroyOnLoad(instance);
                 }
@@ -22,7 +22,7 @@ namespace Rietmon.Game
             }
         }
 
-        private static ProceduralAnimations instance;
+        private static Tween instance;
     
         public static void MoveTo(TransformWrapper wrapper, Vector3 from, Vector3 to, float time, bool usingLocal, 
             AnimationCurve curve, Action callback = null)
