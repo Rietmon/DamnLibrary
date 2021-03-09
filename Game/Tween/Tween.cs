@@ -7,6 +7,7 @@ namespace Rietmon.Game
 {
     public class Tween : UnityBehaviour
     {
+        public static AnimationCurve LinearCurve { get; } = AnimationCurve.Linear(0, 0, 1, 1);
         private static Tween Instance
         {
             get

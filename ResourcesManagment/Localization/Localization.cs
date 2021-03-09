@@ -1,4 +1,4 @@
-﻿#if ENABLE_LOCALIZATION
+﻿#if LOCALIZATION
 using System;
 using System.Collections.Generic;
 using UnityEngine;
