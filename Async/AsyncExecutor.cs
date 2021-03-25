@@ -25,8 +25,10 @@ namespace Rietmon.Async
             instance = this;
         }
 
-        public static void Handle(Action action) => Instance.StartCoroutine(HandleAsync(action));
-    
+        public static Coroutine Handle(Action action) => Instance.StartCoroutine(HandleAsync(action));
+
+        public static void Shutdown(Coroutine coroutine) => Instance.StopCoroutine(coroutine);
+        
         private static IEnumerator HandleAsync(Action action)
         {
             action?.Invoke();

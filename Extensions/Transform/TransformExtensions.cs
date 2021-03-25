@@ -36,7 +36,7 @@ namespace Rietmon.Extensions
             return result;
         }
     
-        public static List<T> GetAllChildes<T>(this Transform transform) where T : Component
+        public static List<T> GetAllChildes<T>(this Transform transform)
         {
             var transforms = GetChildes(transform);
 
