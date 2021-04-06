@@ -29,13 +29,11 @@ namespace Rietmon.Game
             RemoveComponent();
         }
 
-#if UNITY_EDITOR
         private void Reset()
         {
             id = EditorPrefs.GetInt("Editor_LastDontDestroyId", 1);
 
             EditorPrefs.SetInt("Editor_LastDontDestroyId", id + 1);
         }
-#endif
     }
 }

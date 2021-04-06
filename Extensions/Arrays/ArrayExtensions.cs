@@ -43,5 +43,51 @@ namespace Rietmon.Extensions
 
             return tempList.ToArray();
         }
+
+        public static TOut[] SmartCast<TOut, TIn>(this TIn[] array, Func<TIn, TOut> castFunction)
+        {
+            var result = new TOut[array.Length];
+            for (var i = 0; i < result.Length; i++)
+            {
+                result[i] = castFunction.Invoke(array[i]);
+            }
+
+            return result;
+        }
+
+        public static T Find<T>(this T[] array, Func<T, bool> condition)
+        {
+            foreach (var element in array)
+            {
+                if (condition.Invoke(element))
+                    return element;
+            }
+
+            return default;
+        }
+        
+        public static T FindOr<T>(this T[] array, Func<T, bool> condition, T or)
+        {
+            foreach (var element in array)
+            {
+                if (condition.Invoke(element))
+                    return element;
+            }
+
+            return or;
+        }
+
+        public static T CentralOrDefault<T>(this T[] array)
+        {
+            if (array.Length == 0)
+                return default;
+
+            if (array.Length == 1)
+                return array[0];
+
+            var centralIndex = array.Length / 2f;
+
+            return array[(int)centralIndex];
+        }
     }
 }

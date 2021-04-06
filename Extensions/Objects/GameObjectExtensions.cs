@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Rietmon.Extensions
 {
-    public static class GameObjectsExtensions
+    public static class GameObjectExtensions
     {
         private static readonly Dictionary<GameObject, Dictionary<Type, Component>> objectsPull = new Dictionary<GameObject, Dictionary<Type, Component>>();
     

@@ -3,7 +3,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 [Serializable]
-public class Prefab<T> where T : Component
+public class Prefab<T> where T : Object
 {
     public T PrefabObject => prefabObject;
 
@@ -17,6 +17,11 @@ public class Prefab<T> where T : Component
 
     [SerializeField] private Transform defaultParent;
 
+    public Prefab(T component)
+    {
+        prefabObject = component;
+    }
+    
     public T Instantiate() => 
         Instantiate(Vector3.zero, Quaternion.identity, Vector3.one, DefaultParent);
 
@@ -44,7 +49,7 @@ public class Prefab<T> where T : Component
     public T Instantiate(Vector3 position, Quaternion rotation, Vector3 scale, Transform parent)
     {
         var result = Object.Instantiate(prefabObject);
-        var transform = result.transform;
+        var transform = result.GetTransform();
         
         transform.position = position;
         transform.rotation = rotation;
@@ -53,4 +58,6 @@ public class Prefab<T> where T : Component
 
         return result;
     }
+
+    public static implicit operator Prefab<T>(T component) => new Prefab<T>(component);
 }
