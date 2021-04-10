@@ -44,6 +44,7 @@ namespace Rietmon.Serialization
                 case byte result: { return BitConverter.GetBytes(result); }
                 case short result: { return BitConverter.GetBytes(result); }
                 case int result: { return BitConverter.GetBytes(result); }
+                case long result: { return BitConverter.GetBytes(result); }
                 case float result: { return BitConverter.GetBytes(result); }
                 case double result: { return BitConverter.GetBytes(result); }
                 case string result: { return Encoding.UTF8.GetBytes(result); }
@@ -162,8 +163,9 @@ namespace Rietmon.Serialization
         {
             if (type == typeof(bool)) return BitConverter.ToBoolean(ReadBySize(), 0);
             if (type == typeof(byte)) return ReadBySize()[0];
-            if (type == typeof(int)) return BitConverter.ToInt32(ReadBySize(), 0);
             if (type == typeof(short)) return BitConverter.ToInt16(ReadBySize(), 0);
+            if (type == typeof(int)) return BitConverter.ToInt32(ReadBySize(), 0);
+            if (type == typeof(long)) return BitConverter.ToInt64(ReadBySize(), 0);
             if (type == typeof(float)) return BitConverter.ToSingle(ReadBySize(), 0);
             if (type == typeof(double)) return BitConverter.ToDouble(ReadBySize(), 0);
             if (type == typeof(string)) return Encoding.UTF8.GetString(ReadBySize());
