@@ -28,19 +28,34 @@ namespace Rietmon.Extensions
 
         public static List<Transform> GetAllChildes(this Transform transform)
         {
-            var result = new List<Transform> {transform};
-        
-            for (var i = 0; i < result.Count; i++)
-                result.AddRange(result[i].GetChildes());
+            var result = new List<Transform>();
+            
+            void GetAllSubChildes(Transform start)
+            {
+                for (var i = 0; i < start.childCount; i++)
+                {
+                    result.Add(start.GetChild(i));
+                    GetAllSubChildes(start.GetChild(i));
+                }
+            }
+
+            GetAllSubChildes(transform);
 
             return result;
         }
     
         public static List<T> GetAllChildes<T>(this Transform transform)
         {
-            var transforms = GetChildes(transform);
+            var transforms = GetAllChildes(transform);
+            var result = new List<T>();
 
-            return transforms.Select(t => t.GetComponent<T>()).ToList();
+            foreach (var child in transforms)
+            {
+                if (child.TryGetComponent<T>(out var component))
+                    result.Add(component);
+            }
+            
+            return result;
         }
     
         public static Transform FindChildByName(this Transform transform, string name)

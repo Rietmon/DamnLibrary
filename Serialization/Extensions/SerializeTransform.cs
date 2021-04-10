@@ -3,33 +3,33 @@ using Rietmon.Behaviours;
 using Rietmon.Serialization;
 using UnityEngine;
 
-public class SerializeTransform : UnityBehaviour, ISerializableComponent
+public class SerializeTransform : UnityBehaviour, ISerializable
 {
     [SerializeField] private ToSerializeFlags toSerialize;
     
     public void Serialize(SerializationStream stream)
     {
-        if (toSerialize.HasFlag(ToSerializeFlags.Nothing))
+        if ((toSerialize & ToSerializeFlags.Nothing) != 0)
             return;
         
-        if (toSerialize.HasFlag(ToSerializeFlags.Position))
+        if ((toSerialize & ToSerializeFlags.Position) != 0)
             stream.Write(transform.position);
-        if (toSerialize.HasFlag(ToSerializeFlags.Rotation))
+        if ((toSerialize & ToSerializeFlags.Rotation) != 0)
             stream.Write(transform.rotation);
-        if (toSerialize.HasFlag(ToSerializeFlags.Scale))
+        if ((toSerialize & ToSerializeFlags.Scale) != 0)
             stream.Write(transform.localScale);
     }
 
     public void Deserialize(SerializationStream stream)
     {
-        if (toSerialize.HasFlag(ToSerializeFlags.Nothing))
+        if ((toSerialize & ToSerializeFlags.Nothing) != 0)
             return;
 
-        if (toSerialize.HasFlag(ToSerializeFlags.Position))
+        if ((toSerialize & ToSerializeFlags.Position) != 0)
             transform.position = stream.Read<Vector3>();
-        if (toSerialize.HasFlag(ToSerializeFlags.Rotation))
+        if ((toSerialize & ToSerializeFlags.Rotation) != 0)
             transform.rotation = stream.Read<Quaternion>();
-        if (toSerialize.HasFlag(ToSerializeFlags.Scale))
+        if ((toSerialize & ToSerializeFlags.Scale) != 0)
             transform.localScale = stream.Read<Vector3>();
     }
     

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Rietmon.Behaviours;
 using UnityEngine;
@@ -11,50 +12,63 @@ namespace Rietmon.Serialization
         
         public static Serialization Instance { get; private set; }
     
-        [SerializeReference] private UnityBehaviour[] serializableComponents;
-
-        private static readonly List<ISerializable> serializables = new List<ISerializable>();
+        [SerializeField] private UnityBehaviour[] serializableComponents;
 
         private void Awake()
         {
             Instance = this;
         }
 
-        public static void AddToSerializables(ISerializable serializable) => serializables.Add(serializable);
-
-        public static void RemoveFromSerializables(ISerializable serializable) => serializables.Remove(serializable);
-    
-        public static byte[] Serialize()
+        public static SerializationStream CreateSerializationStream()
         {
             var stream = new SerializationStream();
-
             stream.Write(Version);
+            return stream;
+        }
+
+        public static SerializationStream CreateDeserializationStream(byte[] bytes)
+        {
+            var stream = new SerializationStream(bytes);
+            stream.Version = stream.Read<short>();
+            return stream;
+        }
+    
+        public static byte[] SerializeAll(SerializationStream stream = null)
+        {
+            if (Instance == null)
+            {
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeAll)}) Unable to serialize, because there is no serialization component!");
+                return new byte[0];
+            }
+            stream ??= CreateSerializationStream();
 
             var components = Instance.serializableComponents;
 
             foreach (var component in components)
-                ((ISerializableComponent)component).Serialize(stream);
-
-            foreach (var serializable in serializables)
-                serializable.Serialize(stream);
+                ((ISerializable)component).Serialize(stream);
 
             return stream.ToArray();
         }
-    
-        public static void Deserialize(byte[] bytes)
-        {
-            var stream = new SerializationStream(bytes);
 
-            var version = stream.Read<short>();
-            stream.Version = version;
+        public static void DeserializeAll(byte[] bytes, SerializationStream stream = null)
+        {
+            if (Instance == null)
+            {
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeAll)}) Unable to deserialize, because there is no serialization component!");
+                return;
+            }
+            
+            stream ??= CreateDeserializationStream(bytes);
 
             var components = Instance.serializableComponents;
         
             foreach (var component in components)
-                ((ISerializableComponent)component).Deserialize(stream);
-            
-            foreach (var serializable in serializables)
-                serializable.Deserialize(stream);
+                ((ISerializable)component).Deserialize(stream);
+        }
+
+        private void OnDestroy()
+        {
+            Instance = null;
         }
 
         // EDITOR METHODS
@@ -62,16 +76,16 @@ namespace Rietmon.Serialization
 #if UNITY_EDITOR
 
         [ContextMenu("Find serializable components")]
-        public void Editor_FindSerializableComponents()
+        private void FindSerializableComponents()
         {
             var serializeObjects = FindObjectsOfType<SerializableObject>();
 
-            var result = new List<ISerializableComponent>();
+            var result = new List<ISerializable>();
 
             var componentsFounded = 0;
             foreach (var obj in serializeObjects)
             {
-                var components = obj.GetComponents<ISerializableComponent>(); 
+                var components = obj.GetComponents<ISerializable>(); 
                 result.AddRange(components);
                 componentsFounded += components.Length;
             }

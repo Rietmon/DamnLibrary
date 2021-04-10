@@ -33,6 +33,9 @@ public class Prefab<T> where T : Object
 
     public T Instantiate(Transform parent) =>
         Instantiate(Vector3.zero, Quaternion.identity, Vector3.one, parent);
+    
+    public T Instantiate(Transform parent, Vector3 position) =>
+        Instantiate(position, Quaternion.identity, Vector3.one, parent);
 
     public T Instantiate(Vector3 position, Quaternion rotation) =>
         Instantiate(position, rotation, Vector3.one, DefaultParent);

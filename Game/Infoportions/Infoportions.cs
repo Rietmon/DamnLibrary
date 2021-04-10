@@ -4,7 +4,7 @@ using Rietmon.Serialization;
 
 namespace Rietmon.Game
 {
-    public class Infoportions : UnityBehaviour, ISerializableComponent
+    public class Infoportions : UnityBehaviour, ISerializable
     {
         public static Infoportions Instance { get; private set; }
 

@@ -5,7 +5,7 @@ using Rietmon.Serialization;
 using UnityEngine;
 
 [RequireComponent(typeof(SerializableObject))]
-public class SerializeGameObject : UnityBehaviour, ISerializableComponent
+public class SerializeGameObject : UnityBehaviour, ISerializable
 {
     [SerializeField] private ToSerializeFlags toSerialize;
 
@@ -15,10 +15,10 @@ public class SerializeGameObject : UnityBehaviour, ISerializableComponent
     
     public void Serialize(SerializationStream stream)
     {
-        if (toSerialize.HasFlag(ToSerializeFlags.Nothing))
+        if ((toSerialize & ToSerializeFlags.Nothing) != 0)
             return;
 
-        if (toSerialize.HasFlag(ToSerializeFlags.ActiveSelf))
+        if ((toSerialize & ToSerializeFlags.ActiveSelf) != 0)
         {
             stream.Write(gameObject.activeSelf);
             if (serializeChildes)
@@ -32,10 +32,10 @@ public class SerializeGameObject : UnityBehaviour, ISerializableComponent
 
     public void Deserialize(SerializationStream stream)
     {
-        if (toSerialize.HasFlag(ToSerializeFlags.Nothing))
+        if ((toSerialize & ToSerializeFlags.Nothing) != 0)
             return;
 
-        if (toSerialize.HasFlag(ToSerializeFlags.ActiveSelf))
+        if ((toSerialize & ToSerializeFlags.ActiveSelf) != 0)
         {
             gameObject.SetActive(stream.Read<bool>());
             if (serializeChildes)

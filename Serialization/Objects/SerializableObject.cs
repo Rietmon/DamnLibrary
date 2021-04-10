@@ -4,19 +4,19 @@ using UnityEngine;
 
 namespace Rietmon.Serialization
 {
-    [AddComponentMenu("Serialization/SerializationObject")]
+    [AddComponentMenu("Serialization/SerializableObject")]
     public class SerializableObject : UnityBehaviour
     {
         public bool SerializeAllComponents => serializeAllComponents;
 
-        public List<ISerializableComponent> SerializedComponents
+        public List<ISerializable> SerializedComponents
         {
             get
             {
-                var result = new List<ISerializableComponent>();
+                var result = new List<ISerializable>();
             
                 foreach (var component in serializedComponents)
-                    result.Add((ISerializableComponent)component);
+                    result.Add((ISerializable)component);
 
                 return result;
             }
