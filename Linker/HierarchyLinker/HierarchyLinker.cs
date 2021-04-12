@@ -19,7 +19,7 @@ namespace Rietmon.Linker
             this.entry = new HierarchyLinkerContainer<T>(entry);
         }
     
-        public bool GoDown(int index)
+        public virtual bool GoDown(int index)
         {
             if (index >= current.Childes.Count)
                 return false;
@@ -29,7 +29,7 @@ namespace Rietmon.Linker
             return true;
         }
 
-        public bool GoUp()
+        public virtual bool GoUp()
         {
             if (current.Parent == null)
                 return false;
@@ -38,7 +38,7 @@ namespace Rietmon.Linker
             return true;
         }
 
-        public void AddChild(T child)
+        public virtual void AddChild(T child)
         {
             current.AddChild(child);
         }
