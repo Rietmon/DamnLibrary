@@ -3,6 +3,7 @@ using Rietmon.Behaviours;
 using Rietmon.Serialization;
 using UnityEngine;
 
+[RequireComponent(typeof(SerializableObject))]
 public class SerializeTransform : UnityBehaviour, ISerializable
 {
     [SerializeField] private ToSerializeFlags toSerialize;

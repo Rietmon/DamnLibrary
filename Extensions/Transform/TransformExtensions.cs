@@ -26,7 +26,7 @@ namespace Rietmon.Extensions
             return result;
         }
 
-        public static List<Transform> GetAllChildes(this Transform transform)
+        public static List<Transform> GetAllChildes(this Transform transform, bool includeRoot = false)
         {
             var result = new List<Transform>();
             
@@ -39,14 +39,17 @@ namespace Rietmon.Extensions
                 }
             }
 
+            if (includeRoot)
+                result.Add(transform);
+            
             GetAllSubChildes(transform);
 
             return result;
         }
     
-        public static List<T> GetAllChildes<T>(this Transform transform)
+        public static List<T> GetAllChildes<T>(this Transform transform, bool includeRoot = false)
         {
-            var transforms = GetAllChildes(transform);
+            var transforms = GetAllChildes(transform, includeRoot);
             var result = new List<T>();
 
             foreach (var child in transforms)

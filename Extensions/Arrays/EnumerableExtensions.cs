@@ -16,6 +16,13 @@ namespace Rietmon.Extensions
             return result;
         }
 
+        public static T Random<T>(this IEnumerable<T> array)
+        {
+            var enumerable = array as T[] ?? array.ToArray();
+            var randomIndex = UnityEngine.Random.Range(0, enumerable.Length);
+            return enumerable.ElementAtOrDefault(randomIndex);
+        }
+
         public static T GetObjectByName<T>(this IEnumerable<T> array, string name) where T : Object
         {
             return array.FirstOrDefault(obj => obj.name == name);
