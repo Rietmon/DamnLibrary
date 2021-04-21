@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Rietmon.Managment
+namespace Rietmon.Management
 {
     public static class SceneManager
     {

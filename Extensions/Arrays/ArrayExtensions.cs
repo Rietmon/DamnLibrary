@@ -28,6 +28,9 @@ namespace Rietmon.Extensions
 
         public static T[] CopyFromTo<T>(this T[] array, int indexFrom, int indexTo)
         {
+            if (indexFrom >= array.Length || indexTo >= array.Length)
+                return null;
+            
             var newArray = new T[indexTo - indexFrom + 1];
             Array.Copy(array, indexFrom, newArray, 0, indexTo - indexFrom + 1);
             return newArray;
@@ -43,6 +46,9 @@ namespace Rietmon.Extensions
 
             return tempList.ToArray();
         }
+
+        public static T GetArgument<T>(this T[] array, int index, T defaultValue = default) =>
+            array.Length <= index ? defaultValue : array[index];
 
         public static TOut[] SmartCast<TOut, TIn>(this TIn[] array, Func<TIn, TOut> castFunction)
         {

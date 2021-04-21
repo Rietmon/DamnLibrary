@@ -1,38 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
 
-public static class IOManager
+namespace Rietmon.IO
 {
-    public static void CheckOrCreateDirectory(string directory)
+    public static class IOManager
     {
-        if (!Directory.Exists(directory))
+        public static void CheckOrCreateDirectory(string directory)
         {
-            var previousDirectory = Directory.GetDirectoryRoot(directory);
-            CheckOrCreateDirectory(previousDirectory);
-            Directory.CreateDirectory(directory);
-        }
-    }
-    
-#if UNITY_EDITOR
-    public static string Editor_GetSelectedFolder()
-    {
-        var path = "Assets/";
-        var objects = Selection.GetFiltered(typeof(Object), SelectionMode.Assets);
-        foreach (Object obj in objects)
-        {
-            path = AssetDatabase.GetAssetPath(obj);
-            if (!string.IsNullOrEmpty(path) && File.Exists(path))
+            if (!Directory.Exists(directory))
             {
-                path = Path.GetDirectoryName(path);
-                break;
+                var previousDirectory = Directory.GetDirectoryRoot(directory);
+                CheckOrCreateDirectory(previousDirectory);
+                Directory.CreateDirectory(directory);
             }
         }
-        return $"{path}/";
-    }
+
+#if UNITY_EDITOR
+        public static string Editor_GetSelectedFolder()
+        {
+            var path = "Assets/";
+            var objects = Selection.GetFiltered(typeof(Object), SelectionMode.Assets);
+            foreach (Object obj in objects)
+            {
+                path = AssetDatabase.GetAssetPath(obj);
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                {
+                    path = Path.GetDirectoryName(path);
+                    break;
+                }
+            }
+
+            return $"{path}/";
+        }
 #endif
+    }
 }

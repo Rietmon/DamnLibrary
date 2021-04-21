@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using Rietmon.Behaviours;
-using UnityEngine;
-
-public class SingletonBehaviour<T> : UnityBehaviour where T : class
+namespace Rietmon.Behaviours
 {
-    public static T Instance { get; protected set; }
-
-    public SingletonBehaviour()
+    public class SingletonBehaviour<T> : UnityBehaviour where T : class
     {
-        Instance = this as T;
+        public static T Instance { get; protected set; }
+
+        public SingletonBehaviour()
+        {
+            Instance = this as T;
+        }
     }
 }
