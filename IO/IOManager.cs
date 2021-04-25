@@ -12,7 +12,7 @@ namespace Rietmon.IO
         {
             if (!Directory.Exists(directory))
             {
-                var previousDirectory = Directory.GetDirectoryRoot(directory);
+                var previousDirectory = Directory.GetParent(directory).FullName;
                 CheckOrCreateDirectory(previousDirectory);
                 Directory.CreateDirectory(directory);
             }

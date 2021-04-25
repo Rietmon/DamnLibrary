@@ -5,15 +5,15 @@ using Rietmon.Serialization;
 using UnityEngine;
 
 [RequireComponent(typeof(SerializableObject))]
-public class SerializeGameObject : UnityBehaviour, ISerializable
+public class SerializeGameObject : SerializableUnityBehaviour
 {
     [SerializeField] private ToSerializeFlags toSerialize;
 
     [SerializeField] private bool serializeChildes;
 
     [SerializeField] private bool serializeAllChildes;
-    
-    public void Serialize(SerializationStream stream)
+
+    protected override void OnSerialize(SerializationStream stream)
     {
         if ((toSerialize & ToSerializeFlags.Nothing) != 0)
             return;
@@ -30,7 +30,7 @@ public class SerializeGameObject : UnityBehaviour, ISerializable
         }
     }
 
-    public void Deserialize(SerializationStream stream)
+    protected override void OnDeserialize(SerializationStream stream)
     {
         if ((toSerialize & ToSerializeFlags.Nothing) != 0)
             return;

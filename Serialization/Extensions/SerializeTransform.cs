@@ -4,11 +4,11 @@ using Rietmon.Serialization;
 using UnityEngine;
 
 [RequireComponent(typeof(SerializableObject))]
-public class SerializeTransform : UnityBehaviour, ISerializable
+public class SerializeTransform : SerializableUnityBehaviour
 {
     [SerializeField] private ToSerializeFlags toSerialize;
-    
-    public void Serialize(SerializationStream stream)
+
+    protected override void OnSerialize(SerializationStream stream)
     {
         if ((toSerialize & ToSerializeFlags.Nothing) != 0)
             return;
@@ -21,7 +21,7 @@ public class SerializeTransform : UnityBehaviour, ISerializable
             stream.Write(transform.localScale);
     }
 
-    public void Deserialize(SerializationStream stream)
+    protected override void OnDeserialize(SerializationStream stream)
     {
         if ((toSerialize & ToSerializeFlags.Nothing) != 0)
             return;

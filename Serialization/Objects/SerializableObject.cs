@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Rietmon.Behaviours;
+using Rietmon.Extensions;
 using UnityEngine;
 
 namespace Rietmon.Serialization
@@ -7,24 +9,18 @@ namespace Rietmon.Serialization
     [AddComponentMenu("Serialization/SerializableObject")]
     public class SerializableObject : UnityBehaviour
     {
-        public bool SerializeAllComponents => serializeAllComponents;
-
-        public List<ISerializable> SerializedComponents
-        {
-            get
-            {
-                var result = new List<ISerializable>();
-            
-                foreach (var component in serializedComponents)
-                    result.Add((ISerializable)component);
-
-                return result;
-            }
-        }
-
+        public ISerializable[] SerializableComponents { get; private set; }
+        
         [SerializeField] private bool serializeAllComponents;
 
-        [SerializeField] private List<Component> serializedComponents;
+        [SerializeField] private Component[] serializableComponents;
+
+        private void OnEnable()
+        {
+            SerializableComponents = serializeAllComponents 
+                ? GetComponents<ISerializable>() 
+                : serializableComponents.SmartCast((component) => (ISerializable)component);
+        }
 
         private void Reset()
         {

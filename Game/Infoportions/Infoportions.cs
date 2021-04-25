@@ -4,16 +4,10 @@ using Rietmon.Serialization;
 
 namespace Rietmon.Game
 {
-    public class Infoportions : UnityBehaviour, ISerializable
+    [StaticSerializable]
+    public static class Infoportions
     {
-        public static Infoportions Instance { get; private set; }
-
         private static List<string> infoportions = new List<string>();
-    
-        private void Awake()
-        {
-            Instance = this;
-        }
 
         public static void AddInfoportion(string name)
         {
@@ -27,12 +21,12 @@ namespace Rietmon.Game
 
         public static void RemoveInfoportion(string name) => infoportions.Remove(name);
 
-        public void Serialize(SerializationStream stream)
+        public static void Serialize(SerializationStream stream)
         {
             stream.Write(infoportions);
         }
 
-        public void Deserialize(SerializationStream stream)
+        public static void Deserialize(SerializationStream stream)
         {
             infoportions = stream.Read<List<string>>();
         }

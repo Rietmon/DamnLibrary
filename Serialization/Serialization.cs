@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Cysharp.Threading.Tasks;
 using Rietmon.Behaviours;
+using Rietmon.DS;
+using Rietmon.Extensions;
 using UnityEngine;
 
 namespace Rietmon.Serialization
@@ -10,17 +15,25 @@ namespace Rietmon.Serialization
         public const short Version = 1;
         
         public static Serialization Instance { get; private set; }
-    
-        [SerializeField] private UnityBehaviour[] serializableComponents;
 
-        private void Awake()
+        private static List<Type> serializableStaticTypes;
+    
+        [SerializeField] private SerializableObject[] serializableObjects;
+
+        private void OnEnable()
         {
             Instance = this;
         }
 
+        public static async UniTask InitializeAsync()
+        {
+            serializableStaticTypes =
+                new List<Type>(AssemblyUtilities.GetAllAttributeInherits<StaticSerializableAttribute>());
+        }
+
         public static SerializationStream CreateSerializationStream()
         {
-            var stream = new SerializationStream();
+            var stream = new SerializationStream {Version = Version};
             stream.Write(Version);
             return stream;
         }
@@ -31,43 +44,85 @@ namespace Rietmon.Serialization
             stream.Version = stream.Read<short>();
             return stream;
         }
-    
-        public static byte[] SerializeAll(SerializationStream stream = null)
+
+        public static bool IsWillSerializable(SerializableObject obj) => Instance.serializableObjects.Contains(obj);
+
+        public static byte[] SerializeComponents(SerializationStream stream = null)
         {
             if (Instance == null)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeAll)}) Unable to serialize, because there is no serialization component!");
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize, because there is no serialization component!");
                 return new byte[0];
             }
             stream ??= CreateSerializationStream();
 
-            var components = Instance.serializableComponents;
+            var objects = Instance.serializableObjects;
 
-            foreach (var component in components)
-                ((ISerializable)component).Serialize(stream);
+            if (objects == null || objects.Length == 0)
+            {
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize, because there is no serializable objects!");
+                return new byte[0];
+            }
 
+            foreach (var obj in objects)
+                ForeachSerializableObjectComponent(obj, (component) => component.Serialize(stream));
+            
             return stream.ToArray();
         }
 
-        public static void DeserializeAll(byte[] bytes, SerializationStream stream = null)
+        public static void DeserializeComponents(byte[] bytes, SerializationStream stream = null)
         {
             if (Instance == null)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeAll)}) Unable to deserialize, because there is no serialization component!");
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize, because there is no serialization component!");
+                return;
+            }
+
+            if (bytes == null || bytes.Length == 0)
+            {
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize, because byte is null or length is equal 0!");
                 return;
             }
             
             stream ??= CreateDeserializationStream(bytes);
 
-            var components = Instance.serializableComponents;
-        
-            foreach (var component in components)
-                ((ISerializable)component).Deserialize(stream);
+            var objects = Instance.serializableObjects;
+
+            if (objects == null || objects.Length == 0)
+            {
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize, because there is no serializable objects!");
+                return;
+            }
+
+            foreach (var obj in objects)
+                ForeachSerializableObjectComponent(obj, (component) => component.Deserialize(stream));
         }
 
-        private void OnDestroy()
+        public static byte[] SerializeStaticTypes(SerializationStream stream = null)
         {
-            Instance = null;
+            stream ??= CreateSerializationStream();
+            
+            foreach (var type in serializableStaticTypes)
+                type.SafeInvokeStaticMethod("Serialize", stream);
+
+            return stream.ToArray();
+        }
+
+        public static void DeserializeStaticTypes(byte[] bytes, SerializationStream stream = null)
+        {
+            stream ??= CreateDeserializationStream(bytes);
+            
+            foreach (var type in serializableStaticTypes)
+                type.SafeInvokeStaticMethod("Deserialize", stream);
+        }
+
+        private static void ForeachSerializableObjectComponent(SerializableObject serializableObject,
+            Action<ISerializable> callback)
+        {
+            foreach (var component in serializableObject.SerializableComponents)
+            {
+                callback?.Invoke(component);
+            }
         }
 
         // EDITOR METHODS
@@ -77,21 +132,9 @@ namespace Rietmon.Serialization
         [ContextMenu("Find serializable components")]
         private void FindSerializableComponents()
         {
-            var serializeObjects = FindObjectsOfType<SerializableObject>();
-
-            var result = new List<ISerializable>();
-
-            var componentsFounded = 0;
-            foreach (var obj in serializeObjects)
-            {
-                var components = obj.GetComponents<ISerializable>(); 
-                result.AddRange(components);
-                componentsFounded += components.Length;
-            }
-
-            serializableComponents = result.Cast<UnityBehaviour>().ToArray();
+            serializableObjects = FindObjectsOfType<SerializableObject>();
         
-            Debug.Log($"Founded {componentsFounded} components");
+            Debug.Log($"Founded {serializableObjects.Length} components");
         }
 
 #endif
