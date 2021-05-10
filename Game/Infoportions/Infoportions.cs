@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using Rietmon.Behaviours;
+using Cysharp.Threading.Tasks;
+using Rietmon.DS;
 using Rietmon.Serialization;
 
 namespace Rietmon.Game
 {
-    [StaticSerializable]
+    [StaticSerializable, DamnScriptable]
     public static class Infoportions
     {
         private static List<string> infoportions = new List<string>();
@@ -21,14 +22,50 @@ namespace Rietmon.Game
 
         public static void RemoveInfoportion(string name) => infoportions.Remove(name);
 
-        public static void Serialize(SerializationStream stream)
+        private static void Serialize(SerializationStream stream)
         {
             stream.Write(infoportions);
         }
 
-        public static void Deserialize(SerializationStream stream)
+        private static void Deserialize(SerializationStream stream)
         {
             infoportions = stream.Read<List<string>>();
+        }
+
+        private static void RegisterDamnScriptMethods()
+        {
+            DamnScriptEngine.RegisterMethod("HasInfoportion", async (code, arguments) =>
+            {
+                return HasInfoportion(arguments[0]);
+            });
+            
+            DamnScriptEngine.RegisterMethod("AddInfoportion", async (code, arguments) =>
+            {
+                AddInfoportion(arguments[0]);
+
+                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+            });
+            
+            DamnScriptEngine.RegisterMethod("RemoveInfoportion", async (code, arguments) =>
+            {
+                RemoveInfoportion(arguments[0]);
+
+                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+            });
+            
+            DamnScriptEngine.RegisterMethod("OnHasInfoportion", async (code, arguments) =>
+            {
+                await UniTask.WaitUntil(() => HasInfoportion(arguments[0]));
+
+                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+            });
+            
+            DamnScriptEngine.RegisterMethod("OnHasntInfoportion", async (code, arguments) =>
+            {
+                await UniTask.WaitUntil(() => !HasInfoportion(arguments[0]));
+
+                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+            });
         }
     }
 }

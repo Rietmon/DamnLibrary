@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Rietmon.Behaviours;
 using Rietmon.DS;
 using Rietmon.Extensions;
+using UnityEditor;
 using UnityEngine;
 
 namespace Rietmon.Serialization
@@ -65,7 +66,11 @@ namespace Rietmon.Serialization
             }
 
             foreach (var obj in objects)
+            {
+                if (!obj)
+                    continue;
                 ForeachSerializableObjectComponent(obj, (component) => component.Serialize(stream));
+            }
             
             return stream.ToArray();
         }
@@ -95,7 +100,11 @@ namespace Rietmon.Serialization
             }
 
             foreach (var obj in objects)
+            {
+                if (!obj)
+                    continue;
                 ForeachSerializableObjectComponent(obj, (component) => component.Deserialize(stream));
+            }
         }
 
         public static byte[] SerializeStaticTypes(SerializationStream stream = null)
@@ -133,7 +142,8 @@ namespace Rietmon.Serialization
         private void FindSerializableComponents()
         {
             serializableObjects = FindObjectsOfType<SerializableObject>();
-        
+
+            EditorUtility.SetDirty(this);
             Debug.Log($"Founded {serializableObjects.Length} components");
         }
 

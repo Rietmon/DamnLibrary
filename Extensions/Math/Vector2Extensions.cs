@@ -12,5 +12,9 @@ namespace Rietmon.Extensions
         public static float GetSum(this Vector2 vector) => vector.x + vector.y;
 
         public static Vector2 Add(this Vector2 vector, float x, float y) => vector + new Vector2(x, y);
+
+        public static Vector3 ToVector3(this Vector2 vector) => new Vector3(vector.x, vector.y);
+        
+        public static Vector3 ToVector3(this Vector2Int vector) => new Vector3(vector.x, vector.y);
     }
 }
