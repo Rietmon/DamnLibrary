@@ -7,9 +7,7 @@ namespace Rietmon.Behaviours
 {
     public abstract class UnityBehaviour : MonoBehaviour
     {
-        public static List<UnityBehaviour> Behaviours => new List<UnityBehaviour>(Object.FindObjectsOfType<UnityBehaviour>());
-        
-        private static readonly List<UnityBehaviour> behaviours = new List<UnityBehaviour>();
+        public static List<UnityBehaviour> Behaviours => new List<UnityBehaviour>(FindObjectsOfType<UnityBehaviour>());
         
         public new Transform transform
         {
@@ -25,11 +23,6 @@ namespace Rietmon.Behaviours
         private readonly Dictionary<Type, Component> pullComponents = new Dictionary<Type, Component>();
 
         private Transform _transform;
-
-        public UnityBehaviour()
-        {
-            //behaviours.Add(this);
-        }
 
         public virtual void OnAfterAllSerialize() { }
         
@@ -61,9 +54,6 @@ namespace Rietmon.Behaviours
 
         public void SetObjectActive(bool state) => gameObject.SetActive(state);
 
-        protected virtual void OnDestroy()
-        {
-            //behaviours.Remove(this);
-        }
+        protected virtual void OnDestroy() { }
     }
 }
