@@ -14,10 +14,24 @@ public static class TypeExtensions
         if (methodInfo == null)
         {
             Debug.LogWarning(
-                $"[{nameof(DamnScriptEngine)}] ({nameof(SafeInvokeStaticMethod)}) Unable to find method \"{methodName}\" in type {type.FullName}!");
+                $"[{nameof(DamnScriptEngine)}] ({nameof(SafeInvokeStaticMethod)}) Unable to find static method \"{methodName}\" in type {type.FullName}!");
             return;
         }
 
         methodInfo.Invoke(null, arguments);
+    }
+    
+    public static void SafeInvokeMethod(this Type type, object owner,string methodName, params object[] arguments)
+    {
+        var methodInfo = type.GetMethod(methodName,
+            BindingFlags.Public | BindingFlags.NonPublic);
+        if (methodInfo == null)
+        {
+            Debug.LogWarning(
+                $"[{nameof(DamnScriptEngine)}] ({nameof(SafeInvokeMethod)}) Unable to find method \"{methodName}\" in type {type.FullName}!");
+            return;
+        }
+
+        methodInfo.Invoke(owner, arguments);
     }
 }

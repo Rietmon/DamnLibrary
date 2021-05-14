@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Rietmon.DS;
+using Rietmon.Extensions;
 using Rietmon.Serialization;
 
 namespace Rietmon.Game
@@ -36,7 +37,8 @@ namespace Rietmon.Game
         {
             DamnScriptEngine.RegisterMethod("HasInfoportion", async (code, arguments) =>
             {
-                return HasInfoportion(arguments[0]);
+                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments, 
+                    HasInfoportion(arguments.GetArgument(0)));
             });
             
             DamnScriptEngine.RegisterMethod("AddInfoportion", async (code, arguments) =>

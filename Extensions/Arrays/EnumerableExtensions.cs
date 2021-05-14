@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Rietmon.Extensions
 {
@@ -27,5 +29,8 @@ namespace Rietmon.Extensions
         {
             return array.FirstOrDefault(obj => obj.name == name);
         }
+
+        public static IEnumerable<TOut> SmartCast<TOut, TIn>(this IEnumerable<TIn> array, Func<TIn, TOut> castFunction) => 
+            array.Select(castFunction.Invoke).ToList();
     }
 }
