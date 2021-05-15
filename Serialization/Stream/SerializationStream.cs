@@ -64,8 +64,7 @@ namespace Rietmon.Serialization
 
         private byte[] GetBytes(ISerializable serializableComponent)
         {
-            var subStream = new SerializationStream();
-            subStream.Version = Version;
+            var subStream = CreateSubStream();
         
             serializableComponent.Serialize(subStream);
 
@@ -74,8 +73,7 @@ namespace Rietmon.Serialization
 
         private byte[] GetBytes(Array array)
         {
-            var subStream = new SerializationStream();
-            subStream.Version = Version;
+            var subStream = CreateSubStream();
 
             var arrayLength = array.Length;
         
@@ -89,8 +87,7 @@ namespace Rietmon.Serialization
 
         private byte[] GetBytes(IList list)
         {
-            var subStream = new SerializationStream();
-            subStream.Version = Version;
+            var subStream = CreateSubStream();
 
             var arrayLength = list.Count;
         
@@ -104,8 +101,7 @@ namespace Rietmon.Serialization
         
         private byte[] GetBytes(Vector2 vector2)
         {
-            var subStream = new SerializationStream();
-            subStream.Version = Version;
+            var subStream = CreateSubStream();
             
             subStream.Write(vector2.x);
             subStream.Write(vector2.y);
@@ -115,8 +111,7 @@ namespace Rietmon.Serialization
 
         private byte[] GetBytes(Vector3 vector3)
         {
-            var subStream = new SerializationStream();
-            subStream.Version = Version;
+            var subStream = CreateSubStream();
             
             subStream.Write(vector3.x);
             subStream.Write(vector3.y);
@@ -127,8 +122,7 @@ namespace Rietmon.Serialization
 
         private byte[] GetBytes(Quaternion quaternion)
         {
-            var subStream = new SerializationStream();
-            subStream.Version = Version;
+            var subStream = CreateSubStream();
             
             subStream.Write(quaternion.x);
             subStream.Write(quaternion.y);
@@ -186,9 +180,8 @@ namespace Rietmon.Serialization
         private object GetSerializableObject(Type type)
         {
             var result = Activator.CreateInstance(type);
-        
-            var subStream = new SerializationStream(ReadBySize());
-            subStream.Version = Version;
+
+            var subStream = CreateSubStreamAndRead();
 
             ((ISerializable)result).Deserialize(subStream);
 
@@ -198,9 +191,8 @@ namespace Rietmon.Serialization
         private object GetArrayObject(Type type)
         {
             var elementType = type.GetElementType();
-        
-            var subStream = new SerializationStream(ReadBySize());
-            subStream.Version = Version;
+
+            var subStream = CreateSubStreamAndRead();
         
             var array = Array.CreateInstance(elementType, subStream.Read<int>());
         
@@ -213,9 +205,8 @@ namespace Rietmon.Serialization
         private object GetListObject(Type type)
         {
             var elementType = type.GetGenericArguments()[0];
-        
-            var subStream = new SerializationStream(ReadBySize());
-            subStream.Version = Version;
+
+            var subStream = CreateSubStreamAndRead();
 
             var array = (IList)Activator.CreateInstance(type);
 
@@ -230,9 +221,8 @@ namespace Rietmon.Serialization
         private object GetVector2Object(Type type)
         {
             var result = (Vector2)Activator.CreateInstance(type);
-        
-            var subStream = new SerializationStream(ReadBySize());
-            subStream.Version = Version;
+
+            var subStream = CreateSubStreamAndRead();
 
             result.x = subStream.Read<float>();
             result.y = subStream.Read<float>();
@@ -243,9 +233,8 @@ namespace Rietmon.Serialization
         private object GetVector3Object(Type type)
         {
             var result = (Vector3)Activator.CreateInstance(type);
-        
-            var subStream = new SerializationStream(ReadBySize());
-            subStream.Version = Version;
+
+            var subStream = CreateSubStreamAndRead();
 
             result.x = subStream.Read<float>();
             result.y = subStream.Read<float>();
@@ -257,9 +246,8 @@ namespace Rietmon.Serialization
         private object GetQuaternionObject(Type type)
         {
             var result = (Quaternion)Activator.CreateInstance(type);
-        
-            var subStream = new SerializationStream(ReadBySize());
-            subStream.Version = Version;
+
+            var subStream = CreateSubStreamAndRead();
 
             result.x = subStream.Read<float>();
             result.y = subStream.Read<float>();
@@ -291,6 +279,22 @@ namespace Rietmon.Serialization
         }
 
         public byte[] ToArray() => stream.ToArray();
+
+        public SerializationStream CreateSubStreamAndRead()
+        {
+            return new SerializationStream(ReadBySize())
+            {
+                Version = Version
+            };
+        }
+
+        public SerializationStream CreateSubStream()
+        {
+            return new SerializationStream()
+            {
+                Version = Version
+            };
+        }
 
         ~SerializationStream()
         {

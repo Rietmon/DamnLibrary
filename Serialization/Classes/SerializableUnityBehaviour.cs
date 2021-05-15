@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Rietmon.Attributes;
 using Rietmon.Behaviours;
 using Rietmon.Serialization;
 using UnityEngine;
@@ -7,7 +8,11 @@ using UnityEngine;
 [RequireComponent(typeof(SerializableObject))]
 public abstract class SerializableUnityBehaviour : UnityBehaviour, ISerializable
 {
+    public Id SerializableId => serializableId;
+    
     public bool WasDeserialized { get; private set; }
+    
+    [SerializeField, ReadOnly, HideInInspector] private Id serializableId;
 
     public void Serialize(SerializationStream stream)
     {

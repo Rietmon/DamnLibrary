@@ -103,7 +103,8 @@ namespace Rietmon.Serialization
             {
                 if (!obj)
                     continue;
-                ForeachSerializableObjectComponent(obj, (component) => component.Deserialize(stream));
+                var subStream = stream.CreateSubStreamAndRead();
+                ForeachSerializableObjectComponent(obj, (component) => component.Deserialize(subStream));
             }
         }
 

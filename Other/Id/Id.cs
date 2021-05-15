@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Id
 {
     private Internal_Id UsedId
@@ -88,6 +90,7 @@ public class Id
         return !(first == second);
     }
 
+    [Serializable]
     private abstract class Internal_Id
     {
         public readonly byte size;
@@ -120,6 +123,7 @@ public class Id
         }
     }
     
+    [Serializable]
     private class Internal_Id8 : Internal_Id
     {
         public Internal_Id8(byte value) : base(value, 1) { }
@@ -130,6 +134,7 @@ public class Id
         } 
     }
     
+    [Serializable]
     private class Internal_Id16 : Internal_Id
     {
         public Internal_Id16(short value) : base(value, 2) { }
@@ -143,6 +148,7 @@ public class Id
         }
     }
     
+    [Serializable]
     private class Internal_Id32 : Internal_Id
     {
         public Internal_Id32(int value) : base(value, 4) { }
@@ -158,6 +164,7 @@ public class Id
         }
     }
 
+    [Serializable]
     private class Internal_Id64 : Internal_Id
     {
         public Internal_Id64(long value) : base(value, 8) { }
@@ -175,6 +182,7 @@ public class Id
         }
     }
     
+    [Serializable]
     private class Internal_Id128 : Internal_Id
     {
         public Internal_Id128(decimal value) : base(value, 16) { }

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Rietmon.Serialization
 {
     [AddComponentMenu("Serialization/SerializableObject")]
-    public class SerializableObject : UnityBehaviour
+    public class SerializableObject : SerializableUnityBehaviour
     {
         public ISerializable[] SerializableComponents { get; private set; }
         
