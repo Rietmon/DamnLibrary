@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using UnityEngine;
 
 namespace Rietmon.Debugging
 {
-    public class EmailNotifier : IDebugNotifier
+    public class EmailNotifier : DebugNotifier
     {
         private readonly SmtpClient smtpServer;
 
@@ -33,7 +34,7 @@ namespace Rietmon.Debugging
             this.emailTo = emailTo;
         }
 
-        public void Notify()
+        public void GlobalNotify()
         {
             var mail = new MailMessage();
 

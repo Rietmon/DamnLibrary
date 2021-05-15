@@ -11,7 +11,9 @@ namespace Rietmon.Debugging
 
         public static bool RewriteFileAfterEachMessage { get; set; }
 
-        public static Action OnNotify { get; set; }
+        public static Action<string, string, LogType> OnMessageNotify { get; set; }
+        
+        public static Action OnGlobalNotify { get; set; }
 
         public static Action<string, string> OnMessage { get; set; }
 
@@ -19,7 +21,7 @@ namespace Rietmon.Debugging
 
         public static Action<string, string> OnError { get; set; }
 
-        public static List<IDebugNotifier> Notifiers { get; } = new List<IDebugNotifier>();
+        public static List<DebugNotifier> Notifiers { get; } = new List<DebugNotifier>();
 
         public static List<string> Messages { get; } = new List<string>();
 
@@ -39,12 +41,20 @@ namespace Rietmon.Debugging
             Application.logMessageReceivedThreaded += OnLogMessage;
         }
 
-        public static void Notify(string message)
+        private static void MessageNotify(string condition, string stacktrace, LogType type)
         {
-            OnNotify?.Invoke();
+            OnMessageNotify?.Invoke(condition, stacktrace, type);
 
             foreach (var notifier in Notifiers)
-                notifier.Notify();
+                notifier.MessageNotify(condition, stacktrace, type);
+        }
+        
+        public static void GlobalNotify()
+        {
+            OnGlobalNotify?.Invoke();
+
+            foreach (var notifier in Notifiers)
+                notifier.GlobalNotify();
         }
 
         public static void LoadLogFile(string pathToFile = "")
@@ -86,6 +96,8 @@ namespace Rietmon.Debugging
                     OnError?.Invoke(condition, stacktrace);
                     break;
             }
+            
+            MessageNotify(condition, stacktrace, type);
         }
     }
 }
