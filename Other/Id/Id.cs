@@ -30,49 +30,57 @@ public class Id
     private Internal_Id64 id64;
     private Internal_Id128 id128;
 
-    public static Id CreateFrom8Bytes(byte value)
-    {
-        return new Id
+    public static Id Create8(byte value) =>
+        new Id
         {
             id8 = new Internal_Id8(value)
         };
-    }
     
-    public static Id CreateFrom16Bytes(short value)
-    {
-        return new Id
+    public static Id Create8() =>
+        Create8(RandomUtilities.RandomByte);
+    
+    public static Id Create16(short value) =>
+        new Id
         {
             id16 = new Internal_Id16(value)
         };
-    }
     
-    public static Id CreateFrom32Bytes(int value)
-    {
-        return new Id
+    public static Id Create16() =>
+        Create16(RandomUtilities.RandomShort);
+
+    public static Id Create32(int value) =>
+        new Id
         {
             id32 = new Internal_Id32(value)
         };
-    }
     
-    public static Id CreateFrom64Bytes(long value)
-    {
-        return new Id
+    public static Id Create32() =>
+        Create32(RandomUtilities.RandomInt);
+    
+    public static Id Create64(long value) =>
+        new Id
         {
             id64 = new Internal_Id64(value)
         };
-    }
     
-    public static Id CreateFrom128Bytes(decimal value)
-    {
-        return new Id
+    public static Id Create64() =>
+        Create64(RandomUtilities.RandomLong);
+    
+    public static Id Create128(decimal value) =>
+        new Id
         {
             id128 = new Internal_Id128(value)
         };
-    }
+    
+    public static Id Create128() =>
+        Create128(RandomUtilities.RandomDecimal);
 
     public static bool operator ==(Id first, Id second)
     {
-        return first != null && second != null && first.UsedId == second.UsedId;
+        if (Equals(first, null) && Equals(second, null)) return true;
+        if (Equals(first, null)) return false;
+        if (Equals(second, null)) return false;
+        return first.UsedId == second.UsedId;
     }
 
     public static bool operator !=(Id first, Id second)
@@ -82,31 +90,28 @@ public class Id
 
     private abstract class Internal_Id
     {
+        public readonly byte size;
+        
         public readonly object id;
 
-        public Internal_Id(object value) => id = value;
-
-        protected bool Equals(Internal_Id other)
+        public Internal_Id(object value, byte valueSize)
         {
-            return EqualityComparer<object>.Default.Equals(id, other.id);
+            id = value;
+            size = valueSize;
         }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Internal_Id)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return EqualityComparer<object>.Default.GetHashCode(id);
-        }
+        public abstract bool CompareWithOther(Internal_Id other);
         
         public static bool operator ==(Internal_Id first, Internal_Id second)
         {
-            return first != null && second != null && first.id.Equals(second.id);
+            if (Equals(first, null) && Equals(second, null)) return true;
+            if (Equals(first, null)) return false;
+            if (Equals(second, null)) return false;
+
+            var maximalValue = first.size > second.size ? first : second;
+            var otherValue = first.size > second.size ? second : first;
+
+            return maximalValue.CompareWithOther(otherValue);
         }
 
         public static bool operator !=(Internal_Id first, Internal_Id second)
@@ -117,26 +122,75 @@ public class Id
     
     private class Internal_Id8 : Internal_Id
     {
-        public Internal_Id8(byte value) : base(value) { }
+        public Internal_Id8(byte value) : base(value, 1) { }
+
+        public override bool CompareWithOther(Internal_Id other)
+        {
+            return (byte)id == (byte)other.id;
+        } 
     }
     
     private class Internal_Id16 : Internal_Id
     {
-        public Internal_Id16(short value) : base(value) { }
+        public Internal_Id16(short value) : base(value, 2) { }
+
+        public override bool CompareWithOther(Internal_Id other)
+        {
+            if (other.id is byte byteValue)
+                return (short)id == byteValue;
+            
+            return (short)id == (short)other.id;
+        }
     }
     
     private class Internal_Id32 : Internal_Id
     {
-        public Internal_Id32(int value) : base(value) { }
+        public Internal_Id32(int value) : base(value, 4) { }
+
+        public override bool CompareWithOther(Internal_Id other)
+        {
+            if (other.id is byte byteValue)
+                return (int)id == byteValue;
+            if (other.id is short shortValue)
+                return (int)id == shortValue;
+            
+            return (int)id == (int)other.id;
+        }
     }
 
     private class Internal_Id64 : Internal_Id
     {
-        public Internal_Id64(long value) : base(value) { }
+        public Internal_Id64(long value) : base(value, 8) { }
+
+        public override bool CompareWithOther(Internal_Id other)
+        {
+            if (other.id is byte byteValue)
+                return (long)id == byteValue;
+            if (other.id is short shortValue)
+                return (long)id == shortValue;
+            if (other.id is int intValue)
+                return (long)id == intValue;
+            
+            return (long)id == (long)other.id;
+        }
     }
     
     private class Internal_Id128 : Internal_Id
     {
-        public Internal_Id128(decimal value) : base(value) { }
+        public Internal_Id128(decimal value) : base(value, 16) { }
+
+        public override bool CompareWithOther(Internal_Id other)
+        {
+            if (other.id is byte byteValue)
+                return (decimal)id == byteValue;
+            if (other.id is short shortValue)
+                return (decimal)id == shortValue;
+            if (other.id is int intValue)
+                return (decimal)id == intValue;
+            if (other.id is long longValue)
+                return (decimal)id == longValue;
+            
+            return (long)id == (decimal)other.id;
+        }
     }
 }
