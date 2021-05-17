@@ -18,7 +18,6 @@ namespace Rietmon.Game
             var prefabRect = new Rect(position.x, position.y, position.width, position.height);
 
             EditorGUI.PropertyField(prefabRect, property.FindPropertyRelative("prefabObject"), GUIContent.none);
-            ;
 
             EditorGUI.indentLevel = indent;
 

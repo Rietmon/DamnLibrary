@@ -6,7 +6,7 @@ using Rietmon.Serialization;
 
 namespace Rietmon.Game
 {
-    [StaticSerializable, DamnScriptable]
+    [StaticSerializable(1), DamnScriptable]
     public static class Infoportions
     {
         private static List<string> infoportions = new List<string>();

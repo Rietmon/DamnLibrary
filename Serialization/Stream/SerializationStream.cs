@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -9,10 +11,14 @@ namespace Rietmon.Serialization
     public class SerializationStream
     {
         public bool IsReading { get; }
-    
+
         public bool IsWriting { get; }
-        
+
         public int Version { get; set; }
+
+        public bool HasBytesToRead => stream.Position < stream.Length;
+
+        public bool IsEmpty => stream.Length == 0;
 
         private readonly MemoryStream stream;
 
@@ -20,7 +26,7 @@ namespace Rietmon.Serialization
         {
             IsReading = true;
             IsWriting = false;
-            
+
             stream = new MemoryStream();
         }
 
@@ -28,277 +34,239 @@ namespace Rietmon.Serialization
         {
             IsReading = false;
             IsWriting = true;
-        
+
             stream = new MemoryStream(data);
         }
-        
-        // WRITING
 
-        public void Write<T>(T obj) => WriteWithSize(ToBytes(obj));
-
-        public byte[] ToBytes<T>(T obj)
+        public void Write<T>(T obj)
         {
             switch (obj)
             {
-                case bool result: { return BitConverter.GetBytes(result); }
-                case byte result: { return BitConverter.GetBytes(result); }
-                case short result: { return BitConverter.GetBytes(result); }
-                case int result: { return BitConverter.GetBytes(result); }
-                case long result: { return BitConverter.GetBytes(result); }
-                case float result: { return BitConverter.GetBytes(result); }
-                case double result: { return BitConverter.GetBytes(result); }
-                case string result: { return Encoding.UTF8.GetBytes(result); }
-                case ISerializable result: { return GetBytes(result); }
-                case Array result: { return GetBytes(result); }
-                case IList result: { return GetBytes(result); }
-                case Vector2 result: { return GetBytes(result); }
-                case Vector3 result: { return GetBytes(result); }
-                case Quaternion result: { return GetBytes(result); }
+                case bool b: WriteByte(b ? (byte)1 : (byte)0); break;
+                case byte b: WriteByte(b); break;
+                case short s: WriteShort(s); break;
+                case int i: WriteInt(i); break;
+                case float f: WriteFloat(f); break;
+                case double d: WriteDouble(d); break;
+                case long l: WriteLong(l); break;
+                case string s: WriteString(s); break;
+                case Vector2 v: WriteVector2(v); break;
+                case Vector3 v: WriteVector3(v); break;
+                case Quaternion q: WriteQuaternion(q); break;
+                case Array a: WriteArray(a); break;
+                case IList l: WriteList(l); break;
+                default: Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}"); break;
             }
-        
-            Debug.LogError($"Cannot convert to bytes unsupported type: {typeof(T)}!");
-            return null;
         }
 
-        #region GetBytes
-
-        private byte[] GetBytes(ISerializable serializableComponent)
+        private void WriteToStream(params byte[] bytes)
         {
-            var subStream = CreateSubStream();
-        
-            serializableComponent.Serialize(subStream);
-
-            return subStream.ToArray();
-        }
-
-        private byte[] GetBytes(Array array)
-        {
-            var subStream = CreateSubStream();
-
-            var arrayLength = array.Length;
-        
-            subStream.Write(arrayLength);
-        
-            for (var i = 0; i < arrayLength; i++)
-                subStream.Write(array.GetValue(i));
-
-            return subStream.ToArray();
-        }
-
-        private byte[] GetBytes(IList list)
-        {
-            var subStream = CreateSubStream();
-
-            var arrayLength = list.Count;
-        
-            subStream.Write(arrayLength);
-        
-            for (var i = 0; i < arrayLength; i++)
-                subStream.Write(list[i]);
-
-            return subStream.ToArray();
-        }
-        
-        private byte[] GetBytes(Vector2 vector2)
-        {
-            var subStream = CreateSubStream();
-            
-            subStream.Write(vector2.x);
-            subStream.Write(vector2.y);
-
-            return subStream.ToArray();
-        }
-
-        private byte[] GetBytes(Vector3 vector3)
-        {
-            var subStream = CreateSubStream();
-            
-            subStream.Write(vector3.x);
-            subStream.Write(vector3.y);
-            subStream.Write(vector3.z);
-
-            return subStream.ToArray();
-        }
-
-        private byte[] GetBytes(Quaternion quaternion)
-        {
-            var subStream = CreateSubStream();
-            
-            subStream.Write(quaternion.x);
-            subStream.Write(quaternion.y);
-            subStream.Write(quaternion.z);
-            subStream.Write(quaternion.w);
-
-            return subStream.ToArray();
-        }
-
-        #endregion
-
-        private void WriteWithSize(byte[] bytes)
-        {
-            WriteSize(bytes.Length);
             stream.Write(bytes, 0, bytes.Length);
         }
 
-        private void WriteSize(int size)
+        private void WriteByte(byte value)
         {
-            var length = BitConverter.GetBytes(size);
-        
-            stream.Write(length, 0, 4);
-        }
-        
-        // READING
-
-        public T Read<T>() => (T)ToObject(typeof(T));
-    
-        private object Read(Type type) => ToObject(type);
-
-        private object ToObject(Type type)
-        {
-            if (type == typeof(bool)) return BitConverter.ToBoolean(ReadBySize(), 0);
-            if (type == typeof(byte)) return ReadBySize()[0];
-            if (type == typeof(short)) return BitConverter.ToInt16(ReadBySize(), 0);
-            if (type == typeof(int)) return BitConverter.ToInt32(ReadBySize(), 0);
-            if (type == typeof(long)) return BitConverter.ToInt64(ReadBySize(), 0);
-            if (type == typeof(float)) return BitConverter.ToSingle(ReadBySize(), 0);
-            if (type == typeof(double)) return BitConverter.ToDouble(ReadBySize(), 0);
-            if (type == typeof(string)) return Encoding.UTF8.GetString(ReadBySize());
-            if (typeof(ISerializable).IsAssignableFrom(type)) return GetSerializableObject(type);
-            if (type.IsArray) return GetArrayObject(type);
-            if (typeof(IList).IsAssignableFrom(type)) return GetListObject(type);
-            if (typeof(Vector2).IsAssignableFrom(type)) return GetVector2Object(type);
-            if (typeof(Vector3).IsAssignableFrom(type)) return GetVector3Object(type);
-            if (typeof(Quaternion).IsAssignableFrom(type)) return GetQuaternionObject(type);
-        
-            Debug.LogError($"Cannot convert to object unsupported type: {type}!");
-        
-            return null;
+            WriteToStream(value);
         }
 
-        #region GetObject's
-
-        private object GetSerializableObject(Type type)
+        private void WriteShort(short value)
         {
-            var result = Activator.CreateInstance(type);
-
-            var subStream = CreateSubStreamAndRead();
-
-            ((ISerializable)result).Deserialize(subStream);
-
-            return result;
+            WriteToStream(BitConverter.GetBytes(value));
         }
 
-        private object GetArrayObject(Type type)
+        private void WriteInt(int value)
         {
+            WriteToStream(BitConverter.GetBytes(value));
+        }
+
+        private void WriteFloat(float value)
+        {
+            WriteToStream(BitConverter.GetBytes(value));
+        }
+
+        private void WriteDouble(double value)
+        {
+            WriteToStream(BitConverter.GetBytes(value));
+        }
+
+        private void WriteLong(long value)
+        {
+            WriteToStream(BitConverter.GetBytes(value));
+        }
+
+        private void WriteString(string value)
+        {
+            WriteShort((short)value.Length);
+            WriteToStream(Encoding.UTF8.GetBytes(value));
+        }
+
+        private void WriteVector2(Vector2 value)
+        {
+            WriteFloat(value.x);
+            WriteFloat(value.y);
+        }
+
+        private void WriteVector3(Vector3 value)
+        {
+            WriteFloat(value.x);
+            WriteFloat(value.y);
+            WriteFloat(value.z);
+        }
+
+        private void WriteQuaternion(Quaternion value)
+        {
+            WriteFloat(value.x);
+            WriteFloat(value.y);
+            WriteFloat(value.z);
+            WriteFloat(value.w);
+        }
+
+        private void WriteArray(Array value)
+        {
+            WriteShort((short)value.Length);
+            for (var i = 0; i < value.Length; i++)
+                Write(value.GetValue(i));
+        }
+
+        private void WriteList(IList value)
+        {
+            WriteShort((short)value.Count);
+            foreach (var element in value)
+                Write(element);
+        }
+
+        public T Read<T>() => (T)Read(typeof(T));
+
+        private object Read(Type type)
+        {
+            if (type == typeof(bool)) return ReadByte() == 1;
+            if (type == typeof(byte)) return ReadByte();
+            if (type == typeof(short)) return ReadShort();
+            if (type == typeof(int)) return ReadInt();
+            if (type == typeof(float)) return ReadFloat();
+            if (type == typeof(double)) return ReadDouble();
+            if (type == typeof(long)) return ReadLong();
+            if (type == typeof(Vector2)) return ReadVector2();
+            if (type == typeof(Vector3)) return ReadVector3();
+            if (type == typeof(Quaternion)) return ReadQuaternion();
+            if (type.IsArray) return ReadArray(type);
+            if (typeof(IList).IsAssignableFrom(type)) return ReadList(type);
+            if (type == typeof(string)) return ReadString();
+
+            Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {type}");
+            return default;
+        }
+
+        private byte[] ReadFromStream(int count)
+        {
+            var bytes = new byte[count];
+            stream.Read(bytes, 0, count);
+            return bytes;
+        }
+
+        private byte ReadByte()
+        {
+            return ReadFromStream(1).First();
+        }
+
+        private short ReadShort()
+        {
+            return BitConverter.ToInt16(ReadFromStream(2), 0);
+        }
+
+        private int ReadInt()
+        {
+            return BitConverter.ToInt32(ReadFromStream(4), 0);
+        }
+
+        private float ReadFloat()
+        {
+            return BitConverter.ToSingle(ReadFromStream(4), 0);
+        }
+
+        private double ReadDouble()
+        {
+            return BitConverter.ToDouble(ReadFromStream(8), 0);
+        }
+
+        private long ReadLong()
+        {
+            return BitConverter.ToInt64(ReadFromStream(8), 0);
+        }
+
+        private string ReadString()
+        {
+            var length = ReadShort();
+            return Encoding.UTF8.GetString(ReadFromStream(length));
+        }
+
+        private Vector2 ReadVector2()
+        {
+            return new Vector2
+            {
+                x = ReadFloat(),
+                y = ReadFloat()
+            };
+        }
+
+        private Vector3 ReadVector3()
+        {
+            return new Vector3
+            {
+                x = ReadFloat(),
+                y = ReadFloat(),
+                z = ReadFloat()
+            };
+        }
+
+        private Quaternion ReadQuaternion()
+        {
+            return new Quaternion
+            {
+                x = ReadFloat(),
+                y = ReadFloat(),
+                z = ReadFloat(),
+                w = ReadFloat()
+            };
+        }
+
+        private Array ReadArray(Type type)
+        {
+            var length = ReadShort();
             var elementType = type.GetElementType();
-
-            var subStream = CreateSubStreamAndRead();
-        
-            var array = Array.CreateInstance(elementType, subStream.Read<int>());
-        
-            for (var i = 0; i < array.Length; i++)
-                array.SetValue(subStream.Read(elementType), i);
-
+            var array = Array.CreateInstance(elementType, length);
+            for (var i = 0; i < length; i++)
+                array.SetValue(Read(elementType), i);
             return array;
         }
 
-        private object GetListObject(Type type)
+        private IList ReadList(Type type)
         {
-            var elementType = type.GetGenericArguments()[0];
-
-            var subStream = CreateSubStreamAndRead();
-
-            var array = (IList)Activator.CreateInstance(type);
-
-            var arrayLength = subStream.Read<int>();
-        
-            for (var i = 0; i < arrayLength; i++)
-                array.Add(subStream.Read(elementType));
-
-            return array;
-        }
-        
-        private object GetVector2Object(Type type)
-        {
-            var result = (Vector2)Activator.CreateInstance(type);
-
-            var subStream = CreateSubStreamAndRead();
-
-            result.x = subStream.Read<float>();
-            result.y = subStream.Read<float>();
-
-            return result;
-        }
-        
-        private object GetVector3Object(Type type)
-        {
-            var result = (Vector3)Activator.CreateInstance(type);
-
-            var subStream = CreateSubStreamAndRead();
-
-            result.x = subStream.Read<float>();
-            result.y = subStream.Read<float>();
-            result.z = subStream.Read<float>();
-
-            return result;
-        }
-        
-        private object GetQuaternionObject(Type type)
-        {
-            var result = (Quaternion)Activator.CreateInstance(type);
-
-            var subStream = CreateSubStreamAndRead();
-
-            result.x = subStream.Read<float>();
-            result.y = subStream.Read<float>();
-            result.z = subStream.Read<float>();
-            result.w = subStream.Read<float>();
-
-            return result;
-        }
-
-        #endregion
-        
-        private byte[] ReadBySize()
-        {
-            var size = ReadSize();
-
-            var buffer = new byte[size];
-
-            stream.Read(buffer, 0, size);
-
-            return buffer;
-        }
-
-        private int ReadSize()
-        {
-            var buffer = new byte[4];
-            stream.Read(buffer, 0, 4);
-
-            return BitConverter.ToInt32(buffer, 0);
+            var length = ReadShort();
+            var elementType = type.GetGenericArguments().First();
+            var list = (IList)Activator.CreateInstance(type);
+            for (var i = 0; i < length; i++)
+                list.Add(Read(elementType));
+            return list;
         }
 
         public byte[] ToArray() => stream.ToArray();
 
-        public SerializationStream CreateSubStreamAndRead()
-        {
-            return new SerializationStream(ReadBySize())
+        public SerializationStream CreateSerializationSubStream() =>
+            new SerializationStream
             {
                 Version = Version
             };
-        }
 
-        public SerializationStream CreateSubStream()
-        {
-            return new SerializationStream()
+        public SerializationStream CreateDeserializationSubStream(byte[] bytes) =>
+            new SerializationStream(bytes)
             {
                 Version = Version
             };
-        }
 
         ~SerializationStream()
         {
-            stream.Dispose();   
+            stream.Dispose();
         }
     }
 }

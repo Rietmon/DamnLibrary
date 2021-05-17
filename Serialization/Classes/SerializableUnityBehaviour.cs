@@ -1,18 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Rietmon.Attributes;
 using Rietmon.Behaviours;
 using Rietmon.Serialization;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(SerializableObject))]
 public abstract class SerializableUnityBehaviour : UnityBehaviour, ISerializable
 {
-    public Id SerializableId => serializableId;
+    public short SerializableId => serializableId;
     
     public bool WasDeserialized { get; private set; }
     
-    [SerializeField, ReadOnly, HideInInspector] private Id serializableId;
+    [SerializeField, ReadOnly] private short serializableId;
 
     public void Serialize(SerializationStream stream)
     {
@@ -28,4 +30,18 @@ public abstract class SerializableUnityBehaviour : UnityBehaviour, ISerializable
     }
     
     protected virtual void OnDeserialize(SerializationStream stream) { }
+
+#if UNITY_EDITOR
+    [ContextMenu("Generate Serializable Id")]
+    private void Editor_GenerateSerializableId()
+    {
+        serializableId = RandomUtilities.RandomShort;
+        EditorUtility.SetDirty(this);
+    }
+
+    private void Reset()
+    {
+        Editor_GenerateSerializableId();
+    }
+#endif
 }

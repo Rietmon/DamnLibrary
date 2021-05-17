@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Rietmon.Behaviours;
 using Rietmon.DS;
 using Rietmon.Extensions;
+using Rietmon.Management;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace Rietmon.Serialization
         
         public static Serialization Instance { get; private set; }
 
-        private static List<Type> serializableStaticTypes;
+        private static readonly Dictionary<short, Type> serializableStaticTypes = new Dictionary<short, Type>();
     
         [SerializeField] private SerializableObject[] serializableObjects;
 
@@ -28,8 +29,13 @@ namespace Rietmon.Serialization
 
         public static async UniTask InitializeAsync()
         {
-            serializableStaticTypes =
-                new List<Type>(AssemblyUtilities.GetAllAttributeInherits<StaticSerializableAttribute>());
+            var inheritors = AssemblyUtilities.GetAllAttributeInherits<StaticSerializableAttribute>();
+            foreach (var inheritor in inheritors)
+            {
+                var attribute = (StaticSerializableAttribute)Attribute.GetCustomAttribute(inheritor, 
+                    typeof(StaticSerializableAttribute));
+                serializableStaticTypes.Add(attribute.SerializableId, inheritor);
+            }
         }
 
         public static SerializationStream CreateSerializationStream()
@@ -46,22 +52,21 @@ namespace Rietmon.Serialization
             return stream;
         }
 
-        public static bool IsWillSerializable(SerializableObject obj) => Instance.serializableObjects.Contains(obj);
-
         public static byte[] SerializeComponents(SerializationStream stream = null)
         {
             if (Instance == null)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize, because there is no serialization component!");
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize at the {SceneManager.ActiveScene.name} scene, because there is no serialization component!");
                 return new byte[0];
             }
+            
             stream ??= CreateSerializationStream();
 
             var objects = Instance.serializableObjects;
 
             if (objects == null || objects.Length == 0)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize, because there is no serializable objects!");
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize at the {SceneManager.ActiveScene.name} scene, because there is no serializable objects!");
                 return new byte[0];
             }
 
@@ -69,7 +74,14 @@ namespace Rietmon.Serialization
             {
                 if (!obj)
                     continue;
-                ForeachSerializableObjectComponent(obj, (component) => component.Serialize(stream));
+                var subStream = stream.CreateSerializationSubStream();
+                obj.Serialize(subStream);
+
+                if (subStream.IsEmpty)
+                    continue;
+                
+                stream.Write(obj.SerializableId);
+                stream.Write(subStream.ToArray());
             }
             
             return stream.ToArray();
@@ -79,13 +91,13 @@ namespace Rietmon.Serialization
         {
             if (Instance == null)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize, because there is no serialization component!");
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because there is no serialization component!");
                 return;
             }
 
             if (bytes == null || bytes.Length == 0)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize, because byte is null or length is equal 0!");
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because byte is null or length is equal 0!");
                 return;
             }
             
@@ -95,16 +107,22 @@ namespace Rietmon.Serialization
 
             if (objects == null || objects.Length == 0)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize, because there is no serializable objects!");
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because there is no serializable objects!");
                 return;
             }
 
-            foreach (var obj in objects)
+            while (stream.HasBytesToRead)
             {
-                if (!obj)
+                var id = stream.Read<short>();
+                var componentBytes = stream.Read<byte[]>();
+                var component = Instance.serializableObjects.Find((c) => c.SerializableId == id);
+                if (!component)
+                {
+                    Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to find component with id {id} at the {SceneManager.ActiveScene.name} scene");
                     continue;
-                var subStream = stream.CreateSubStreamAndRead();
-                ForeachSerializableObjectComponent(obj, (component) => component.Deserialize(subStream));
+                }
+
+                component.Deserialize(CreateDeserializationStream(componentBytes));
             }
         }
 
@@ -113,7 +131,7 @@ namespace Rietmon.Serialization
             stream ??= CreateSerializationStream();
             
             foreach (var type in serializableStaticTypes)
-                type.SafeInvokeStaticMethod("Serialize", stream);
+                type.Value.SafeInvokeStaticMethod("Serialize", stream);
 
             return stream.ToArray();
         }
@@ -122,16 +140,17 @@ namespace Rietmon.Serialization
         {
             stream ??= CreateDeserializationStream(bytes);
             
-            foreach (var type in serializableStaticTypes)
-                type.SafeInvokeStaticMethod("Deserialize", stream);
-        }
-
-        private static void ForeachSerializableObjectComponent(SerializableObject serializableObject,
-            Action<ISerializable> callback)
-        {
-            foreach (var component in serializableObject.SerializableComponents)
+            while (stream.HasBytesToRead)
             {
-                callback?.Invoke(component);
+                var id = stream.Read<short>();
+                var serializedBytes = stream.Read<byte[]>();
+                if (!serializableStaticTypes.TryGetValue(id, out var targetType))
+                {
+                    Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to find component with id {id}");
+                    continue;
+                }
+
+                targetType.SafeInvokeStaticMethod("Deserialize", CreateDeserializationStream(serializedBytes));
             }
         }
 
