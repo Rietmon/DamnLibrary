@@ -122,7 +122,7 @@ namespace Rietmon.Serialization
                     continue;
                 }
 
-                component.Deserialize(CreateDeserializationStream(componentBytes));
+                component.Deserialize(stream.CreateDeserializationSubStream(componentBytes));
             }
         }
 
