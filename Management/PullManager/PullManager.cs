@@ -3,15 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Rietmon.Game;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
-public class PullManager<T> where T : Object
+public class PullManager<T> : IDisposable where T : Object
 {
     public int PullCapacity { get; }
 
     public int FreeObjects => objectsPull.Count;
 
     public int BusyObject => objectPullExecuting.Count;
+    
+    public Action<Object> OnWillBusy { get; set; }
+    
+    public Action<Object> OnWillFree { get; set; }
 
     private readonly Prefab<T> examplePrefab;
 
@@ -63,6 +68,33 @@ public class PullManager<T> where T : Object
         }
     }
 
+    public void EnableGameObjectOptimization()
+    {
+        foreach (var freeObject in objectsPull)
+            (freeObject as GameObject)?.SetActive(false);
+        
+        OnWillBusy += (obj) => (obj as GameObject)?.SetActive(true);
+        OnWillFree += (obj) => (obj as GameObject)?.SetActive(false);
+    }
+
+    public void DisableGameObjectOptimization()
+    {
+        foreach (var freeObject in objectsPull)
+            (freeObject as GameObject)?.SetActive(true);
+        
+        OnWillBusy -= (obj) => (obj as GameObject)?.SetActive(true);
+        OnWillFree -= (obj) => (obj as GameObject)?.SetActive(false);
+    }
+    
     private T CreateObject() =>
         instantiateMethod != null ? instantiateMethod.Invoke(examplePrefab.PrefabObject) : examplePrefab.SimpleInstantiate();
+
+    public void Dispose()
+    {
+        foreach (var obj in objectsPull)
+            Object.Destroy(obj);
+        
+        foreach (var obj in objectPullExecuting)
+            Object.Destroy(obj);
+    }
 }
