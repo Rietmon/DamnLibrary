@@ -21,7 +21,7 @@ public static class TypeExtensions
         methodInfo.Invoke(null, arguments);
     }
     
-    public static void SafeInvokeMethod(this Type type, object owner,string methodName, params object[] arguments)
+    public static void SafeInvokeMethod(this Type type, object owner, string methodName, params object[] arguments)
     {
         var methodInfo = type.GetMethod(methodName,
             BindingFlags.Public | BindingFlags.NonPublic);

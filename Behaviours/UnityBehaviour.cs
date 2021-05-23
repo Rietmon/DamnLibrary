@@ -19,6 +19,8 @@ namespace Rietmon.Behaviours
                 return _transform;
             }
         }
+        
+        public bool WasAllDeserialized { get; set; }
 
         private readonly Dictionary<Type, Component> pullComponents = new Dictionary<Type, Component>();
 
@@ -28,7 +30,7 @@ namespace Rietmon.Behaviours
         
         public virtual void OnAfterAllDeserialize() { }
 
-        public void AddComponent<T>() where T : Component => gameObject.AddComponent<T>();
+        public T AddComponent<T>() where T : Component => gameObject.AddComponent<T>();
 
         public T GetComponentFromPull<T>() where T : Component
         {

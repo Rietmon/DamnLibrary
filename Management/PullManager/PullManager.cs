@@ -51,7 +51,10 @@ public class PullManager<T> : IDisposable where T : Object
             {
                 objectPullExecuting.Remove(obj);
                 objectsPull.Add(obj);
+                OnWillFree?.Invoke(obj);
             };
+            
+            OnWillBusy?.Invoke(obj);
             
             return obj;
         }
@@ -61,8 +64,11 @@ public class PullManager<T> : IDisposable where T : Object
 
             endCallback += () =>
             {
+                OnWillFree?.Invoke(obj);
                 Object.Destroy(obj);
             };
+
+            OnWillBusy?.Invoke(obj);
 
             return obj;
         }
