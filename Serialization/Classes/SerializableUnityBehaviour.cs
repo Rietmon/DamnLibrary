@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using Rietmon.Attributes;
 using Rietmon.Behaviours;
 using Rietmon.Serialization;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 [RequireComponent(typeof(SerializableObject))]
