@@ -10,9 +10,9 @@ namespace Rietmon.Game
 {
     public class DontDestroy : UnityBehaviour
     {
-        private static readonly List<int> ids = new List<int>();
+        private static readonly List<short> ids = new List<short>();
 
-        [SerializeField, ReadOnly] private int id;
+        [SerializeField, ReadOnly] private short id;
 
         private void OnEnable()
         {
@@ -32,9 +32,7 @@ namespace Rietmon.Game
 #if UNITY_EDITOR
         private void Reset()
         {
-            id = EditorPrefs.GetInt("Editor_LastDontDestroyId", 1);
-
-            EditorPrefs.SetInt("Editor_LastDontDestroyId", id + 1);
+            id = RandomUtilities.RandomShort;
         }
 #endif
     }
