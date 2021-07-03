@@ -51,10 +51,11 @@ public class ColliderSorting : UnityBehaviour
         return collidersSorting[greaterColliderIndex].Collider;
     }
 
-    public enum CollisionSortingLayers : short
+    public enum CollisionSortingLayers : byte
     {
         Default = 0,
-        NonCollisionStatic = 100,
-        LevelChanger = 999,
+        NonCollisionStatic = 50,
+        CollisionStatic = 100,
+        LevelChanger = 255,
     }
 }
