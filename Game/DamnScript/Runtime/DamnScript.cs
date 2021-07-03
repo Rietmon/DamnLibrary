@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Rietmon.DS
 {
+    // Obselete. Wait for new version
     public class DamnScript
     {
         public GameObject Owner { get; }
