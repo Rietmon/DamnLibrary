@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Rietmon.DS;
 using Rietmon.Extensions;
 using Rietmon.Serialization;
@@ -57,14 +56,22 @@ namespace Rietmon.Game
             
             DamnScriptEngine.RegisterMethod("OnHasInfoportion", async (code, arguments) =>
             {
+#if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => HasInfoportion(arguments[0]));
+#else
+                await TaskUtilities.WaitUntil(() => HasInfoportion(arguments[0]));
+#endif
 
                 return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
             
             DamnScriptEngine.RegisterMethod("OnHasntInfoportion", async (code, arguments) =>
             {
+#if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => !HasInfoportion(arguments[0]));
+#else
+                await TaskUtilities.WaitUntil(() => !HasInfoportion(arguments[0]));
+#endif
 
                 return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });

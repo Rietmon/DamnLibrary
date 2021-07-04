@@ -1,6 +1,9 @@
 using System;
 using System.Threading.Tasks;
+#if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
+#else
+#endif
 using Rietmon.Behaviours;
 using Rietmon.DS;
 using Rietmon.Extensions;
@@ -13,7 +16,7 @@ public class AudioManager : SingletonBehaviour<AudioManager>
 
     private static PullManager<AudioSource> pullManager;
 
-    public static async UniTask InitializeAsync()
+    public static void Initialize()
     {
         var exampleObject = new GameObject("AudioSource").AddComponent<AudioSource>();
         pullManager = new PullManager<AudioSource>(
@@ -37,7 +40,7 @@ public class AudioManager : SingletonBehaviour<AudioManager>
 
         async void StopAudioSourceCallback()
         {
-            await Task.WhenAny(UniTask.WaitUntil(() => !audioSource.isPlaying).AsTask(), UniTask.WaitUntil(() => needToStop).AsTask());
+            await Task.WhenAny(TaskUtilities.WaitUntil(() => !audioSource.isPlaying), TaskUtilities.WaitUntil(() => needToStop));
             audioSource.Stop();
             pullCallback?.Invoke();
         }

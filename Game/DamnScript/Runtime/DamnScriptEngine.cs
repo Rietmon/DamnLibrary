@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+#if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
+#else
+using System.Threading.Tasks;
+#endif
 using Rietmon.Extensions;
 using UnityEngine;
 
@@ -13,7 +16,7 @@ namespace Rietmon.DS
         private static readonly Dictionary<string, DamnScriptNativeMethod> methods =
             new Dictionary<string, DamnScriptNativeMethod>();
 
-        public static async UniTask InitializeAsync()
+        public static void Initialize()
         {
             var damnScriptableTypes = AssemblyUtilities.GetAllAttributeInherits<DamnScriptableAttribute>();
             foreach (var damnScriptable in damnScriptableTypes)
@@ -27,14 +30,23 @@ namespace Rietmon.DS
         public static void RegisterMethod(string name, Func<DamnScriptCode, string[], bool> method) =>
             methods.Add(name, method);
 
+#if ENABLE_UNI_TASK
         public static void RegisterMethod(string name, Func<DamnScriptCode, string[], UniTask<bool>> method) =>
             methods.Add(name, method);
+#else
+        public static void RegisterMethod(string name, Func<DamnScriptCode, string[], Task<bool>> method) =>
+            methods.Add(name, method);
+#endif
 
         public static void RegisterMethod(string name, DamnScriptNativeMethod method) => methods.Add(name, method);
 
         public static void UnregisterMethod(string name) => methods.Remove(name);
 
+#if ENABLE_UNI_TASK
         public static async UniTask<bool> ExecuteStringAsync(string str)
+#else
+        public static async Task<bool> ExecuteStringAsync(string str)
+#endif
         {
             if (str.IsNullOrEmpty())
                 return true;
@@ -54,7 +66,11 @@ namespace Rietmon.DS
             return damnScriptCode.Execute();
         }
 
+#if ENABLE_UNI_TASK
         public static async UniTask<bool> ExecuteAsync(DamnScriptCode owner, string[] codes)
+#else
+        public static async Task<bool> ExecuteAsync(DamnScriptCode owner, string[] codes)
+#endif
         {
             var methodName = codes[0];
             var arguments = codes.CopyWithout(0);
@@ -92,8 +108,13 @@ namespace Rietmon.DS
             return Execute(code, otherArguments);
         }
 
+#if ENABLE_UNI_TASK
         public static async UniTask<bool> TryExecuteMoreAsync(int wasUsedArguments, DamnScriptCode code,
             string[] arguments, bool defaultReturnValue = true)
+#else
+        public static async Task<bool> TryExecuteMoreAsync(int wasUsedArguments, DamnScriptCode code,
+            string[] arguments, bool defaultReturnValue = true)
+#endif
         {
             if (arguments.Length <= wasUsedArguments)
                 return defaultReturnValue;

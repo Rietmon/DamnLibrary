@@ -1,4 +1,8 @@
-﻿using Cysharp.Threading.Tasks;
+﻿#if ENABLE_UNI_TASK
+using Cysharp.Threading.Tasks;
+#else
+using System.Threading.Tasks;
+#endif
 using UnityEngine;
 
 namespace Rietmon.DS
@@ -17,7 +21,11 @@ namespace Rietmon.DS
             this.codes = codes;
         }
 
+#if ENABLE_UNI_TASK
         public async UniTask<bool> ExecuteAsync() => await DamnScriptEngine.ExecuteAsync(this, codes);
+#else
+        public async Task<bool> ExecuteAsync() => await DamnScriptEngine.ExecuteAsync(this, codes);
+#endif
     
         public bool Execute() => DamnScriptEngine.Execute(this, codes);
     }

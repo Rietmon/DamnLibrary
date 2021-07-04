@@ -1,3 +1,4 @@
+#if ENABLE_ADDRESSABLES
 using System.Threading.Tasks;
 using Rietmon.Game;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.AddressableAssets;
 using Rietmon.Extensions;
 using UnityEngine.U2D;
 
-public static class BaseResourcesManager
+public static class AddressableManager
 {
     private const string PathToDataWindows = "Assets/Data/Runtime/Prefabs/Windows/{0}.prefab";
     private const string PathToSpritesAtlases = "Assets/Data/Runtime/Atlases/{0}.spriteatlas";
@@ -29,7 +30,7 @@ public static class BaseResourcesManager
         if ((clip = await Internal_GetAssetAsync<AudioClip>(PathToAudioOgg.Format(audioName))) != null)
             return Internal_VerifyAsset(clip, audioName);
         
-        Debug.LogError($"[{nameof(BaseResourcesManager)}] ({nameof(GetAudio)}) Unable to find audio with name {audioName}. Check extension!");
+        Debug.LogError($"[{nameof(AddressableManager)}] ({nameof(GetAudio)}) Unable to find audio with name {audioName}. Check extension!");
         return null;
     }
 
@@ -40,12 +41,12 @@ public static class BaseResourcesManager
 
         if (locations == null || locations.Count == 0)
         {
-            Debug.LogError($"[{nameof(BaseResourcesManager)}] ({nameof(Internal_GetAssetAsync)}) Unable to find the location with the name {assetName}");
+            Debug.LogError($"[{nameof(AddressableManager)}] ({nameof(Internal_GetAssetAsync)}) Unable to find the location with the name {assetName}");
             return null;
         }
 
         var result = await Addressables.LoadAssetAsync<T>(locations[0]).Task;
-        Debug.Log($"[{nameof(BaseResourcesManager)}] ({nameof(Internal_GetAssetAsync)}) Asset with the name {assetName} was loaded in {Time.frameCount - startLoadingFrame} frames.");
+        Debug.Log($"[{nameof(AddressableManager)}] ({nameof(Internal_GetAssetAsync)}) Asset with the name {assetName} was loaded in {Time.frameCount - startLoadingFrame} frames.");
         return result;
     }
 
@@ -57,7 +58,8 @@ public static class BaseResourcesManager
         if (asset) 
             return asset;
         
-        Debug.LogError($"[{nameof(BaseResourcesManager)}] ({nameof(Internal_VerifyAsset)}) Error at loading asset with the name {assetName}. Result equal a null.");
+        Debug.LogError($"[{nameof(AddressableManager)}] ({nameof(Internal_VerifyAsset)}) Error at loading asset with the name {assetName}. Result equal a null.");
         return default;
     }
 }
+#endif

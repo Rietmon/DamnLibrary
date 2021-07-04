@@ -1,4 +1,8 @@
+#if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
+#else
+using System.Threading.Tasks;
+#endif
 using Rietmon.Behaviours;
 using UnityEngine;
 
@@ -6,10 +10,18 @@ public abstract class WindowBehaviour : UnityBehaviour
 {
     public string WindowName { get; set; }
     public object[] Arguments { get; set; }
-
-    public virtual async UniTask OnOpenAsync() { }
     
+#if ENABLE_UNI_TASK
+    public virtual async UniTask OnOpenAsync() { }
+#else
+    public virtual async Task OnOpenAsync() { }
+#endif
+    
+#if ENABLE_UNI_TASK
     public virtual async UniTask OnCloseAsync() { }
+#else
+    public virtual async Task OnCloseAsync() { }
+#endif
 
     public async void CloseAsync() => await WindowsManager.CloseAsync(this);
 

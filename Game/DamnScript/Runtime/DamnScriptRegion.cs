@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+#if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
+#else
+using System.Threading.Tasks;
+#endif
 using Rietmon.Serialization;
 
 namespace Rietmon.DS
@@ -37,7 +41,11 @@ namespace Rietmon.DS
             {
                 if (IsOver || stopExecuting)
                 {
+#if ENABLE_UNI_TASK
                     await UniTask.Yield();
+#else
+                    await Task.Yield();
+#endif
                     
                     stopExecuting = false;
                     onRegionEndCallback?.Invoke();
@@ -47,7 +55,11 @@ namespace Rietmon.DS
                 if (await CurrentCode.ExecuteAsync()) 
                     CurrentMethod++;
 
-                await UniTask.Yield();
+#if ENABLE_UNI_TASK
+                    await UniTask.Yield();
+#else
+                await Task.Yield();
+#endif
             }
         }
 

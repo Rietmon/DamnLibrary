@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Cysharp.Threading.Tasks;
 using Rietmon.Behaviours;
-using Rietmon.DS;
 using Rietmon.Extensions;
 using Rietmon.Management;
 using UnityEditor;
@@ -27,7 +23,7 @@ namespace Rietmon.Serialization
             Instance = this;
         }
 
-        public static async UniTask InitializeAsync()
+        public static void Initialize()
         {
             var inheritors = AssemblyUtilities.GetAllAttributeInherits<StaticSerializableAttribute>();
             foreach (var inheritor in inheritors)
