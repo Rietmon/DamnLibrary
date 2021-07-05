@@ -1,6 +1,8 @@
 ﻿#if UNITY_2020 && ENABLE_DAMN_SCRIPT
 using System.Collections.Generic;
+#if ENABLE_SERIALIZATION
 using Rietmon.Serialization;
+#endif
 using UnityEngine;
 
 namespace Rietmon.DS
@@ -8,10 +10,13 @@ namespace Rietmon.DS
     public class DamnScript
     {
         public GameObject Owner { get; }
+
+        /// <summary>
+        /// Use only for serialization!!!
+        /// </summary>
+        public List<string> ExecutingDamnScriptRegions { get; set; }
     
         private readonly Dictionary<string, DamnScriptRegion> damnScriptRegions = new Dictionary<string, DamnScriptRegion>();
-
-        private List<string> executingDamnScriptRegions;
 
         public DamnScript(string scriptContent, GameObject owner)
         {
@@ -24,16 +29,16 @@ namespace Rietmon.DS
 
         public async void BeginAsync(string regionName = "Start")
         {
-            if (executingDamnScriptRegions != null)
+            if (ExecutingDamnScriptRegions != null)
             {
-                foreach (var region in executingDamnScriptRegions)
+                foreach (var region in ExecutingDamnScriptRegions)
                 {
                     GetRegion(region).BeginAsync();
                 }
             }
             else
             {
-                executingDamnScriptRegions = new List<string>();
+                ExecutingDamnScriptRegions = new List<string>();
 
                 GetRegion(regionName).BeginAsync();
                 OnRegionStart(regionName);
@@ -52,25 +57,27 @@ namespace Rietmon.DS
             return region;
         }
         
+#if ENABLE_SERIALIZATION
         public void Serialize(SerializationStream stream)
         {
-            stream.Write(executingDamnScriptRegions);
+            stream.Write(ExecutingDamnScriptRegions);
             
-            foreach (var executingRegion in executingDamnScriptRegions)
+            foreach (var executingRegion in ExecutingDamnScriptRegions)
                 damnScriptRegions[executingRegion].Serialize(stream);
         }
 
         public void Deserialize(SerializationStream stream)
         {
-            executingDamnScriptRegions = stream.Read<List<string>>();
+            ExecutingDamnScriptRegions = stream.Read<List<string>>();
 
-            foreach (var executingRegion in executingDamnScriptRegions)
+            foreach (var executingRegion in ExecutingDamnScriptRegions)
                 damnScriptRegions[executingRegion].Deserialize(stream);
         }
+#endif
 
-        private void OnRegionStart(string regionName) => executingDamnScriptRegions.Add(regionName);
+        private void OnRegionStart(string regionName) => ExecutingDamnScriptRegions.Add(regionName);
 
-        private void OnRegionEnd(string regionName) => executingDamnScriptRegions.Remove(regionName);
+        private void OnRegionEnd(string regionName) => ExecutingDamnScriptRegions.Remove(regionName);
     }   
 }
 #endif

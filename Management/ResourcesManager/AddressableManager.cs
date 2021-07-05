@@ -1,5 +1,6 @@
 #if ENABLE_ADDRESSABLE && UNITY_2020
 using System.Threading.Tasks;
+using Rietmon.Behaviours;
 using Rietmon.Game;
 using UnityEngine;
 using UnityEngine.AddressableAssets;

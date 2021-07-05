@@ -6,11 +6,16 @@ using Cysharp.Threading.Tasks;
 #else
 using System.Threading.Tasks;
 #endif
+#if ENABLE_SERIALIZATION
 using Rietmon.Serialization;
+#endif
 
 namespace Rietmon.DS
 {
-    public class DamnScriptRegion : ISerializable
+    public class DamnScriptRegion 
+#if ENABLE_SERIALIZATION
+        : ISerializable
+#endif
     {
         public DamnScript Parent { get; }
 
@@ -69,6 +74,8 @@ namespace Rietmon.DS
             stopExecuting = true;
         }
 
+        
+#if ENABLE_SERIALIZATION
         public void Serialize(SerializationStream stream)
         {
             stream.Write(CurrentMethod);
@@ -78,6 +85,7 @@ namespace Rietmon.DS
         {
             CurrentMethod = stream.Read<int>();
         }
+#endif
     }   
 }
 #endif
