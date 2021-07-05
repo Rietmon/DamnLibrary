@@ -4,7 +4,9 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Text;
+#if UNITY_2020
 using UnityEngine;
+#endif
 
 namespace Rietmon.Serialization
 {
@@ -50,12 +52,16 @@ namespace Rietmon.Serialization
                 case double d: WriteDouble(d); break;
                 case long l: WriteLong(l); break;
                 case string s: WriteString(s); break;
+#if UNITY_2020
                 case Vector2 v: WriteVector2(v); break;
                 case Vector3 v: WriteVector3(v); break;
                 case Quaternion q: WriteQuaternion(q); break;
+#endif
                 case Array a: WriteArray(a); break;
                 case IList l: WriteList(l); break;
+#if UNITY_2020
                 default: Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}"); break;
+#endif
             }
         }
 
@@ -99,7 +105,8 @@ namespace Rietmon.Serialization
             WriteShort((short)value.Length);
             WriteToStream(Encoding.UTF8.GetBytes(value));
         }
-
+        
+#if UNITY_2020
         private void WriteVector2(Vector2 value)
         {
             WriteFloat(value.x);
@@ -120,6 +127,7 @@ namespace Rietmon.Serialization
             WriteFloat(value.z);
             WriteFloat(value.w);
         }
+#endif
 
         private void WriteArray(Array value)
         {
@@ -146,14 +154,18 @@ namespace Rietmon.Serialization
             if (type == typeof(float)) return ReadFloat();
             if (type == typeof(double)) return ReadDouble();
             if (type == typeof(long)) return ReadLong();
+#if UNITY_2020
             if (type == typeof(Vector2)) return ReadVector2();
             if (type == typeof(Vector3)) return ReadVector3();
             if (type == typeof(Quaternion)) return ReadQuaternion();
+#endif
             if (type.IsArray) return ReadArray(type);
             if (typeof(IList).IsAssignableFrom(type)) return ReadList(type);
             if (type == typeof(string)) return ReadString();
 
+#if UNITY_2020
             Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {type}");
+#endif
             return default;
         }
 
@@ -200,6 +212,7 @@ namespace Rietmon.Serialization
             return Encoding.UTF8.GetString(ReadFromStream(length));
         }
 
+#if UNITY_2020
         private Vector2 ReadVector2()
         {
             return new Vector2
@@ -229,6 +242,7 @@ namespace Rietmon.Serialization
                 w = ReadFloat()
             };
         }
+#endif
 
         private Array ReadArray(Type type)
         {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-#if ENABLE_DAMN_SCRIPT
+#if UNITY_2020 && ENABLE_DAMN_SCRIPT
 using Rietmon.DS;
 #endif
 using Rietmon.Extensions;
@@ -9,7 +9,7 @@ using Rietmon.Serialization;
 
 namespace Rietmon.Game
 {
-#if ENABLE_DAMN_SCRIPT
+#if UNITY_2020 && ENABLE_DAMN_SCRIPT
     [DamnScriptable]
 #endif
     public static class Infoportions
@@ -28,7 +28,7 @@ namespace Rietmon.Game
 
         public static void RemoveInfoportion(string name) => infoportions.Remove(name);
 
-#if ENABLE_DAMN_SCRIPT
+#if UNITY_2020 && ENABLE_DAMN_SCRIPT
         private static void RegisterDamnScriptMethods()
         {
             DamnScriptEngine.RegisterMethod("HasInfoportion", async (code, arguments) =>

@@ -1,19 +1,26 @@
 ﻿#if ENABLE_SERIALIZATION
 using System;
 using System.Collections.Generic;
-using Rietmon.Behaviours;
 using Rietmon.Extensions;
+#if UNITY_2020
+using Rietmon.Behaviours;
 using Rietmon.Management;
 using UnityEditor;
 using UnityEngine;
+#endif
 
 namespace Rietmon.Serialization
 {
-    public class Serialization : UnityBehaviour
+    public class Serialization 
+#if UNITY_2020
+        : UnityBehaviour
+#endif
     {
         public const short Version = 1;
         
+#if UNITY_2020
         public static Serialization Instance { get; private set; }
+#endif
 
         private static readonly Dictionary<short, Type> serializableStaticTypes = new Dictionary<short, Type>();
     
@@ -21,10 +28,12 @@ namespace Rietmon.Serialization
         [SerializeField] private SerializableObject[] serializableObjects;
         #endif
 
+#if UNITY_2020
         private void OnEnable()
         {
             Instance = this;
         }
+#endif
 
         public static void Initialize()
         {
@@ -149,7 +158,9 @@ namespace Rietmon.Serialization
                 var serializedBytes = stream.Read<byte[]>();
                 if (!serializableStaticTypes.TryGetValue(id, out var targetType))
                 {
+#if UNITY_2020
                     Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to find component with id {id}");
+#endif
                     continue;
                 }
 
