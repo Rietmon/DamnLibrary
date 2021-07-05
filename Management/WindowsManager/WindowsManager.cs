@@ -1,3 +1,4 @@
+#if UNITY_2020
 using System.Collections.Generic;
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
@@ -86,3 +87,4 @@ public class WindowsManager : SingletonBehaviour<WindowsManager>
         window.DestroyObject();
     }
 }
+#endif

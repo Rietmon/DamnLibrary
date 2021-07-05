@@ -1,3 +1,4 @@
+#if UNITY_2020
 using System.Collections.Generic;
 using System.Linq;
 using Rietmon.Behaviours;
@@ -59,3 +60,4 @@ public class ColliderSorting : UnityBehaviour
         LevelChanger = 255,
     }
 }
+#endif

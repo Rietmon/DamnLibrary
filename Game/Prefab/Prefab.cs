@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_2020
+using System;
 using Rietmon.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -74,3 +75,4 @@ namespace Rietmon.Game
         public static implicit operator bool(Prefab<T> prefab) => prefab != null;
     }
 }
+#endif

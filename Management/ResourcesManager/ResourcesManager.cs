@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿#if UNITY_2020
+using System.Threading.Tasks;
 using Rietmon.Extensions;
 using Rietmon.Game;
 using UnityEngine;
@@ -6,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Rietmon.Management
 {
-    public class ResourcesManager
+    public static class ResourcesManager
     {
         private const string PathToDataWindows = "Prefabs/Windows/{0}";
         
@@ -32,3 +33,4 @@ namespace Rietmon.Management
         }
     }
 }
+#endif

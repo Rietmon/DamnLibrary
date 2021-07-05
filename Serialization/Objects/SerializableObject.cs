@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if ENABLE_SERIALIZATION && UNITY_2020
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Rietmon.Serialization
@@ -57,3 +58,4 @@ namespace Rietmon.Serialization
         }
     }
 }
+#endif

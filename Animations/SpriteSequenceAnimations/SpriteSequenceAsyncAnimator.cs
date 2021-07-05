@@ -1,3 +1,4 @@
+#if UNITY_2020
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
 #else
@@ -6,55 +7,57 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Rietmon.Extensions;
 
-public class SpriteSequenceAsyncAnimator : ISpriteSequenceAnimator
+namespace Rietmon.Animations
 {
-    public bool IsPlaying
+    public class SpriteSequenceAsyncAnimator : ISpriteSequenceAnimator
     {
-        get => isPlaying;
-        set
+        public bool IsPlaying
         {
-            if (isPlaying == value)
-                return;
+            get => isPlaying;
+            set
+            {
+                if (isPlaying == value)
+                    return;
 
-            isPlaying = value;
-            if (value)
-                Handler(-1);
-            else
-                needToStopAnimation = true;
+                isPlaying = value;
+                if (value)
+                    Handler(-1);
+                else
+                    needToStopAnimation = true;
+            }
         }
-    }
 
-    public bool IsPaused { get; set; }
+        public bool IsPaused { get; set; }
 
-    public float FrameDuration { get; set; }
-    
-    public SpriteSequenceAnimationType AnimationType { get; set; }
-    
-    public SpriteRenderer SpriteRenderer { get; set; }
+        public float FrameDuration { get; set; }
 
-    public Sprite[] SpritesSequence { get; set; }
-    
-    public int CurrentFrameIndex { get; set; }
+        public SpriteSequenceAnimationType AnimationType { get; set; }
 
-    private int currentAnimationDirection = 1;
+        public SpriteRenderer SpriteRenderer { get; set; }
 
-    private bool needToContinueAnimation;
+        public Sprite[] SpritesSequence { get; set; }
 
-    private bool needToStopAnimation;
+        public int CurrentFrameIndex { get; set; }
 
-    private bool isPlaying;
+        private int currentAnimationDirection = 1;
 
-    public SpriteSequenceAsyncAnimator(bool startPlaying = true)
-    {
-        IsPlaying = startPlaying;
-    }
+        private bool needToContinueAnimation;
 
-    public void ForceSkipFrame() => needToContinueAnimation = true;
+        private bool needToStopAnimation;
 
-    private async void Handler(float animationDuration)
-    {
-        if (animationDuration != -1)
+        private bool isPlaying;
+
+        public SpriteSequenceAsyncAnimator(bool startPlaying = true)
         {
+            IsPlaying = startPlaying;
+        }
+
+        public void ForceSkipFrame() => needToContinueAnimation = true;
+
+        private async void Handler(float animationDuration)
+        {
+            if (animationDuration != -1)
+            {
 #if ENABLE_UNI_TASK
             UniTask.Run(async () =>
             {
@@ -62,103 +65,105 @@ public class SpriteSequenceAsyncAnimator : ISpriteSequenceAnimator
                 IsPlaying = false;
             });
 #else
-            Task.Run(async () =>
-            {
-                await Task.Delay((int)(animationDuration * 1000));
-                IsPlaying = false;
-            });
+                Task.Run(async () =>
+                {
+                    await Task.Delay((int)(animationDuration * 1000));
+                    IsPlaying = false;
+                });
 #endif
-        }
+            }
 
-        while (!needToStopAnimation)
-        {
-            needToContinueAnimation = false;
-            
-            if (SpriteRenderer == null || SpritesSequence == null || SpritesSequence.Length == 0 || IsPaused)
+            while (!needToStopAnimation)
             {
+                needToContinueAnimation = false;
+
+                if (SpriteRenderer == null || SpritesSequence == null || SpritesSequence.Length == 0 || IsPaused)
+                {
 #if ENABLE_UNI_TASK
                 await UniTask.WhenAny(UniTask.Yield(PlayerLoopTiming.Update).ToUniTask(), UniTask.WaitUntil(() => needToStopAnimation));
 #else
-                await Task.WhenAny(TaskUtilities.Yield(), TaskUtilities.WaitUntil(() => needToStopAnimation));
+                    await Task.WhenAny(TaskUtilities.Yield(), TaskUtilities.WaitUntil(() => needToStopAnimation));
 #endif
-                continue;
-            }
-            
-            CurrentFrameIndex = TryGetNextIndex();
-            SpriteRenderer.sprite = SpritesSequence[CurrentFrameIndex];
-            if (FrameDuration > 0)
-            {
+                    continue;
+                }
+
+                CurrentFrameIndex = TryGetNextIndex();
+                SpriteRenderer.sprite = SpritesSequence[CurrentFrameIndex];
+                if (FrameDuration > 0)
+                {
 #if ENABLE_UNI_TASK
                 await UniTask.WhenAny(UniTask.Delay((int)(FrameDuration * 1000)),
                     UniTask.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
 #else
-                await Task.WhenAny(Task.Delay((int)(FrameDuration * 1000)),
-                    TaskUtilities.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
+                    await Task.WhenAny(Task.Delay((int)(FrameDuration * 1000)),
+                        TaskUtilities.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
 #endif
-            }
-            else
-            {
+                }
+                else
+                {
 #if ENABLE_UNI_TASK
                 await UniTask.WhenAny(UniTask.Yield(PlayerLoopTiming.Update).ToUniTask(),
                     UniTask.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
 #else
-                await Task.WhenAny(TaskUtilities.Yield(),
-                    TaskUtilities.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
+                    await Task.WhenAny(TaskUtilities.Yield(),
+                        TaskUtilities.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
 #endif
+                }
             }
+
+            needToStopAnimation = false;
         }
 
-        needToStopAnimation = false;
-    }
-
-    private int TryGetNextIndex()
-    {
-        switch (AnimationType)
+        private int TryGetNextIndex()
         {
-            case SpriteSequenceAnimationType.OneFrame:
-                return CurrentFrameIndex;
-            case SpriteSequenceAnimationType.ForwardAndRepeat:
+            switch (AnimationType)
             {
-                CurrentFrameIndex++;
-                if (CurrentFrameIndex >= SpritesSequence.Length)
-                    CurrentFrameIndex = 0;
-        
-                return CurrentFrameIndex;
-            }
-            case SpriteSequenceAnimationType.ForwardAndBackward:
-            {
-                if (currentAnimationDirection == 1)
+                case SpriteSequenceAnimationType.OneFrame:
+                    return CurrentFrameIndex;
+                case SpriteSequenceAnimationType.ForwardAndRepeat:
                 {
                     CurrentFrameIndex++;
                     if (CurrentFrameIndex >= SpritesSequence.Length)
-                    {
-                        CurrentFrameIndex -= 2;
-                        currentAnimationDirection = -1;
-                    }
-        
+                        CurrentFrameIndex = 0;
+
                     return CurrentFrameIndex;
                 }
-                else
+                case SpriteSequenceAnimationType.ForwardAndBackward:
                 {
-                    CurrentFrameIndex--;
-                    if (CurrentFrameIndex <= -1)
+                    if (currentAnimationDirection == 1)
                     {
-                        CurrentFrameIndex += 2;
-                        currentAnimationDirection = 1;
+                        CurrentFrameIndex++;
+                        if (CurrentFrameIndex >= SpritesSequence.Length)
+                        {
+                            CurrentFrameIndex -= 2;
+                            currentAnimationDirection = -1;
+                        }
+
+                        return CurrentFrameIndex;
                     }
-        
-                    return CurrentFrameIndex;
+                    else
+                    {
+                        CurrentFrameIndex--;
+                        if (CurrentFrameIndex <= -1)
+                        {
+                            CurrentFrameIndex += 2;
+                            currentAnimationDirection = 1;
+                        }
+
+                        return CurrentFrameIndex;
+                    }
                 }
+                default:
+                    return 0;
             }
-            default:
-                return 0;
+        }
+
+        public void Dispose()
+        {
+            SpriteRenderer = null;
+            needToStopAnimation = true;
+            SpritesSequence = null;
         }
     }
-
-    public void Dispose()
-    {
-        SpriteRenderer = null;
-        needToStopAnimation = true;
-        SpritesSequence = null;
-    }
 }
+#endif

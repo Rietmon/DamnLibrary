@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_2020 && ENABLE_DAMN_SCRIPT
+using System;
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
 #else
@@ -48,3 +49,4 @@ namespace Rietmon.DS
             new DamnScriptNativeMethod(function);
     } 
 }
+#endif

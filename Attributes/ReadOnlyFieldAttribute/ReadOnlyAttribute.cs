@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_2020
+using UnityEngine;
 
 namespace Rietmon.Attributes
 {
@@ -7,3 +8,4 @@ namespace Rietmon.Attributes
  
     }
 }
+#endif

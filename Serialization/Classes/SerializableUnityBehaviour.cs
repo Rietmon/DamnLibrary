@@ -1,5 +1,7 @@
+#if ENABLE_SERIALIZATION && UNITY_2020
 using Rietmon.Attributes;
 using Rietmon.Behaviours;
+using Rietmon.Extensions;
 using Rietmon.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -44,3 +46,4 @@ public abstract class SerializableUnityBehaviour : UnityBehaviour, ISerializable
     }
 #endif
 }
+#endif

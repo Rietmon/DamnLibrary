@@ -1,15 +1,18 @@
 using System;
 using System.Linq;
 
-public static class EnumUtils
+namespace Rietmon.Extensions
 {
-    public static T Min<T>() where T : Enum
+    public static class EnumUtils
     {
-        return Enum.GetValues(typeof(T)).Cast<T>().Min();
-    }
-    
-    public static T Max<T>() where T : Enum
-    {
-        return Enum.GetValues(typeof(T)).Cast<T>().Max();
+        public static T Min<T>() where T : Enum
+        {
+            return Enum.GetValues(typeof(T)).Cast<T>().Min();
+        }
+
+        public static T Max<T>() where T : Enum
+        {
+            return Enum.GetValues(typeof(T)).Cast<T>().Max();
+        }
     }
 }

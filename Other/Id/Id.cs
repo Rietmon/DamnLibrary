@@ -123,6 +123,7 @@ public struct Id
         }
     }
 
+#if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(Id), true)]
     private class Internal_IdPropertyDrawer : PropertyDrawer
     {
@@ -148,4 +149,5 @@ public struct Id
             GUI.enabled = true;
         }
     }
+#endif
 }

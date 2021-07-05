@@ -1,3 +1,4 @@
+#if UNITY_2020
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
 #else
@@ -37,3 +38,4 @@ public abstract class WindowBehaviour : UnityBehaviour
         return defaultValue;
     }
 }
+#endif

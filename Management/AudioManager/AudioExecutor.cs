@@ -1,3 +1,4 @@
+#if UNITY_2020
 using System;
 
 public class AudioExecutor
@@ -28,3 +29,4 @@ public class AudioExecutor
 
     public void Stop() => stopMethod?.Invoke();
 }
+#endif

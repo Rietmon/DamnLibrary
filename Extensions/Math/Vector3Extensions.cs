@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_2020
+using UnityEngine;
 
 namespace Rietmon.Extensions
 {
@@ -16,3 +17,4 @@ namespace Rietmon.Extensions
         public static Vector3 Add(this Vector3 vector, float x = 0, float y = 0, float z = 0) => vector + new Vector3(x, y, z);
     }
 }
+#endif

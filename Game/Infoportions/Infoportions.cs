@@ -32,6 +32,7 @@ namespace Rietmon.Game
             infoportions = stream.Read<List<string>>();
         }
 
+#if ENABLE_DAMN_SCRIPT
         private static void RegisterDamnScriptMethods()
         {
             DamnScriptEngine.RegisterMethod("HasInfoportion", async (code, arguments) =>
@@ -76,5 +77,6 @@ namespace Rietmon.Game
                 return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
         }
+#endif
     }
 }

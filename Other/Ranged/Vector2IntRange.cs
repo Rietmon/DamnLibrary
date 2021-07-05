@@ -1,3 +1,4 @@
+#if UNITY_2020
 using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -29,3 +30,4 @@ public struct Vector2IntRange : IRanged<Vector2Int>
         maximalValue = max;
     }
 }
+#endif

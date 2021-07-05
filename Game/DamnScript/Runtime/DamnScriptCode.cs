@@ -1,4 +1,5 @@
-﻿#if ENABLE_UNI_TASK
+﻿#if UNITY_2020 && ENABLE_DAMN_SCRIPT
+#if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
 #else
 using System.Threading.Tasks;
@@ -31,3 +32,4 @@ namespace Rietmon.DS
     }
   
 }
+#endif

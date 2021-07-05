@@ -3,33 +3,36 @@ using System.Reflection;
 using Rietmon.DS;
 using UnityEngine;
 
-public static class TypeExtensions
+namespace Rietmon.Extensions
 {
-    public static void SafeInvokeStaticMethod(this Type type, string methodName, params object[] arguments)
+    public static class TypeExtensions
     {
-        var methodInfo = type.GetMethod(methodName,
-            BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);
-        if (methodInfo == null)
+        public static void SafeInvokeStaticMethod(this Type type, string methodName, params object[] arguments)
         {
-            Debug.LogWarning(
-                $"[{nameof(DamnScriptEngine)}] ({nameof(SafeInvokeStaticMethod)}) Unable to find static method \"{methodName}\" in type {type.FullName}!");
-            return;
+            var methodInfo = type.GetMethod(methodName,
+                BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);
+            if (methodInfo == null)
+            {
+                Debug.LogWarning(
+                    $"[{nameof(DamnScriptEngine)}] ({nameof(SafeInvokeStaticMethod)}) Unable to find static method \"{methodName}\" in type {type.FullName}!");
+                return;
+            }
+
+            methodInfo.Invoke(null, arguments);
         }
 
-        methodInfo.Invoke(null, arguments);
-    }
-    
-    public static void SafeInvokeMethod(this Type type, object owner, string methodName, params object[] arguments)
-    {
-        var methodInfo = type.GetMethod(methodName,
-            BindingFlags.Public | BindingFlags.NonPublic);
-        if (methodInfo == null)
+        public static void SafeInvokeMethod(this Type type, object owner, string methodName, params object[] arguments)
         {
-            Debug.LogWarning(
-                $"[{nameof(DamnScriptEngine)}] ({nameof(SafeInvokeMethod)}) Unable to find method \"{methodName}\" in type {type.FullName}!");
-            return;
-        }
+            var methodInfo = type.GetMethod(methodName,
+                BindingFlags.Public | BindingFlags.NonPublic);
+            if (methodInfo == null)
+            {
+                Debug.LogWarning(
+                    $"[{nameof(DamnScriptEngine)}] ({nameof(SafeInvokeMethod)}) Unable to find method \"{methodName}\" in type {type.FullName}!");
+                return;
+            }
 
-        methodInfo.Invoke(owner, arguments);
+            methodInfo.Invoke(owner, arguments);
+        }
     }
 }

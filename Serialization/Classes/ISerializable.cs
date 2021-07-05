@@ -1,4 +1,5 @@
-﻿namespace Rietmon.Serialization
+﻿#if ENABLE_SERIALIZATION
+namespace Rietmon.Serialization
 {
     public interface ISerializable
     {
@@ -6,3 +7,4 @@
         void Deserialize(SerializationStream stream);
     }
 }
+#endif

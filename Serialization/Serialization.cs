@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_SERIALIZATION
+using System;
 using System.Collections.Generic;
 using Rietmon.Behaviours;
 using Rietmon.Extensions;
@@ -16,7 +17,9 @@ namespace Rietmon.Serialization
 
         private static readonly Dictionary<short, Type> serializableStaticTypes = new Dictionary<short, Type>();
     
+        #if UNITY_2020
         [SerializeField] private SerializableObject[] serializableObjects;
+        #endif
 
         private void OnEnable()
         {
@@ -48,6 +51,7 @@ namespace Rietmon.Serialization
             return stream;
         }
 
+#if UNITY_2020
         public static byte[] SerializeComponents(SerializationStream stream = null)
         {
             if (Instance == null)
@@ -82,7 +86,9 @@ namespace Rietmon.Serialization
             
             return stream.ToArray();
         }
+#endif
 
+#if UNITY_2020
         public static void DeserializeComponents(byte[] bytes, SerializationStream stream = null)
         {
             if (Instance == null)
@@ -121,7 +127,8 @@ namespace Rietmon.Serialization
                 component.Deserialize(stream.CreateDeserializationSubStream(componentBytes));
             }
         }
-
+#endif
+        
         public static byte[] SerializeStaticTypes(SerializationStream stream = null)
         {
             stream ??= CreateSerializationStream();
@@ -166,3 +173,4 @@ namespace Rietmon.Serialization
 #endif
     }
 }
+#endif

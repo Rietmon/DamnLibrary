@@ -1,7 +1,12 @@
-public enum SpriteSequenceAnimationType : byte
+#if UNITY_2020
+namespace Rietmon.Animations
 {
-    None,
-    OneFrame,
-    ForwardAndRepeat,
-    ForwardAndBackward
+    public enum SpriteSequenceAnimationType : byte
+    {
+        None,
+        OneFrame,
+        ForwardAndRepeat,
+        ForwardAndBackward
+    }
 }
+#endif

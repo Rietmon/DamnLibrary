@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Rietmon.Mathematics
 {
@@ -27,7 +28,11 @@ namespace Rietmon.Mathematics
 
         private static bool IsAngleLess(float angle, float min, float max)
         {
-            float center = Mathf.Abs(max - min + 180);
+#if UNITY_2020
+            var center = Mathf.Abs(max - min + 180);
+#else
+            var center = Math.Abs(max - min + 180);
+#endif
         
             if (center < min)
                 return !IsAngleBetween(angle, center, min);

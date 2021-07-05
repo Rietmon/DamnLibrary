@@ -1,3 +1,4 @@
+#if UNITY_2020
 using System;
 using System.Threading.Tasks;
 #if ENABLE_UNI_TASK
@@ -79,3 +80,4 @@ public class AudioManager : SingletonBehaviour<AudioManager>
         });
     }
 }
+#endif

@@ -2,7 +2,9 @@ using System.IO;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+#if UNITY_2020
 using UnityEngine;
+#endif
 
 namespace Rietmon.IO
 {

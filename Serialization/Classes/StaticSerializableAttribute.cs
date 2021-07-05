@@ -1,3 +1,4 @@
+#if ENABLE_SERIALIZATION
 using System;
 
 namespace Rietmon.Serialization
@@ -12,3 +13,4 @@ namespace Rietmon.Serialization
         }
     }
 }
+#endif

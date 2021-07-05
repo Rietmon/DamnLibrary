@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_2020 && ENABLE_DAMN_SCRIPT
+using System;
 using System.Collections.Generic;
 using System.Linq;
 #if ENABLE_UNI_TASK
@@ -212,3 +213,4 @@ namespace Rietmon.DS
         }
     }
 }
+#endif

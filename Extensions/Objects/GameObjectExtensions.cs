@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_2020
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,3 +36,4 @@ namespace Rietmon.Extensions
         }
     }
 }
+#endif

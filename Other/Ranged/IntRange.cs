@@ -19,9 +19,15 @@ public struct IntRange : IRanged<int>
 
     public int RandomValue => Random.Range(MinimalValue, MaximalValue);
 
-    [SerializeField] private int minimalValue;
+#if UNITY_2020
+    [SerializeField] 
+#endif
+    private int minimalValue;
 
-    [SerializeField] private int maximalValue;
+#if UNITY_2020
+    [SerializeField] 
+#endif
+    private int maximalValue;
 
     public IntRange(int min, int max)
     {

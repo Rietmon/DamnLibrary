@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_2020
+using UnityEngine;
 
 namespace Rietmon.Extensions
 {
@@ -18,3 +19,4 @@ namespace Rietmon.Extensions
         }
     }
 }
+#endif

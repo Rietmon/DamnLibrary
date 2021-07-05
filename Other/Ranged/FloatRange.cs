@@ -18,10 +18,16 @@ public struct FloatRange : IRanged<float>
     }
 
     public float RandomValue => Random.Range(MinimalValue, MaximalValue);
+    
+#if UNITY_2020
+    [SerializeField] 
+#endif
+    private float minimalValue;
 
-    [SerializeField] private float minimalValue;
-
-    [SerializeField] private float maximalValue;
+#if UNITY_2020
+    [SerializeField] 
+#endif
+    private float maximalValue;
 
     public FloatRange(float min, float max)
     {

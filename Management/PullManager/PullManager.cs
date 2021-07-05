@@ -1,3 +1,4 @@
+#if UNITY_2020
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,3 +104,4 @@ public class PullManager<T> : IDisposable where T : Object
             Object.Destroy(obj);
     }
 }
+#endif

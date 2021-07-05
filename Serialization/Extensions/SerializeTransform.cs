@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_SERIALIZATION && UNITY_2020
+using System;
 using Rietmon.Serialization;
 using UnityEngine;
 
@@ -42,3 +43,4 @@ public class SerializeTransform : SerializableUnityBehaviour
         Scale = 4
     }
 }
+#endif

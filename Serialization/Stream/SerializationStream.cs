@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_SERIALIZATION
+using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
@@ -269,3 +270,4 @@ namespace Rietmon.Serialization
         }
     }
 }
+#endif

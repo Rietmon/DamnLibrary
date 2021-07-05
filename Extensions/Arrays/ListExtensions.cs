@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
 
-public static class ListExtensions
+namespace Rietmon.Extensions
 {
-    public static void AddIfNotContains<T>(this List<T> array, T element)
+    public static class ListExtensions
     {
-        if (!array.Contains(element))
-            array.Add(element);
-    }
-    
-    public static void AddIfNotExists<T>(this List<T> array, T element, Predicate<T> existMethod)
-    {
-        if (!array.Exists(existMethod))
-            array.Add(element);
+        public static void AddIfNotContains<T>(this List<T> array, T element)
+        {
+            if (!array.Contains(element))
+                array.Add(element);
+        }
+
+        public static void AddIfNotExists<T>(this List<T> array, T element, Predicate<T> existMethod)
+        {
+            if (!array.Exists(existMethod))
+                array.Add(element);
+        }
     }
 }

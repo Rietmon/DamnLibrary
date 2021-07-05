@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_2020 && ENABLE_DAMN_SCRIPT
+using System.Collections.Generic;
 using Rietmon.Serialization;
 using UnityEngine;
 
@@ -72,3 +73,4 @@ namespace Rietmon.DS
         private void OnRegionEnd(string regionName) => executingDamnScriptRegions.Remove(regionName);
     }   
 }
+#endif

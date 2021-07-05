@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_2020
+using System;
 using System.Collections.Generic;
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
@@ -73,3 +74,4 @@ namespace Rietmon.Management
 #endif
     }
 }
+#endif

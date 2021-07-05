@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_2020
+using UnityEditor;
 using UnityEngine;
 
 namespace Rietmon.Attributes
@@ -16,3 +17,4 @@ namespace Rietmon.Attributes
         }
     }
 }
+#endif

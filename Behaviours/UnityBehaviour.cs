@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_2020
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -58,3 +59,4 @@ namespace Rietmon.Behaviours
         protected virtual void OnDestroy() { }
     }
 }
+#endif

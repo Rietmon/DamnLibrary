@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_SERIALIZATION && UNITY_2020
+using System;
 using Rietmon.Extensions;
 using Rietmon.Serialization;
 using UnityEngine;
@@ -53,3 +54,4 @@ public class SerializeGameObject : SerializableUnityBehaviour
         ActiveSelf = 1
     }
 }
+#endif

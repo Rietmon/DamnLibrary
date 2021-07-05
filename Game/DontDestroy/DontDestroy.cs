@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_2020
+using System.Collections.Generic;
 using Rietmon.Attributes;
 using Rietmon.Behaviours;
+using Rietmon.Extensions;
 using UnityEngine;
-#if UNITY_EDITOR
-
-#endif
 
 namespace Rietmon.Game
 {
@@ -37,3 +36,4 @@ namespace Rietmon.Game
 #endif
     }
 }
+#endif

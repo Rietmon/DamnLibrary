@@ -3,76 +3,85 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-public static class AssemblyUtilities
+namespace Rietmon.Extensions
 {
-    private static readonly string[] mainAssemblyNames =
+    public static class AssemblyUtilities
     {
-        "Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-        "Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-    };
-
-    public static Assembly[] MainAssemblies => mainAssemblies ??= GetAssemblies(mainAssemblyNames).ToArray();
-
-    private static Assembly[] mainAssemblies;
-    
-    public static IEnumerable<Assembly> GetAssemblies(params string[] names)
-    {
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        foreach (var assembly in assemblies)
+        private static readonly string[] mainAssemblyNames =
         {
-            if (names.Contains(assembly.GetName().FullName))
-                yield return assembly;
-        }
-    }
-    
-    public static IEnumerable<Type> GetAllAttributeInheritsFromAllAssemblies<T>()
-    {
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        foreach (var assembly in assemblies)
+#if UNITY_2020
+            "Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+#endif
+        };
+
+        public static Assembly[] MainAssemblies => mainAssemblies ??= GetAssemblies(mainAssemblyNames).ToArray();
+
+        private static Assembly[] mainAssemblies;
+
+        public static IEnumerable<Assembly> GetAssemblies(params string[] names)
         {
-            var types = assembly.GetTypes();
-            foreach (var type in types)
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
             {
-                if (type.GetCustomAttributes(typeof(T), true).Length > 0)
-                    yield return type;
+                if (names.Contains(assembly.GetName().FullName))
+                    yield return assembly;
             }
         }
-    }
 
-    public static IEnumerable<Type> GetAllAttributeInherits<T>(params string[] assemblyNames)
-    {
-        var assemblies = assemblyNames != null && assemblyNames.Length > 0 ? AppDomain.CurrentDomain.GetAssemblies() : MainAssemblies;
-        foreach (var assembly in assemblies)
+        public static IEnumerable<Type> GetAllAttributeInheritsFromAllAssemblies<T>()
         {
-            var types = assembly.GetTypes();
-            foreach (var type in types)
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
             {
-                if (type.GetCustomAttributes(typeof(T), true).Length > 0)
-                    yield return type;
+                var types = assembly.GetTypes();
+                foreach (var type in types)
+                {
+                    if (type.GetCustomAttributes(typeof(T), true).Length > 0)
+                        yield return type;
+                }
             }
         }
-    }
 
-    public static IEnumerable<Type> GetAllInheritsFromAllAssemblies<T>()
-    {
-        var types = Assembly.GetExecutingAssembly().GetTypes();
-        foreach (var type in types)
+        public static IEnumerable<Type> GetAllAttributeInherits<T>(params string[] assemblyNames)
         {
-            if (type.IsSubclassOf(typeof(T)))
-                yield return type;
+            var assemblies = assemblyNames != null && assemblyNames.Length > 0
+                ? AppDomain.CurrentDomain.GetAssemblies()
+                : MainAssemblies;
+            foreach (var assembly in assemblies)
+            {
+                var types = assembly.GetTypes();
+                foreach (var type in types)
+                {
+                    if (type.GetCustomAttributes(typeof(T), true).Length > 0)
+                        yield return type;
+                }
+            }
         }
-    }
-    
-    public static IEnumerable<Type> GetAllInheritsFrom<T>(params string[] assemblyNames)
-    {
-        var assemblies = assemblyNames != null && assemblyNames.Length > 0 ? AppDomain.CurrentDomain.GetAssemblies() : MainAssemblies;
-        foreach (var assembly in assemblies)
+
+        public static IEnumerable<Type> GetAllInheritsFromAllAssemblies<T>()
         {
-            var types = assembly.GetTypes();
+            var types = Assembly.GetExecutingAssembly().GetTypes();
             foreach (var type in types)
             {
                 if (type.IsSubclassOf(typeof(T)))
                     yield return type;
+            }
+        }
+
+        public static IEnumerable<Type> GetAllInheritsFrom<T>(params string[] assemblyNames)
+        {
+            var assemblies = assemblyNames != null && assemblyNames.Length > 0
+                ? AppDomain.CurrentDomain.GetAssemblies()
+                : MainAssemblies;
+            foreach (var assembly in assemblies)
+            {
+                var types = assembly.GetTypes();
+                foreach (var type in types)
+                {
+                    if (type.IsSubclassOf(typeof(T)))
+                        yield return type;
+                }
             }
         }
     }

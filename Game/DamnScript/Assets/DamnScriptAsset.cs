@@ -1,3 +1,4 @@
+#if UNITY_2020 && ENABLE_DAMN_SCRIPT
 using UnityEngine;
 
 namespace Rietmon.DS
@@ -13,3 +14,4 @@ namespace Rietmon.DS
         [SerializeField] private string content;
     }
 }
+#endif

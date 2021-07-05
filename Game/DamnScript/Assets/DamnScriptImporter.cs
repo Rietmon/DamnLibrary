@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+#if UNITY_EDITOR && ENABLE_DAMN_SCRIPT
 using System.IO;
 using Rietmon.IO;
 using UnityEditor;
