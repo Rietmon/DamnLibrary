@@ -1,5 +1,7 @@
 ﻿using System;
+#if UNITY_2020
 using UnityEngine;
+#endif
 
 namespace Rietmon.Other
 {
@@ -17,10 +19,16 @@ namespace Rietmon.Other
             get => second;
             set => second = value;
         }
+        
+#if UNITY_2020
+        [SerializeField] 
+#endif
+        private T1 first;
 
-        [SerializeField] private T1 first;
-
-        [SerializeField] private T2 second;
+#if UNITY_2020
+        [SerializeField] 
+#endif
+        private T2 second;
         
         public Pair() { }
 

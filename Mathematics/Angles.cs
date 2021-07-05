@@ -1,5 +1,7 @@
 ﻿using System;
+#if UNITY_2020
 using UnityEngine;
+#endif
 
 namespace Rietmon.Mathematics
 {

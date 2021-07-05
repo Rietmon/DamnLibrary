@@ -1,5 +1,7 @@
 ﻿using System;
+#if UNITY_2020
 using UnityEngine;
+#endif
 
 namespace Rietmon.Linkers
 {
@@ -9,8 +11,11 @@ namespace Rietmon.Linkers
         public HierarchyLinkerContainer<T> Entry => entry;
 
         public T Current => current.Value;
-
-        [SerializeField] private HierarchyLinkerContainer<T> entry;
+        
+#if UNITY_2020
+        [SerializeField] 
+#endif
+        private HierarchyLinkerContainer<T> entry;
 
         private HierarchyLinkerContainer<T> current;
     

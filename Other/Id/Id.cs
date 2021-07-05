@@ -2,8 +2,12 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Rietmon.Extensions;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
+#if UNITY_2020
 using UnityEngine;
+#endif
 
 namespace Rietmon.Other
 {
@@ -29,7 +33,10 @@ namespace Rietmon.Other
             }
         }
 
-        [SerializeField] private Internal_Id internalId;
+#if UNITY_2020
+        [SerializeField]
+#endif
+        private Internal_Id internalId;
 
         public static Id Create8(byte value) => new Id
         {

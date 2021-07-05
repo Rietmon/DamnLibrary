@@ -1,6 +1,8 @@
 using System;
+using Rietmon.Extensions;
+#if UNITY_2020
 using UnityEngine;
-using Random = UnityEngine.Random;
+#endif
 
 namespace Rietmon.Other
 {
@@ -19,7 +21,7 @@ namespace Rietmon.Other
             set => maximalValue = value;
         }
 
-        public float RandomValue => Random.Range(MinimalValue, MaximalValue);
+        public float RandomValue => (float)RandomUtilities.Range(MinimalValue, MaximalValue);
 
 #if UNITY_2020
         [SerializeField]

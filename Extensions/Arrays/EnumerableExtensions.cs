@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if UNITY_2020
 using Object = UnityEngine.Object;
+#endif
 
 namespace Rietmon.Extensions
 {
@@ -20,14 +22,17 @@ namespace Rietmon.Extensions
         public static T Random<T>(this IEnumerable<T> array)
         {
             var enumerable = array as T[] ?? array.ToArray();
-            var randomIndex = UnityEngine.Random.Range(0, enumerable.Length);
+            var randomIndex = RandomUtilities.Range(0, enumerable.Length);
             return enumerable.ElementAtOrDefault(randomIndex);
         }
 
+        
+#if UNITY_2020
         public static T GetObjectByName<T>(this IEnumerable<T> array, string name) where T : Object
         {
             return array.FirstOrDefault(obj => obj.name == name);
         }
+#endif
 
         public static IEnumerable<TOut> SmartCast<TOut, TIn>(this IEnumerable<TIn> array, Func<TIn, TOut> castFunction) => 
             array.Select(castFunction.Invoke).ToList();

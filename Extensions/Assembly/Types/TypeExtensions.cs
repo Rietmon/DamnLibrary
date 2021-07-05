@@ -3,7 +3,9 @@ using System.Reflection;
 #if ENABLE_DAMN_SCRIPT
 using Rietmon.DS;
 #endif
+#if UNITY_2020
 using UnityEngine;
+#endif
 
 namespace Rietmon.Extensions
 {
@@ -15,8 +17,10 @@ namespace Rietmon.Extensions
                 BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);
             if (methodInfo == null)
             {
+#if UNITY_2020
                 Debug.LogWarning(
                     $"[{nameof(TypeExtensions)}] ({nameof(SafeInvokeStaticMethod)}) Unable to find static method \"{methodName}\" in type {type.FullName}!");
+#endif
                 return;
             }
 
@@ -29,8 +33,10 @@ namespace Rietmon.Extensions
                 BindingFlags.Public | BindingFlags.NonPublic);
             if (methodInfo == null)
             {
+#if UNITY_2020
                 Debug.LogWarning(
                     $"[{nameof(TypeExtensions)}] ({nameof(SafeInvokeMethod)}) Unable to find method \"{methodName}\" in type {type.FullName}!");
+#endif
                 return;
             }
 
