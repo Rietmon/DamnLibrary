@@ -7,13 +7,17 @@ using Cysharp.Threading.Tasks;
 #else
 #endif
 using Rietmon.Behaviours;
+#if ENABLE_DAMN_SCRIPT
 using Rietmon.DS;
+#endif
 using Rietmon.Extensions;
 using UnityEngine;
 
 namespace Rietmon.Management
 {
+#if ENABLE_DAMN_SCRIPT
     [DamnScriptable]
+#endif
     public class InputManager : UnityBehaviour
     {
         private static readonly Dictionary<KeyCode, List<Action<KeyCode>>> onKeyDownCallbacks =
@@ -123,6 +127,8 @@ namespace Rietmon.Management
 
         public static bool GetKeyUp(KeyCode code) => Input.GetKeyUp(code);
 
+        
+#if ENABLE_DAMN_SCRIPT
         private static void RegisterDamnScriptMethods()
         {
             DamnScriptEngine.RegisterMethod("OnKeyDown", async (code, arguments) =>
@@ -164,6 +170,7 @@ namespace Rietmon.Management
                 return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
         }
+#endif
     }
 }
 #endif

@@ -6,13 +6,17 @@ using Cysharp.Threading.Tasks;
 #else
 #endif
 using Rietmon.Behaviours;
+#if ENABLE_DAMN_SCRIPT
 using Rietmon.DS;
+#endif
 using Rietmon.Extensions;
 using UnityEngine;
 
 namespace Rietmon.Management
 {
+#if ENABLE_DAMN_SCRIPT
     [DamnScriptable]
+#endif
     public class AudioManager : SingletonBehaviour<AudioManager>
     {
         private const byte AudioSourcesPullCount = 16;
@@ -75,6 +79,7 @@ namespace Rietmon.Management
         {
         }
 
+#if ENABLE_DAMN_SCRIPT
         private static void RegisterDamnScriptMethods()
         {
             DamnScriptEngine.RegisterMethod("PlayAudio", async (code, arguments) =>
@@ -84,6 +89,7 @@ namespace Rietmon.Management
                 return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
         }
+#endif
     }
 }
 #endif

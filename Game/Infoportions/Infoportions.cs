@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
+#if ENABLE_DAMN_SCRIPT
 using Rietmon.DS;
+#endif
 using Rietmon.Extensions;
+#if ENABLE_SERIALIZATION
 using Rietmon.Serialization;
+#endif
 
 namespace Rietmon.Game
 {
-    [StaticSerializable(1), DamnScriptable]
+#if ENABLE_DAMN_SCRIPT
+    [DamnScriptable]
+#endif
     public static class Infoportions
     {
         private static List<string> infoportions = new List<string>();
@@ -21,16 +27,6 @@ namespace Rietmon.Game
         public static bool HasInfoportion(string name) => infoportions.Contains(name);
 
         public static void RemoveInfoportion(string name) => infoportions.Remove(name);
-
-        private static void Serialize(SerializationStream stream)
-        {
-            stream.Write(infoportions);
-        }
-
-        private static void Deserialize(SerializationStream stream)
-        {
-            infoportions = stream.Read<List<string>>();
-        }
 
 #if ENABLE_DAMN_SCRIPT
         private static void RegisterDamnScriptMethods()

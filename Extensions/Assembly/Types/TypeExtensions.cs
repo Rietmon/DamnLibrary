@@ -1,6 +1,8 @@
 using System;
 using System.Reflection;
+#if ENABLE_DAMN_SCRIPT
 using Rietmon.DS;
+#endif
 using UnityEngine;
 
 namespace Rietmon.Extensions
@@ -14,7 +16,7 @@ namespace Rietmon.Extensions
             if (methodInfo == null)
             {
                 Debug.LogWarning(
-                    $"[{nameof(DamnScriptEngine)}] ({nameof(SafeInvokeStaticMethod)}) Unable to find static method \"{methodName}\" in type {type.FullName}!");
+                    $"[{nameof(TypeExtensions)}] ({nameof(SafeInvokeStaticMethod)}) Unable to find static method \"{methodName}\" in type {type.FullName}!");
                 return;
             }
 
@@ -28,7 +30,7 @@ namespace Rietmon.Extensions
             if (methodInfo == null)
             {
                 Debug.LogWarning(
-                    $"[{nameof(DamnScriptEngine)}] ({nameof(SafeInvokeMethod)}) Unable to find method \"{methodName}\" in type {type.FullName}!");
+                    $"[{nameof(TypeExtensions)}] ({nameof(SafeInvokeMethod)}) Unable to find method \"{methodName}\" in type {type.FullName}!");
                 return;
             }
 
