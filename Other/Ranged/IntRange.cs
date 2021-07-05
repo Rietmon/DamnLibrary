@@ -2,36 +2,39 @@ using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[Serializable]
-public struct IntRange : IRanged<int>
+namespace Rietmon.Other
 {
-    public int MinimalValue
+    [Serializable]
+    public struct IntRange : IRanged<int>
     {
-        get => minimalValue;
-        set => minimalValue = value;
-    }
+        public int MinimalValue
+        {
+            get => minimalValue;
+            set => minimalValue = value;
+        }
 
-    public int MaximalValue
-    {
-        get => maximalValue;
-        set => maximalValue = value;
-    }
+        public int MaximalValue
+        {
+            get => maximalValue;
+            set => maximalValue = value;
+        }
 
-    public int RandomValue => Random.Range(MinimalValue, MaximalValue);
+        public int RandomValue => Random.Range(MinimalValue, MaximalValue);
 
 #if UNITY_2020
-    [SerializeField] 
+        [SerializeField]
 #endif
-    private int minimalValue;
+        private int minimalValue;
 
 #if UNITY_2020
-    [SerializeField] 
+        [SerializeField]
 #endif
-    private int maximalValue;
+        private int maximalValue;
 
-    public IntRange(int min, int max)
-    {
-        minimalValue = min;
-        maximalValue = max;
+        public IntRange(int min, int max)
+        {
+            minimalValue = min;
+            maximalValue = max;
+        }
     }
 }

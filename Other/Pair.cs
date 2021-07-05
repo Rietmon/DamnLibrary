@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Rietmon
+namespace Rietmon.Other
 {
     [Serializable]
     public class Pair<T1, T2>

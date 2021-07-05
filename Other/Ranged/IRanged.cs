@@ -1,8 +1,11 @@
-public interface IRanged<T>
+namespace Rietmon.Other
 {
-    public T MinimalValue { get; set; }
+    public interface IRanged<T>
+    {
+        public T MinimalValue { get; set; }
 
-    public T MaximalValue { get; set; }
+        public T MaximalValue { get; set; }
 
-    public T RandomValue { get; }
+        public T RandomValue { get; }
+    }
 }

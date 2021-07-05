@@ -1,5 +1,6 @@
 ﻿#if UNITY_2020
 using System.Threading.Tasks;
+using Rietmon.Behaviours;
 using Rietmon.Extensions;
 using Rietmon.Game;
 using UnityEngine;

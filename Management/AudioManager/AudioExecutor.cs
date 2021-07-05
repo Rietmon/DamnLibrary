@@ -1,32 +1,35 @@
 #if UNITY_2020
 using System;
 
-public class AudioExecutor
+namespace Rietmon.Management
 {
-    public bool IsPlaying => isPlayingMethod.Invoke();
-
-    public float Volume
+    public class AudioExecutor
     {
-        get => getVolumeMethod.Invoke();
-        set => setVolumeMethod?.Invoke(value);
+        public bool IsPlaying => isPlayingMethod.Invoke();
+
+        public float Volume
+        {
+            get => getVolumeMethod.Invoke();
+            set => setVolumeMethod?.Invoke(value);
+        }
+
+        private readonly Func<bool> isPlayingMethod;
+
+        private readonly Action stopMethod;
+
+        private readonly Action<float> setVolumeMethod;
+
+        private readonly Func<float> getVolumeMethod;
+
+        public AudioExecutor(Func<bool> isPlaying, Action stop, Action<float> setVolume, Func<float> getVolume)
+        {
+            isPlayingMethod = isPlaying;
+            stopMethod = stop;
+            setVolumeMethod = setVolume;
+            getVolumeMethod = getVolume;
+        }
+
+        public void Stop() => stopMethod?.Invoke();
     }
-
-    private readonly Func<bool> isPlayingMethod;
-
-    private readonly Action stopMethod;
-
-    private readonly Action<float> setVolumeMethod;
-
-    private readonly Func<float> getVolumeMethod;
-
-    public AudioExecutor(Func<bool> isPlaying, Action stop, Action<float> setVolume, Func<float> getVolume)
-    {
-        isPlayingMethod = isPlaying;
-        stopMethod = stop;
-        setVolumeMethod = setVolume;
-        getVolumeMethod = getVolume;
-    }
-
-    public void Stop() => stopMethod?.Invoke();
 }
 #endif

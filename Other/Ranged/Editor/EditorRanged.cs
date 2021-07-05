@@ -4,31 +4,35 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomPropertyDrawer(typeof(IRanged<>), true)]
-public class EditorRanged : PropertyDrawer
+namespace Rietmon.Other
 {
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 18;
-
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    [CustomPropertyDrawer(typeof(IRanged<>), true)]
+    public class EditorRanged : PropertyDrawer
     {
-        EditorGUI.BeginProperty(position, label, property);
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 18;
 
-        position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            EditorGUI.BeginProperty(position, label, property);
 
-        var indent = EditorGUI.indentLevel;
-        EditorGUI.indentLevel = 0;
+            position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
-        var minimalValue = new Rect(position.x, position.y, 100, 18);
-        var dotLimiterRect = new Rect(position.x + 102, position.y, 100, 18);
-        var maximalValue = new Rect(position.x + 113, position.y, 100, 18);
+            var indent = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = 0;
 
-        EditorGUI.PropertyField(minimalValue, property.FindPropertyRelative("minimalValue"), GUIContent.none);;
-        EditorGUI.LabelField(dotLimiterRect, "-");
-        EditorGUI.PropertyField(maximalValue, property.FindPropertyRelative("maximalValue"), GUIContent.none);
+            var minimalValue = new Rect(position.x, position.y, 100, 18);
+            var dotLimiterRect = new Rect(position.x + 102, position.y, 100, 18);
+            var maximalValue = new Rect(position.x + 113, position.y, 100, 18);
 
-        EditorGUI.indentLevel = indent;
+            EditorGUI.PropertyField(minimalValue, property.FindPropertyRelative("minimalValue"), GUIContent.none);
+            ;
+            EditorGUI.LabelField(dotLimiterRect, "-");
+            EditorGUI.PropertyField(maximalValue, property.FindPropertyRelative("maximalValue"), GUIContent.none);
 
-        EditorGUI.EndProperty();
+            EditorGUI.indentLevel = indent;
+
+            EditorGUI.EndProperty();
+        }
     }
 }
 #endif
