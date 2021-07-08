@@ -10,5 +10,15 @@ namespace Rietmon.Behaviours
             Instance = this as T;
         }
     }
+    
+    public class ProtectedSingletonBehaviour<T> : UnityBehaviour where T : class
+    {
+        protected static T Instance { get; private set; }
+
+        public ProtectedSingletonBehaviour()
+        {
+            Instance = this as T;
+        }
+    }
 }
 #endif

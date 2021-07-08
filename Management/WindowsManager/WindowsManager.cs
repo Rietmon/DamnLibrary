@@ -19,7 +19,7 @@ namespace Rietmon.Management
         private static readonly List<WindowBehaviour> openedWindows = new List<WindowBehaviour>();
 
 #if ENABLE_UNI_TASK
-    public static async UniTask<T> OpenAsync<T>(string windowName, params object[] arguments) =>
+        public static async UniTask<T> OpenAsync<T>(string windowName, params object[] arguments) =>
         (await OpenAsync(windowName, arguments)).GetComponent<T>();
 #else
         public static async Task<T> OpenAsync<T>(string windowName, params object[] arguments) =>
@@ -27,7 +27,7 @@ namespace Rietmon.Management
 #endif
 
 #if ENABLE_UNI_TASK
-    public static async UniTask<WindowBehaviour> OpenAsync(string windowName, params object[] arguments)
+        public static async UniTask<WindowBehaviour> OpenAsync(string windowName, params object[] arguments)
 #else
         public static async Task<WindowBehaviour> OpenAsync(string windowName, params object[] arguments)
 #endif
@@ -51,24 +51,24 @@ namespace Rietmon.Management
         }
 
 #if ENABLE_UNI_TASK
-    public static async UniTask WaitForClose(WindowBehaviour window) =>
-        await UniTask.WaitUntil(() => !openedWindows.Contains(window));
+        public static async UniTask WaitForClose(WindowBehaviour window) =>
+            await UniTask.WaitUntil(() => !openedWindows.Contains(window));
 #else
         public static async Task WaitForClose(WindowBehaviour window) =>
             await TaskUtilities.WaitUntil(() => !openedWindows.Contains(window));
 #endif
 
 #if ENABLE_UNI_TASK
-    public static async UniTask OpenAsyncAndWaitForClose(string windowName, params object[] arguments) =>
-        await WaitForClose(await OpenAsync(windowName, arguments));
+        public static async UniTask OpenAsyncAndWaitForClose(string windowName, params object[] arguments) =>
+            await WaitForClose(await OpenAsync(windowName, arguments));
 #else
         public static async Task OpenAsyncAndWaitForClose(string windowName, params object[] arguments) =>
             await WaitForClose(await OpenAsync(windowName, arguments));
 #endif
 
 #if ENABLE_UNI_TASK
-    public static async UniTask CloseAsync(string windowName) =>
-        await CloseAsync(openedWindows.Find((window) => window.WindowName == windowName));
+        public static async UniTask CloseAsync(string windowName) =>
+            await CloseAsync(openedWindows.Find((window) => window.WindowName == windowName));
 #else
         public static async Task CloseAsync(string windowName) =>
             await CloseAsync(openedWindows.Find((window) => window.WindowName == windowName));
