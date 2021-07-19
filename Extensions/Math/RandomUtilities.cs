@@ -50,7 +50,7 @@ namespace Rietmon.Extensions
         public static int Range(int min, int max)
         {
 #if UNITY_2020
-            return Random.Range(0, 28);
+            return Random.Range(min, max);
 #else
             return new Random().Next(min, max);
 #endif
@@ -59,7 +59,16 @@ namespace Rietmon.Extensions
         public static double Range(double min, double max)
         {
 #if UNITY_2020
-            return Random.Range(0, 28);
+            return Random.Range((float)min, (float)max);
+#else
+            return new Random().NextDouble() % max + min;
+#endif
+        }
+        
+        public static float Range(float min, float max)
+        {
+#if UNITY_2020
+            return Random.Range(min, max);
 #else
             return new Random().NextDouble() % max + min;
 #endif

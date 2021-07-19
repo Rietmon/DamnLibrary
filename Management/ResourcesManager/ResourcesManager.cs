@@ -11,11 +11,24 @@ namespace Rietmon.Management
     public static class ResourcesManager
     {
         private const string PathToDataWindows = "Prefabs/Windows/{0}";
+        private const string PathToDataTextures = "Prefabs/Textures/{0}";
         
         public static async Task<Prefab<WindowBehaviour>> GetWindowPrefabAsync(string windowName) =>
-                Internal_VerifyAsset(await Internal_GetAssetAsync<WindowBehaviour>(PathToDataWindows.Format(windowName)), windowName);
+            await GetAsset<WindowBehaviour>(PathToDataWindows.Format(windowName), windowName);
         
-        public static async Task<T> Internal_GetAssetAsync<T>(string assetName) where T : Object
+        public static async Task<Sprite> GetSprite(string spriteName) =>
+            await GetAsset<Sprite>(PathToDataTextures.Format(spriteName), spriteName);
+        
+        public static async Task<Texture2D> GetTexture(string textureName) =>
+            await GetAsset<Texture2D>(PathToDataTextures.Format(textureName), textureName);
+
+        public static async Task<T> GetAsset<T>(string assetName) where T : Object =>
+            Internal_VerifyAsset(await Internal_GetAssetAsync<T>(assetName), assetName);
+        
+        public static async Task<T> GetAsset<T>(string pathToAsset, string assetName) where T : Object =>
+            Internal_VerifyAsset(await Internal_GetAssetAsync<T>(pathToAsset), assetName);
+        
+        private static async Task<T> Internal_GetAssetAsync<T>(string assetName) where T : Object
         {
             var startLoadingFrame = Time.frameCount;
             var loadOperation = Resources.LoadAsync<T>(assetName);
@@ -24,7 +37,7 @@ namespace Rietmon.Management
             return (T)loadOperation.asset;
         }
         
-        public static T Internal_VerifyAsset<T>(T asset, string assetName) where T : Object
+        private static T Internal_VerifyAsset<T>(T asset, string assetName) where T : Object
         {
             if (asset) 
                 return asset;
