@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 #else
 using System.Threading.Tasks;
-using Rietmon.Extensions;
 #endif
+using Rietmon.Extensions;
 using Rietmon.Behaviours;
 using Rietmon.Management;
 using UnityEngine;

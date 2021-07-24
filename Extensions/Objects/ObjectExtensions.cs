@@ -5,6 +5,14 @@ namespace Rietmon.Extensions
 {
     public static class ObjectExtensions
     {
+        public static void TotalDestroy(this Object obj)
+        {
+            if (obj is Component component)
+                component.DestroyObject();
+            else
+                Object.Destroy(obj);
+        }
+        
         public static Transform GetTransform(this Object obj)
         {
             switch (obj)

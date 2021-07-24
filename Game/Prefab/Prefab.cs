@@ -73,6 +73,8 @@ namespace Rietmon.Game
         public static implicit operator Prefab<T>(T component) => new Prefab<T>(component);
 
         public static implicit operator bool(Prefab<T> prefab) => prefab != null;
+
+        public static implicit operator T(Prefab<T> prefab) => prefab.PrefabObject;
     }
 }
 #endif
