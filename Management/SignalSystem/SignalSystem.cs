@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
+#endif
 using Rietmon.Other;
 
 namespace Rietmon.Management
@@ -53,7 +55,11 @@ namespace Rietmon.Management
                 callback?.Second.Invoke(signal);
         }
         
+#if ENABLE_UNI_TASK
         public static async UniTask NotifyAsync<T>(T signal) where T : Signal
+#else
+        public static async Task NotifyAsync<T>(T signal) where T : Signal
+#endif
         {
             var signalType = signal.GetType();
             if (!signalCallbacks.TryGetValue(signalType, out var callbacks))
@@ -62,7 +68,11 @@ namespace Rietmon.Management
             foreach (var callback in callbacks)
             {
                 var asyncResult = callback?.Second.BeginInvoke(signal, null, null);
+#if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => asyncResult.IsCompleted);
+#else
+                await TaskUtilities.WaitUntil(() => asyncResult.IsCompleted);
+#endif
             }
         }
     } 
