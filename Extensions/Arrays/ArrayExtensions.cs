@@ -38,12 +38,16 @@ namespace Rietmon.Extensions
 
         public static T[] CopyWithout<T>(this T[] array, params int[] indices)
         {
-            var tempList = new List<T>();
-            tempList.AddRange(array);
-
-            foreach (var index in indices)
-                tempList.RemoveAt(index);
-
+            var tempList = new List<T>(array);
+            if (indices.Length > 0)
+            {
+                var objectsToRemove = new T[indices.Length];
+                for (var i = 0; i < indices.Length; i++)
+                    objectsToRemove[i] = array[indices[i]];
+                
+                foreach (var obj in objectsToRemove)
+                    tempList.Remove(obj);
+            }
             return tempList.ToArray();
         }
 
