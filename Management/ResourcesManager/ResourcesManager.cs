@@ -28,6 +28,9 @@ namespace Rietmon.Management
 
         public static async Task<T> GetAsset<T>(string assetName) where T : Object =>
             Internal_VerifyAsset(await Internal_GetAssetAsync<T>(assetName), assetName);
+
+        public static T[] GetAllAssets<T>(string path) where T : Object => 
+            Internal_GetAssets<T>(path);
         
         public static async Task<T> GetAsset<T>(string pathToAsset, string assetName) where T : Object =>
             Internal_VerifyAsset(await Internal_GetAssetAsync<T>(pathToAsset), assetName);
@@ -39,6 +42,13 @@ namespace Rietmon.Management
             await TaskUtilities.WaitUntil(() => loadOperation.isDone);
             Debug.Log($"[{nameof(ResourcesManager)}] ({nameof(Internal_GetAssetAsync)}) Asset with the name {assetName} was loaded in {Time.frameCount - startLoadingFrame} frames.");
             return (T)loadOperation.asset;
+        }
+        
+        private static T[] Internal_GetAssets<T>(string path) where T : Object
+        {
+            var loadOperation = Resources.LoadAll<T>(path);
+            Debug.Log($"[{nameof(ResourcesManager)}] ({nameof(Internal_GetAssets)}) Assets by path {path} was loaded.");
+            return loadOperation;
         }
         
         private static T Internal_VerifyAsset<T>(T asset, string assetName) where T : Object

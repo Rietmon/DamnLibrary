@@ -57,8 +57,18 @@ namespace Rietmon.Serialization
                 case Vector3 v: WriteVector3(v); break;
                 case Quaternion q: WriteQuaternion(q); break;
 #endif
-                case Array a: WriteArray(a); break;
-                case IList l: WriteList(l); break;
+                case Array a:
+                    var arrayType = a.GetType();
+                    WriteArray(a, arrayType.GetElementType() == typeof(object)); 
+                    break;
+                case IList l: 
+                    var listType = l.GetType();
+                    WriteList(l, listType.GenericTypeArguments[0] == typeof(object)); 
+                    break;
+                case IDictionary d:
+                    var dictionaryType = d.GetType();
+                    WriteDictionary(d, dictionaryType.GenericTypeArguments[1] == typeof(object));
+                    break;
 #if UNITY_2020
                 default: Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}"); break;
 #endif
@@ -129,23 +139,45 @@ namespace Rietmon.Serialization
         }
 #endif
 
-        private void WriteArray(Array value)
+        private void WriteArray(Array value, bool saveElementType)
         {
             WriteShort((short)value.Length);
             for (var i = 0; i < value.Length; i++)
-                Write(value.GetValue(i));
+            {
+                var element = value.GetValue(i);
+                if (saveElementType)
+                    Write(element.GetType().FullName);
+                Write(element);
+            }
         }
 
-        private void WriteList(IList value)
+        private void WriteList(IList value, bool saveElementType)
         {
             WriteShort((short)value.Count);
             foreach (var element in value)
+            {
+                if (saveElementType)
+                    Write(element.GetType().FullName);
                 Write(element);
+            }
+        }
+        
+        private void WriteDictionary(IDictionary value, bool saveElementType)
+        {
+            WriteShort((short)value.Count);
+            foreach (var element in value)
+            {
+                var dictionaryEntry = (DictionaryEntry)element;
+                Write(dictionaryEntry.Key);
+                if (saveElementType)
+                    Write(dictionaryEntry.Value.GetType().FullName);
+                Write(dictionaryEntry.Value);
+            }
         }
 
         public T Read<T>() => (T)Read(typeof(T));
 
-        private object Read(Type type)
+        public object Read(Type type)
         {
             if (type == typeof(bool)) return ReadByte() == 1;
             if (type == typeof(byte)) return ReadByte();
@@ -154,6 +186,7 @@ namespace Rietmon.Serialization
             if (type == typeof(float)) return ReadFloat();
             if (type == typeof(double)) return ReadDouble();
             if (type == typeof(long)) return ReadLong();
+            if (type == typeof(string)) return ReadString();
 #if UNITY_2020
             if (type == typeof(Vector2)) return ReadVector2();
             if (type == typeof(Vector3)) return ReadVector3();
@@ -161,7 +194,7 @@ namespace Rietmon.Serialization
 #endif
             if (type.IsArray) return ReadArray(type);
             if (typeof(IList).IsAssignableFrom(type)) return ReadList(type);
-            if (type == typeof(string)) return ReadString();
+            if (typeof(IDictionary).IsAssignableFrom(type)) return ReadDictionary(type);
 
 #if UNITY_2020
             Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {type}");
@@ -248,9 +281,20 @@ namespace Rietmon.Serialization
         {
             var length = ReadShort();
             var elementType = type.GetElementType();
+            var isDynamicValue = elementType == typeof(object);
             var array = Array.CreateInstance(elementType, length);
             for (var i = 0; i < length; i++)
-                array.SetValue(Read(elementType), i);
+            {
+                if (isDynamicValue)
+                {
+                    var currentElementTypeName = Read<string>();
+                    var currentElementType = Type.GetType(currentElementTypeName);
+                    var element = Read(currentElementType);
+                    array.SetValue(element, i);
+                }
+                else
+                    array.SetValue(Read(elementType), i);
+            }
             return array;
         }
 
@@ -258,10 +302,44 @@ namespace Rietmon.Serialization
         {
             var length = ReadShort();
             var elementType = type.GetGenericArguments().First();
+            var isDynamicValue = elementType == typeof(object);
             var list = (IList)Activator.CreateInstance(type);
             for (var i = 0; i < length; i++)
-                list.Add(Read(elementType));
+            {
+                if (isDynamicValue)
+                {
+                    var currentElementTypeName = Read<string>();
+                    var currentElementType = Type.GetType(currentElementTypeName);
+                    var element = Read(currentElementType);
+                    list.Add(element);
+                }
+                else
+                    list.Add(Read(elementType));
+            }
             return list;
+        }
+        
+        private IDictionary ReadDictionary(Type type)
+        {
+            var length = ReadShort();
+            var keyType = type.GetGenericArguments().First();
+            var elementType = type.GetGenericArguments()[1];
+            var isDynamicValue = elementType == typeof(object);
+            var dictionary = (IDictionary)Activator.CreateInstance(type);
+            for (var i = 0; i < length; i++)
+            {
+                var key = Read(keyType);
+                if (isDynamicValue)
+                {
+                    var currentElementTypeName = Read<string>();
+                    var currentElementType = Type.GetType(currentElementTypeName);
+                    var element = Read(currentElementType);
+                    dictionary.Add(key, element);
+                }
+                else
+                    dictionary.Add(key, Read(elementType));
+            }
+            return dictionary;
         }
 
         public byte[] ToArray() => stream.ToArray();

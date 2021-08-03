@@ -15,6 +15,9 @@ namespace Rietmon.Serialization
 
         private void OnEnable()
         {
+            if (SerializableComponents != null)
+                return;
+            
             SerializableComponents = new List<SerializableUnityBehaviour>(serializeAllComponents 
                 ? GetComponents<SerializableUnityBehaviour>() 
                 : serializableComponents);

@@ -16,7 +16,7 @@ namespace Rietmon.Serialization
         : UnityBehaviour
 #endif
     {
-        public const short Version = 1;
+        public static short Version { get; set; } = 1;
         
 #if UNITY_2020
         public static Serialization Instance { get; private set; }
@@ -24,9 +24,9 @@ namespace Rietmon.Serialization
 
         private static readonly Dictionary<short, Type> serializableStaticTypes = new Dictionary<short, Type>();
     
-        #if UNITY_2020
+#if UNITY_2020
         [SerializeField] private SerializableObject[] serializableObjects;
-        #endif
+#endif
 
 #if UNITY_2020
         private void OnEnable()
@@ -178,7 +178,7 @@ namespace Rietmon.Serialization
             serializableObjects = FindObjectsOfType<SerializableObject>();
 
             EditorUtility.SetDirty(this);
-            Debug.Log($"Founded {serializableObjects.Length} components");
+            Debug.Log($"Found {serializableObjects.Length} components");
         }
 
 #endif

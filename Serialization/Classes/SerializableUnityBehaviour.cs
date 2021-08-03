@@ -40,7 +40,7 @@ public abstract class SerializableUnityBehaviour : UnityBehaviour, ISerializable
         EditorUtility.SetDirty(this);
     }
 
-    private void Reset()
+    protected virtual void Reset()
     {
         Editor_GenerateSerializableId();
     }
