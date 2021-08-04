@@ -20,7 +20,7 @@ namespace Rietmon.Management
 
 #if ENABLE_UNI_TASK
         public static async UniTask<T> OpenAsync<T>(string windowName, params object[] arguments) =>
-        (await OpenAsync(windowName, arguments)).GetComponent<T>();
+            (await OpenAsync(windowName, arguments)).GetComponent<T>();
 #else
         public static async Task<T> OpenAsync<T>(string windowName, params object[] arguments) =>
             (await OpenAsync(windowName, arguments)).GetComponent<T>();
@@ -75,7 +75,7 @@ namespace Rietmon.Management
 #endif
 
 #if ENABLE_UNI_TASK
-    public static async UniTask CloseAsync(WindowBehaviour window)
+        public static async UniTask CloseAsync(WindowBehaviour window)
 #else
         public static async Task CloseAsync(WindowBehaviour window)
 #endif

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
+using Rietmon.Extensions;
 #endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -31,6 +32,9 @@ namespace Rietmon.Management
         
 #if ENABLE_UNI_TASK
         public static async UniTask PreloadSceneAsync(string name, bool enableActivation = false)
+#else
+        public static async Task PreloadSceneAsync(string name, bool enableActivation = false)
+#endif
         {
             var isPreloaded = false;
             void Callback() => isPreloaded = true;
@@ -38,9 +42,15 @@ namespace Rietmon.Management
             PreloadScene(name, enableActivation, Callback);
 
             if (enableActivation)
+            {
+#if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => isPreloaded);
-        }
+#else
+                await TaskUtilities.WaitUntil(() => isPreloaded);
 #endif
+                await UniTask.WaitUntil(() => isPreloaded);
+            }
+        }
         public static bool IsScenePreloaded(string name) =>
             !scenesInPreloading.ContainsKey(name) || ActiveScene.name == name;
         
@@ -50,28 +60,37 @@ namespace Rietmon.Management
     
         public static void EnablePreloadedScene(string name) => scenesInPreloading[name].allowSceneActivation = true;
         
-#if ENABLE_UNI_TASK
         public static async void UnloadSceneAsync(string name)
         {
             if (IsScenePreloading(name))
             {
+#if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => IsScenePreloaded(name));
+#else
+                await TaskUtilities.WaitUntil(() => IsScenePreloaded(name));
+#endif
                 EnablePreloadedScene(name);
             }
             UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(name);
             
             scenesInPreloading.Remove(name);
         }
-#endif
         
 #if ENABLE_UNI_TASK
-        public static async void ChangeSceneAsync(string name)
+        public static async UniTask ChangeSceneAsync(string name)
+#else
+        public static async Task ChangeSceneAsync(string name)
+#endif
         {
             UnloadSceneAsync(ActiveScene.name);
             
             await PreloadSceneAsync(name, true);
         }
-#endif
+
+        public static void LoadScene(string name)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(name);
+        }
     }
 }
 #endif

@@ -16,19 +16,15 @@ namespace Rietmon.Behaviours
         public object[] Arguments { get; set; }
 
 #if ENABLE_UNI_TASK
-    public virtual async UniTask OnOpenAsync() { }
+        public virtual async UniTask OnOpenAsync() { }
 #else
-        public virtual async Task OnOpenAsync()
-        {
-        }
+        public virtual async Task OnOpenAsync() { }
 #endif
 
 #if ENABLE_UNI_TASK
-    public virtual async UniTask OnCloseAsync() { }
+        public virtual async UniTask OnCloseAsync() { }
 #else
-        public virtual async Task OnCloseAsync()
-        {
-        }
+        public virtual async Task OnCloseAsync() { }
 #endif
 
         public async void CloseAsync() => await WindowsManager.CloseAsync(this);
