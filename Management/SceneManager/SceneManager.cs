@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
-using Rietmon.Extensions;
+#else
+using System.Threading.Tasks;
 #endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
