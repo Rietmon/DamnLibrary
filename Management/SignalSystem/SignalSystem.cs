@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Rietmon.Extensions;
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
+#else
+using System.Threading.Tasks;
 #endif
 using Rietmon.Other;
 

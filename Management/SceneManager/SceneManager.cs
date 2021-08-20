@@ -1,6 +1,7 @@
 ﻿#if UNITY_2020
 using System;
 using System.Collections.Generic;
+using Rietmon.Extensions;
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
 #else
@@ -49,7 +50,6 @@ namespace Rietmon.Management
 #else
                 await TaskUtilities.WaitUntil(() => isPreloaded);
 #endif
-                await UniTask.WaitUntil(() => isPreloaded);
             }
         }
         public static bool IsScenePreloaded(string name) =>
