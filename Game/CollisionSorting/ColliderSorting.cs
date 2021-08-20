@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class ColliderSorting : UnityBehaviour
 {
-    public CollisionSortingLayers SortingLayer
+    public virtual int SortingLayer
     {
         get => sortingLayer;
         set => sortingLayer = value;
@@ -15,7 +15,7 @@ public class ColliderSorting : UnityBehaviour
 
     public Collider2D Collider => collider;
     
-    [SerializeField] private CollisionSortingLayers sortingLayer;
+    [SerializeField] private int sortingLayer;
 
     [SerializeField] private Collider2D collider;
 
@@ -37,7 +37,7 @@ public class ColliderSorting : UnityBehaviour
         }
 
         if (collidersSorting.Count == 0)
-            return colliders.FirstOrDefault();
+            return null;
 
         if (collidersSorting.Count == 1)
             return collidersSorting[0].Collider;
@@ -50,14 +50,6 @@ public class ColliderSorting : UnityBehaviour
         }
 
         return collidersSorting[greaterColliderIndex].Collider;
-    }
-
-    public enum CollisionSortingLayers : byte
-    {
-        Default = 0,
-        NonCollisionStatic = 50,
-        CollisionStatic = 100,
-        LevelChanger = 255,
     }
 }
 #endif

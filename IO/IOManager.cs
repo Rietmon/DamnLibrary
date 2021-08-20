@@ -25,7 +25,7 @@ namespace Rietmon.IO
         {
             var path = "Assets/";
             var objects = Selection.GetFiltered(typeof(Object), SelectionMode.Assets);
-            foreach (Object obj in objects)
+            foreach (var obj in objects)
             {
                 path = AssetDatabase.GetAssetPath(obj);
                 if (!string.IsNullOrEmpty(path) && File.Exists(path))

@@ -18,9 +18,9 @@ namespace Rietmon.Management
     {
         public int PullCapacity { get; private set; }
 
-        public int FreeObjects => objectsPull.Count;
+        public int FreeObjectsCount => objectsPull.Count;
 
-        public int BusyObject => objectPullExecuting.Count;
+        public int BusyObjectsCount => objectPullExecuting.Count;
 
         public Action<T> OnWillBusy { get; set; }
 

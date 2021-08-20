@@ -21,7 +21,7 @@ namespace Rietmon.Extensions
 
         public static T[] Copy<T>(this T[] array)
         {
-            var newArray = new T[0];
+            var newArray = Array.Empty<T>();
             Array.Copy(array, newArray, array.Length);
             return newArray;
         }

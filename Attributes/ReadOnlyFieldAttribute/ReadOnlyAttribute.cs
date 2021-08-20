@@ -3,9 +3,6 @@ using UnityEngine;
 
 namespace Rietmon.Attributes
 {
-    public class ReadOnlyAttribute : PropertyAttribute
-    {
- 
-    }
+    public class ReadOnlyAttribute : PropertyAttribute { }
 }
 #endif

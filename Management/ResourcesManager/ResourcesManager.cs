@@ -13,6 +13,7 @@ namespace Rietmon.Management
         private const string PathToResourcesWindows = "Prefabs/Windows/{0}";
         private const string PathToResourcesTextures = "Textures/{0}";
         private const string PathToResourcesPrefabs = "Prefabs/{0}";
+        private const string PathToResourcesAudio = "Audio/{0}";
         
         public static async Task<Prefab<WindowBehaviour>> GetWindowPrefabAsync(string windowName) =>
             await GetAsset<WindowBehaviour>(PathToResourcesWindows.Format(windowName), windowName);
@@ -25,6 +26,9 @@ namespace Rietmon.Management
         
         public static async Task<Prefab<T>> GetPrefab<T>(string prefabName) where T : Object =>
             await GetAsset<T>(PathToResourcesPrefabs.Format(prefabName), prefabName);
+        
+        public static async Task<AudioClip> GetAudio(string audioName) =>
+            await GetAsset<AudioClip>(PathToResourcesAudio.Format(audioName), audioName);
 
         public static async Task<T> GetAsset<T>(string assetName) where T : Object =>
             Internal_VerifyAsset(await Internal_GetAssetAsync<T>(assetName), assetName);

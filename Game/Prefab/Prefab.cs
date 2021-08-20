@@ -17,6 +17,8 @@ namespace Rietmon.Game
             set => defaultParent = value;
         }
 
+        private Transform PrefabTransform => prefabObject.GetTransform();
+
         [SerializeField] private T prefabObject;
 
         [SerializeField] private Transform defaultParent;
@@ -31,28 +33,28 @@ namespace Rietmon.Game
         public T SimpleInstantiate(Transform transform) => Object.Instantiate(prefabObject, transform);
 
         public T FullInstantiate() =>
-            FullInstantiate(Vector3.zero, Quaternion.identity, Vector3.one, DefaultParent);
+            FullInstantiate(PrefabTransform.position, PrefabTransform.rotation, PrefabTransform.localScale, DefaultParent);
 
         public T FullInstantiate(Vector3 position) =>
-            FullInstantiate(position, Quaternion.identity, Vector3.one, DefaultParent);
+            FullInstantiate(position, PrefabTransform.rotation, PrefabTransform.localScale, DefaultParent);
 
         public T FullInstantiate(Quaternion rotation) =>
-            FullInstantiate(Vector3.zero, rotation, Vector3.one, DefaultParent);
+            FullInstantiate(PrefabTransform.position, rotation, PrefabTransform.localScale, DefaultParent);
 
         public T FullInstantiate(Transform parent) =>
-            FullInstantiate(Vector3.zero, Quaternion.identity, Vector3.one, parent);
+            FullInstantiate(PrefabTransform.position, PrefabTransform.rotation, PrefabTransform.localScale, parent);
 
         public T FullInstantiate(Transform parent, Vector3 position) =>
-            FullInstantiate(position, Quaternion.identity, Vector3.one, parent);
+            FullInstantiate(position, PrefabTransform.rotation, PrefabTransform.localScale, parent);
 
         public T FullInstantiate(Vector3 position, Quaternion rotation) =>
-            FullInstantiate(position, rotation, Vector3.one, DefaultParent);
+            FullInstantiate(position, rotation, PrefabTransform.localScale, DefaultParent);
 
         public T FullInstantiate(Vector3 position, Vector3 scale) =>
-            FullInstantiate(position, Quaternion.identity, scale, DefaultParent);
+            FullInstantiate(position, PrefabTransform.rotation, scale, DefaultParent);
 
         public T FullInstantiate(Quaternion rotation, Vector3 scale) =>
-            FullInstantiate(Vector3.zero, rotation, scale, DefaultParent);
+            FullInstantiate(PrefabTransform.position, rotation, scale, DefaultParent);
 
         public T FullInstantiate(Vector3 position, Quaternion rotation, Vector3 scale) =>
             FullInstantiate(position, rotation, scale, DefaultParent);

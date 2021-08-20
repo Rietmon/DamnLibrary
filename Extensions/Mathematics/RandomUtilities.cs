@@ -28,7 +28,7 @@ namespace Rietmon.Extensions
 #endif
 
 #if UNITY_2020
-        public static uint RandomUInt => (uint)Random.Range(0, uint.MaxValue);
+        public static uint RandomUInt => (uint)Random.Range(uint.MinValue, uint.MaxValue);
 #else
         public static uint RandomUInt => (uint)Range(0, uint.MaxValue);
 #endif

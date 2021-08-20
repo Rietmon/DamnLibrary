@@ -59,11 +59,11 @@ namespace Rietmon.Animations
             if (animationDuration != -1)
             {
 #if ENABLE_UNI_TASK
-            UniTask.Run(async () =>
-            {
-                await UniTask.Delay((int)(animationDuration * 1000));
-                IsPlaying = false;
-            });
+                UniTask.Run(async () =>
+                {
+                    await UniTask.Delay((int)(animationDuration * 1000));
+                    IsPlaying = false;
+                });
 #else
                 Task.Run(async () =>
                 {
@@ -80,7 +80,7 @@ namespace Rietmon.Animations
                 if (SpriteRenderer == null || SpritesSequence == null || SpritesSequence.Length == 0 || IsPaused)
                 {
 #if ENABLE_UNI_TASK
-                await UniTask.WhenAny(UniTask.Yield(PlayerLoopTiming.Update).ToUniTask(), UniTask.WaitUntil(() => needToStopAnimation));
+                    await UniTask.WhenAny(UniTask.Yield(PlayerLoopTiming.Update).ToUniTask(), UniTask.WaitUntil(() => needToStopAnimation));
 #else
                     await Task.WhenAny(TaskUtilities.Yield(), TaskUtilities.WaitUntil(() => needToStopAnimation));
 #endif
@@ -92,8 +92,8 @@ namespace Rietmon.Animations
                 if (FrameDuration > 0)
                 {
 #if ENABLE_UNI_TASK
-                await UniTask.WhenAny(UniTask.Delay((int)(FrameDuration * 1000)),
-                    UniTask.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
+                    await UniTask.WhenAny(UniTask.Delay((int)(FrameDuration * 1000)),
+                        UniTask.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
 #else
                     await Task.WhenAny(Task.Delay((int)(FrameDuration * 1000)),
                         TaskUtilities.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
@@ -102,8 +102,8 @@ namespace Rietmon.Animations
                 else
                 {
 #if ENABLE_UNI_TASK
-                await UniTask.WhenAny(UniTask.Yield(PlayerLoopTiming.Update).ToUniTask(),
-                    UniTask.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
+                    await UniTask.WhenAny(UniTask.Yield(PlayerLoopTiming.Update).ToUniTask(),
+                        UniTask.WaitUntil(() => needToStopAnimation || needToContinueAnimation));
 #else
                     await Task.WhenAny(TaskUtilities.Yield(),
                         TaskUtilities.WaitUntil(() => needToStopAnimation || needToContinueAnimation));

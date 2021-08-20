@@ -14,7 +14,7 @@ namespace Rietmon.Game
 #endif
     public static class Infoportions
     {
-        private static List<string> infoportions = new List<string>();
+        private static readonly List<string> infoportions = new List<string>();
 
         public static void AddInfoportion(string name)
         {

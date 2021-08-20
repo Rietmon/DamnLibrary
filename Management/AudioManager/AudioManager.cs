@@ -19,15 +19,21 @@ namespace Rietmon.Management
 #endif
     public class AudioManager : SingletonBehaviour<AudioManager>
     {
-        private const byte AudioSourcesPullCount = 16;
-
         private static PullManager<AudioSource> pullManager;
+        
+        [SerializeField] private int audioSourcesPullCount = 16;
 
         public static void Initialize()
         {
+            if (Instance == null)
+            {
+                Debug.LogWarning($"[{nameof(AudioManager)}] ({nameof(Initialize)}) Creating instance automatically!");
+                var audioManager = new GameObject("AudioManager").AddComponent<AudioManager>();
+                DontDestroyOnLoad(audioManager);
+            }
             var exampleObject = new GameObject("AudioSource").AddComponent<AudioSource>();
             pullManager = new PullManager<AudioSource>(
-                AudioSourcesPullCount,
+                Instance.audioSourcesPullCount,
                 exampleObject,
                 (source) => Instantiate(source, Instance.transform));
             pullManager.EnableGameObjectOptimization();
@@ -88,6 +94,13 @@ namespace Rietmon.Management
 
                 return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
+        }
+#endif
+        
+#if UNITY_EDITOR
+        private void Reset()
+        {
+            audioSourcesPullCount = 16;
         }
 #endif
     }
