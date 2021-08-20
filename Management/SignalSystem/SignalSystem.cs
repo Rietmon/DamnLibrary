@@ -55,7 +55,7 @@ namespace Rietmon.Management
                 return;
             
             foreach (var callback in callbacks)
-                callback?.Second.Invoke(signal);
+                callback.Second?.Invoke(signal);
         }
         
 #if ENABLE_UNI_TASK
@@ -70,7 +70,7 @@ namespace Rietmon.Management
             
             foreach (var callback in callbacks)
             {
-                var asyncResult = callback?.Second.BeginInvoke(signal, null, null);
+                var asyncResult = callback.Second?.BeginInvoke(signal, null, null);
 #if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => asyncResult.IsCompleted);
 #else
