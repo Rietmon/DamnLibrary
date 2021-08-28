@@ -12,12 +12,15 @@ namespace Rietmon.IO
     {
         public static void CheckOrCreateDirectory(string directory)
         {
-            if (!Directory.Exists(directory))
+            void CheckDirectory(string p)
             {
-                var previousDirectory = Directory.GetParent(directory).FullName;
-                CheckOrCreateDirectory(previousDirectory);
-                Directory.CreateDirectory(directory);
+                if (Directory.Exists(p)) return;
+
+                CheckDirectory(Directory.GetDirectoryRoot(p));
+                Directory.CreateDirectory(p);
             }
+
+            CheckDirectory(directory);
         }
 
 #if UNITY_EDITOR
