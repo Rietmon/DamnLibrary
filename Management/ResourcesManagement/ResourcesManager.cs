@@ -24,7 +24,7 @@ namespace Rietmon.Management
         public static async Task<Sprite> GetSpriteAsync(string spriteName) =>
             await GetAssetAsync<Sprite>(PathToResourcesTextures.Format(spriteName));
         
-        public static Prefab<Sprite> GetSprite(string spriteName) =>
+        public static Sprite GetSprite(string spriteName) =>
             GetAsset<Sprite>(PathToResourcesTextures.Format(spriteName));
         
         public static async Task<Texture2D> GetTextureAsync(string textureName) =>
