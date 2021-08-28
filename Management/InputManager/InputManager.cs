@@ -50,7 +50,8 @@ namespace Rietmon.Management
             Func<KeyCode, bool> func)
         {
             array.Clear();
-            array.AddRange(callbacks.Where(callback => func.Invoke(callback.Key)).Select(callback => callback.Key));
+            array.AddRange(callbacks.Where(callback => func.Invoke(callback.Key))
+                .Select(callback => callback.Key));
         }
 
         private static void InvokeCallbacks(List<KeyCode> array, Dictionary<KeyCode, List<Action<KeyCode>>> callbacks)

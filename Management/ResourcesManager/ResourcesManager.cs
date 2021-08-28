@@ -16,51 +16,64 @@ namespace Rietmon.Management
         private const string PathToResourcesAudio = "Audio/{0}";
         
         public static async Task<Prefab<WindowBehaviour>> GetWindowPrefabAsync(string windowName) =>
-            await GetAsset<WindowBehaviour>(PathToResourcesWindows.Format(windowName), windowName);
+            await GetAssetAsync<WindowBehaviour>(PathToResourcesWindows.Format(windowName));
         
-        public static async Task<Sprite> GetSprite(string spriteName) =>
-            await GetAsset<Sprite>(PathToResourcesTextures.Format(spriteName), spriteName);
+        public static Prefab<WindowBehaviour> GetWindowPrefab(string windowName) => 
+            GetAsset<WindowBehaviour>(PathToResourcesWindows.Format(windowName));
         
-        public static async Task<Texture2D> GetTexture(string textureName) =>
-            await GetAsset<Texture2D>(PathToResourcesTextures.Format(textureName), textureName);
+        public static async Task<Sprite> GetSpriteAsync(string spriteName) =>
+            await GetAssetAsync<Sprite>(PathToResourcesTextures.Format(spriteName));
         
-        public static async Task<Prefab<T>> GetPrefab<T>(string prefabName) where T : Object =>
-            await GetAsset<T>(PathToResourcesPrefabs.Format(prefabName), prefabName);
+        public static Prefab<Sprite> GetSprite(string spriteName) =>
+            GetAsset<Sprite>(PathToResourcesTextures.Format(spriteName));
         
-        public static async Task<AudioClip> GetAudio(string audioName) =>
-            await GetAsset<AudioClip>(PathToResourcesAudio.Format(audioName), audioName);
+        public static async Task<Texture2D> GetTextureAsync(string textureName) =>
+            await GetAssetAsync<Texture2D>(PathToResourcesTextures.Format(textureName));
+        
+        public static Texture2D GetTexture(string textureName) =>
+            GetAsset<Texture2D>(PathToResourcesTextures.Format(textureName));
+        
+        public static async Task<Prefab<T>> GetPrefabAsync<T>(string prefabName) where T : Object =>
+            await GetAssetAsync<T>(PathToResourcesPrefabs.Format(prefabName));
+        
+        public static Prefab<T> GetPrefab<T>(string prefabName) where T : Object =>
+            GetAsset<T>(PathToResourcesPrefabs.Format(prefabName));
+        
+        public static async Task<AudioClip> GetAudioAsync(string audioName) =>
+            await GetAssetAsync<AudioClip>(PathToResourcesAudio.Format(audioName));
+        
+        public static AudioClip GetAudio(string audioName) =>
+            GetAsset<AudioClip>(PathToResourcesAudio.Format(audioName));
 
-        public static async Task<T> GetAsset<T>(string assetName) where T : Object =>
-            Internal_VerifyAsset(await Internal_GetAssetAsync<T>(assetName), assetName);
-
-        public static T[] GetAllAssets<T>(string path) where T : Object => 
-            Internal_GetAssets<T>(path);
-        
-        public static async Task<T> GetAsset<T>(string pathToAsset, string assetName) where T : Object =>
-            Internal_VerifyAsset(await Internal_GetAssetAsync<T>(pathToAsset), assetName);
-        
-        private static async Task<T> Internal_GetAssetAsync<T>(string assetName) where T : Object
+        public static async Task<T> GetAssetAsync<T>(string assetPath) where T : Object
         {
             var startLoadingFrame = Time.frameCount;
-            var loadOperation = Resources.LoadAsync<T>(assetName);
+            var loadOperation = Resources.LoadAsync<T>(assetPath);
             await TaskUtilities.WaitUntil(() => loadOperation.isDone);
-            Debug.Log($"[{nameof(ResourcesManager)}] ({nameof(Internal_GetAssetAsync)}) Asset with the name {assetName} was loaded in {Time.frameCount - startLoadingFrame} frames.");
-            return (T)loadOperation.asset;
+            Debug.Log($"[{nameof(ResourcesManager)}] ({nameof(GetAssetAsync)}) Asset on the path {assetPath} was loaded in {Time.frameCount - startLoadingFrame} frames.");
+            return VerifyAsset((T)loadOperation.asset, assetPath);
         }
         
-        private static T[] Internal_GetAssets<T>(string path) where T : Object
+        public static T GetAsset<T>(string assetPath) where T : Object
         {
-            var loadOperation = Resources.LoadAll<T>(path);
-            Debug.Log($"[{nameof(ResourcesManager)}] ({nameof(Internal_GetAssets)}) Assets by path {path} was loaded.");
-            return loadOperation;
+            var asset = Resources.Load<T>(assetPath);
+            Debug.Log($"[{nameof(ResourcesManager)}] ({nameof(GetAssetAsync)}) Asset on the path {assetPath} was loaded.");
+            return VerifyAsset(asset, assetPath);
+        }
+
+        public static T[] GetAllAssets<T>(string path) where T : Object
+        {
+            var assets = Resources.LoadAll<T>(path);
+            Debug.Log($"[{nameof(ResourcesManager)}] ({nameof(GetAllAssets)}) Assets on the path {path} was loaded.");
+            return assets;
         }
         
-        private static T Internal_VerifyAsset<T>(T asset, string assetName) where T : Object
+        private static T VerifyAsset<T>(T asset, string assetPath) where T : Object
         {
             if (asset) 
                 return asset;
         
-            Debug.LogError($"[{nameof(ResourcesManager)}] ({nameof(Internal_VerifyAsset)}) Error at loading asset with the name {assetName}. Result equal a null.");
+            Debug.LogError($"[{nameof(ResourcesManager)}] ({nameof(VerifyAsset)}) Error at loading asset on the path {assetPath}. Result equal a null.");
             return default;
         }
     }

@@ -14,7 +14,7 @@ namespace Rietmon.Extensions
             var result = "";
 
             foreach (var obj in array)
-                result += obj.ToString();
+                result += $"{obj}\n";
 
             return result;
         }
@@ -25,14 +25,6 @@ namespace Rietmon.Extensions
             var randomIndex = RandomUtilities.Range(0, enumerable.Length);
             return enumerable.ElementAtOrDefault(randomIndex);
         }
-
-        
-#if UNITY_2020
-        public static T GetObjectByName<T>(this IEnumerable<T> array, string name) where T : Object
-        {
-            return array.FirstOrDefault(obj => obj.name == name);
-        }
-#endif
 
         public static IEnumerable<TOut> SmartCast<TOut, TIn>(this IEnumerable<TIn> array, Func<TIn, TOut> castFunction) => 
             array.Select(castFunction.Invoke).ToList();
