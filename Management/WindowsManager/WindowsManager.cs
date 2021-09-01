@@ -14,7 +14,7 @@ namespace Rietmon.Management
 {
     public class WindowsManager : ProtectedSingletonBehaviour<WindowsManager>
     {
-        public static WindowsDataProviderType DataProviderType { get; set; }
+        public static WindowsDataProviderType DataProviderType { get; set; } = WindowsDataProviderType.Resources;
         
         public static int OpenedWindowsCount => openedWindows.Count;
 
@@ -194,10 +194,12 @@ namespace Rietmon.Management
                 {
                     return ResourcesManager.GetWindowPrefab(windowName);
                 }
+#if ENABLE_ADDRESSABLE
                 case WindowsDataProviderType.Addressable:
                 {
                     return AddressableManager.GetWindowPrefabAsync(windowName).Result;
                 }
+#endif
             }
 
             return null;
@@ -211,10 +213,12 @@ namespace Rietmon.Management
                 {
                     return await ResourcesManager.GetWindowPrefabAsync(windowName);
                 }
+#if ENABLE_ADDRESSABLE
                 case WindowsDataProviderType.Addressable:
                 {
                     return await AddressableManager.GetWindowPrefabAsync(windowName);
                 }
+#endif
             }
 
             return null;
