@@ -7,28 +7,28 @@ using Random = UnityEngine.Random;
 namespace Rietmon.Other
 {
     [Serializable]
-    public struct Vector2IntRange : IRanged<Vector2Int>
+    public struct Vector2Range : IRanged<Vector2>
     {
-        public Vector2Int MinimalValue
+        public Vector2 MinimalValue
         {
             get => minimalValue;
             set => minimalValue = value;
         }
 
-        public Vector2Int MaximalValue
+        public Vector2 MaximalValue
         {
             get => maximalValue;
             set => maximalValue = value;
         }
 
-        public Vector2Int RandomValue => new Vector2Int(RandomUtilities.Range(MinimalValue.x, MaximalValue.x),
+        public Vector2 RandomValue => new Vector2(RandomUtilities.Range(MinimalValue.x, MaximalValue.x),
             RandomUtilities.Range(MinimalValue.y, MaximalValue.y));
 
-        [SerializeField] private Vector2Int minimalValue;
+        [SerializeField] private Vector2 minimalValue;
 
-        [SerializeField] private Vector2Int maximalValue;
+        [SerializeField] private Vector2 maximalValue;
 
-        public Vector2IntRange(Vector2Int min, Vector2Int max)
+        public Vector2Range(Vector2 min, Vector2 max)
         {
             minimalValue = min;
             maximalValue = max;

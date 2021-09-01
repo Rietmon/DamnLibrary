@@ -7,33 +7,33 @@ using UnityEngine;
 namespace Rietmon.Other
 {
     [Serializable]
-    public struct FloatRange : IRanged<float>
+    public struct DoubleRange : IRanged<double>
     {
-        public float MinimalValue
+        public double MinimalValue
         {
             get => minimalValue;
             set => minimalValue = value;
         }
 
-        public float MaximalValue
+        public double MaximalValue
         {
             get => maximalValue;
             set => maximalValue = value;
         }
 
-        public float RandomValue => RandomUtilities.Range(MinimalValue, MaximalValue);
+        public double RandomValue => RandomUtilities.Range(MinimalValue, MaximalValue);
 
 #if UNITY_2020
         [SerializeField]
 #endif
-        private float minimalValue;
+        private double minimalValue;
 
 #if UNITY_2020
         [SerializeField]
 #endif
-        private float maximalValue;
+        private double maximalValue;
 
-        public FloatRange(float min, float max)
+        public DoubleRange(double min, double max)
         {
             minimalValue = min;
             maximalValue = max;
