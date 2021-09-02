@@ -87,7 +87,10 @@ namespace Rietmon.Serialization
                 case ISerializable s: WriteSerializable(s); break;
 #if UNITY_2020
                 case Vector2 v: WriteVector2(v); break;
+                case Vector2Int v: WriteVector2Int(v); break;
                 case Vector3 v: WriteVector3(v); break;
+                case Vector3Int v: WriteVector3Int(v); break;
+                case Vector4 v: WriteVector4(v); break;
                 case Quaternion q: WriteQuaternion(q); break;
 #endif
                 case Array a: WriteArray(a); break;
@@ -156,12 +159,33 @@ namespace Rietmon.Serialization
             WriteFloat(value.x);
             WriteFloat(value.y);
         }
+        
+        private void WriteVector2Int(Vector2Int value)
+        {
+            WriteInt(value.x);
+            WriteInt(value.y);
+        }
 
         private void WriteVector3(Vector3 value)
         {
             WriteFloat(value.x);
             WriteFloat(value.y);
             WriteFloat(value.z);
+        }
+
+        private void WriteVector3Int(Vector3Int value)
+        {
+            WriteInt(value.x);
+            WriteInt(value.y);
+            WriteInt(value.z);
+        }
+
+        private void WriteVector4(Vector4 value)
+        {
+            WriteFloat(value.x);
+            WriteFloat(value.y);
+            WriteFloat(value.z);
+            WriteFloat(value.w);
         }
 
         private void WriteQuaternion(Quaternion value)
