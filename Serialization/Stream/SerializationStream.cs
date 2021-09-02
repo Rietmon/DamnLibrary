@@ -250,7 +250,10 @@ namespace Rietmon.Serialization
             if (typeof(ISerializable).IsAssignableFrom(type)) return ReadSerializable(type);
 #if UNITY_2020
             if (type == typeof(Vector2)) return ReadVector2();
+            if (type == typeof(Vector2Int)) return ReadVector2();
             if (type == typeof(Vector3)) return ReadVector3();
+            if (type == typeof(Vector3Int)) return ReadVector3();
+            if (type == typeof(Vector4)) return ReadVector3();
             if (type == typeof(Quaternion)) return ReadQuaternion();
 #endif
             if (type.IsArray) return ReadArray(type);
@@ -272,7 +275,7 @@ namespace Rietmon.Serialization
 
         private Type ReadType()
         {
-            var typeName = Read<string>();
+            var typeName = ReadString();
             return Type.GetType(typeName);
         }
 
@@ -328,6 +331,15 @@ namespace Rietmon.Serialization
                 y = ReadFloat()
             };
         }
+       
+        private Vector2Int ReadVector2Int()
+        {
+            return new Vector2Int
+            {
+                x = ReadInt(),
+                y = ReadInt()
+            };
+        }
 
         private Vector3 ReadVector3()
         {
@@ -336,6 +348,27 @@ namespace Rietmon.Serialization
                 x = ReadFloat(),
                 y = ReadFloat(),
                 z = ReadFloat()
+            };
+        }
+
+        private Vector3Int ReadVector3Int()
+        {
+            return new Vector3Int
+            {
+                x = ReadInt(),
+                y = ReadInt(),
+                z = ReadInt()
+            };
+        }
+
+        private Vector4 ReadVector4()
+        {
+            return new Vector4
+            {
+                x = ReadFloat(),
+                y = ReadFloat(),
+                z = ReadFloat(),
+                w = ReadFloat()
             };
         }
 
