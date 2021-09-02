@@ -70,7 +70,7 @@ namespace Rietmon.Extensions
 #if UNITY_2020
             return Random.Range(min, max);
 #else
-            return new Random().NextDouble() % max + min;
+            return (float)(new Random().NextDouble() % max + min);
 #endif
         }
     }

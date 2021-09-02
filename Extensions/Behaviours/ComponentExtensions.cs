@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_2020
+using UnityEngine;
 
 namespace Rietmon.Extensions
 {
@@ -11,3 +12,4 @@ namespace Rietmon.Extensions
         public static void SetObjectActive(this Component component, bool state) => component.gameObject.SetActive(state);
     }
 }
+#endif
