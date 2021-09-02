@@ -65,7 +65,7 @@ namespace Rietmon.Serialization
                 case IDictionary d: WriteDictionary(d); break;
             }
 #if UNITY_2020
-            Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {type}");
+            Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {objectType}");
 #endif
         }
 
