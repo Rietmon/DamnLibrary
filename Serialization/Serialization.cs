@@ -11,9 +11,10 @@ using UnityEngine;
 
 namespace Rietmon.Serialization
 {
-    public class Serialization 
 #if UNITY_2020
-        : UnityBehaviour
+    public class Serialization : UnityBehaviour
+#else
+    public static class Serialization
 #endif
     {
         public static short Version { get; set; } = 1;
@@ -35,7 +36,7 @@ namespace Rietmon.Serialization
         }
 #endif
 
-        public static void Initialize()
+        public static void FindInheritors()
         {
             var inheritors = AssemblyUtilities.GetAllAttributeInherits<StaticSerializableAttribute>();
             foreach (var inheritor in inheritors)
@@ -95,9 +96,7 @@ namespace Rietmon.Serialization
             
             return stream.ToArray();
         }
-#endif
 
-#if UNITY_2020
         public static void DeserializeComponents(byte[] bytes, SerializationStream stream = null)
         {
             if (Instance == null)

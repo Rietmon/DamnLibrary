@@ -39,7 +39,37 @@ namespace Rietmon.Serialization
             stream = new MemoryStream(data);
         }
 
-        public void Write<T>(T obj, params bool[] dynamicTypes)
+        public void Write(Type objectType, object value)
+        {
+            if (objectType == typeof(object))
+                WriteValueType(value.GetType());
+            
+            switch (value)
+            {
+                case bool b: WriteByte(b ? (byte)1 : (byte)0); break;
+                case byte b: WriteByte(b); break;
+                case short s: WriteShort(s); break;
+                case int i: WriteInt(i); break;
+                case float f: WriteFloat(f); break;
+                case double d: WriteDouble(d); break;
+                case long l: WriteLong(l); break;
+                case string s: WriteString(s); break;
+                case ISerializable s: WriteSerializable(s); break;
+#if UNITY_2020
+                case Vector2 v: WriteVector2(v); break;
+                case Vector3 v: WriteVector3(v); break;
+                case Quaternion q: WriteQuaternion(q); break;
+#endif
+                case Array a: WriteArray(a); break;
+                case IList l: WriteList(l); break;
+                case IDictionary d: WriteDictionary(d); break;
+            }
+#if UNITY_2020
+            Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {type}");
+#endif
+        }
+
+        public void Write<T>(T obj)
         {
             if (typeof(T) == typeof(object))
                 WriteValueType(obj.GetType());
@@ -60,9 +90,9 @@ namespace Rietmon.Serialization
                 case Vector3 v: WriteVector3(v); break;
                 case Quaternion q: WriteQuaternion(q); break;
 #endif
-                case Array a: WriteArray(a, dynamicTypes); break;
-                case IList l: WriteList(l, dynamicTypes); break;
-                case IDictionary d: WriteDictionary(d, dynamicTypes); break;
+                case Array a: WriteArray(a); break;
+                case IList l: WriteList(l); break;
+                case IDictionary d: WriteDictionary(d); break;
 #if UNITY_2020
                 default: Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}"); break;
 #endif
@@ -143,43 +173,38 @@ namespace Rietmon.Serialization
         }
 #endif
 
-        private void WriteArray(Array value, bool[] dynamicTypes)
+        private void WriteArray(Array value)
         {
             WriteShort((short)value.Length);
+            var elementsType = value.GetType().GetElementType();
             for (var i = 0; i < value.Length; i++)
             {
                 var element = value.GetValue(i);
-                if (dynamicTypes.TryGetValue(0, out var isDynamicType) && isDynamicType)
-                    Write(element.GetType().FullName);
-                Write(element);
+                Write(elementsType, element);
             }
         }
 
-        private void WriteList(IList value, bool[] dynamicTypes)
+        private void WriteList(IList value)
         {
             WriteShort((short)value.Count);
+            var elementType = value.GetType().GetGenericArguments()[0];
             foreach (var element in value)
             {
-                if (dynamicTypes.TryGetValue(0, out var isDynamicType) && isDynamicType)
-                    Write(element.GetType().FullName);
-                Write(element);
+                Write(elementType, element);
             }
         }
         
-        private void WriteDictionary(IDictionary value, bool[] dynamicTypes)
+        private void WriteDictionary(IDictionary value)
         {
             WriteShort((short)value.Count);
+            var genericTypes = value.GetType().GetGenericArguments();
             foreach (var element in value)
             {
                 var dictionaryEntry = (DictionaryEntry)element;
                 
-                if (dynamicTypes.TryGetValue(0, out var isKeyDynamicType) && isKeyDynamicType)
-                    Write(dictionaryEntry.Key.GetType().FullName);
-                Write(dictionaryEntry.Key);
+                Write(genericTypes[0], dictionaryEntry.Key);
                 
-                if (dynamicTypes.TryGetValue(0, out var isValueDynamicType) && isValueDynamicType)
-                    Write(dictionaryEntry.Value.GetType().FullName);
-                Write(dictionaryEntry.Value);
+                Write(genericTypes[1], dictionaryEntry.Value);
             }
         }
 
@@ -333,7 +358,7 @@ namespace Rietmon.Serialization
         private IDictionary ReadDictionary(Type type)
         {
             var length = ReadShort();
-            var keyType = type.GetGenericArguments().First();
+            var keyType = type.GetGenericArguments()[0];
             var valueType = type.GetGenericArguments()[1];
             var dictionary = (IDictionary)Activator.CreateInstance(type);
             
