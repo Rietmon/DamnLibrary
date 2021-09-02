@@ -61,7 +61,11 @@ namespace Rietmon.Management
     
         public static void EnablePreloadedScene(string name) => scenesInPreloading[name].allowSceneActivation = true;
         
-        public static async void UnloadSceneAsync(string name)
+#if ENABLE_UNI_TASK
+        public static async UniTask UnloadSceneAsync(string name)
+#else
+        public static async Task UnloadSceneAsync(string name)
+#endif
         {
             if (IsScenePreloading(name))
             {

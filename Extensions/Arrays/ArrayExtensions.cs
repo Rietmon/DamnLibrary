@@ -5,6 +5,18 @@ namespace Rietmon.Extensions
 {
     public static class ArrayExtensions
     {
+        public static bool TryGetValue<T>(this T[] array, int index, out T value)
+        {
+            if (index < array.Length && index >= 0)
+            {
+                value = array[index];
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+        
         public static int IndexOf<T>(this T[] array, T element) => Array.IndexOf(array, element);
 
         public static int[] IndicesOf<T>(this T[] array, T element)
