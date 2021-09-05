@@ -31,14 +31,14 @@ namespace Rietmon.Serialization
 
         public SerializationStream()
         {
-            IsReading = true;
+            IsWriting = true;
 
             stream = new MemoryStream();
         }
 
         public SerializationStream(byte[] data)
         {
-            IsWriting = true;
+            IsReading = true;
 
             stream = new MemoryStream(data);
         }
@@ -49,7 +49,7 @@ namespace Rietmon.Serialization
                 return;
             
             if (serializeAs != null && serializeAs == typeof(object) || 
-                typeof(T) == typeof(object))
+                serializeAs == null && typeof(T) == typeof(object))
                 WriteValueType(obj.GetType());
             
             switch (obj)
