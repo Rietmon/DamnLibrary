@@ -36,7 +36,7 @@ namespace Rietmon.Serialization
         }
 #endif
 
-        public static void FindInheritors()
+        public static void FindStaticSerializable()
         {
             var inheritors = AssemblyUtilities.GetAllAttributeInherits<StaticSerializableAttribute>();
             foreach (var inheritor in inheritors)
@@ -49,7 +49,7 @@ namespace Rietmon.Serialization
 
         public static SerializationStream CreateSerializationStream()
         {
-            var stream = new SerializationStream {Version = Version};
+            var stream = new SerializationStream { Version = Version };
             stream.Write(Version);
             return stream;
         }
@@ -67,7 +67,7 @@ namespace Rietmon.Serialization
             if (Instance == null)
             {
                 Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize at the {SceneManager.ActiveScene.name} scene, because there is no serialization component!");
-                return new byte[0];
+                return Array.Empty<byte>();
             }
             
             stream ??= CreateSerializationStream();
@@ -77,7 +77,7 @@ namespace Rietmon.Serialization
             if (objects == null || objects.Length == 0)
             {
                 Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize at the {SceneManager.ActiveScene.name} scene, because there is no serializable objects!");
-                return new byte[0];
+                return Array.Empty<byte>();
             }
 
             foreach (var obj in objects)
@@ -101,13 +101,13 @@ namespace Rietmon.Serialization
         {
             if (Instance == null)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because there is no serialization component!");
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because there is no serialization component!");
                 return;
             }
 
             if (bytes == null || bytes.Length == 0)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because byte is null or length is equal 0!");
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because byte is null or length is equal 0!");
                 return;
             }
             
@@ -117,7 +117,7 @@ namespace Rietmon.Serialization
 
             if (objects == null || objects.Length == 0)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because there is no serializable objects!");
+                Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because there is no serializable objects!");
                 return;
             }
 
@@ -177,7 +177,7 @@ namespace Rietmon.Serialization
             serializableObjects = FindObjectsOfType<SerializableObject>();
 
             EditorUtility.SetDirty(this);
-            Debug.Log($"Found {serializableObjects.Length} components");
+            Debug.Log($"[{nameof(Serialization)}] ({nameof(FindSerializableComponents)}) Found {serializableObjects.Length} components");
         }
 
 #endif

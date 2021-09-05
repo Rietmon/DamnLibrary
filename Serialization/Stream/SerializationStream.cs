@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Rietmon.Extensions;
 #if UNITY_2020
 using UnityEngine;
 #endif
@@ -16,12 +15,15 @@ namespace Rietmon.Serialization
     {
         private static readonly Dictionary<Type, Func<object, byte[]>> customSerialization =
             new Dictionary<Type, Func<object, byte[]>>();
-        
+
+        private static readonly Dictionary<Type, Func<SerializationStream, object>> customDeserialization =
+            new Dictionary<Type, Func<SerializationStream, object>>();
+
         public bool IsReading { get; }
 
         public bool IsWriting { get; }
 
-        public int Version { get; set; }
+        public int Version { get; internal set; }
 
         public bool HasBytesToRead => stream.Position < stream.Length;
 
@@ -273,6 +275,8 @@ namespace Rietmon.Serialization
             if (typeof(IList).IsAssignableFrom(type)) return ReadList(type);
             if (typeof(IDictionary).IsAssignableFrom(type)) return ReadDictionary(type);
 
+            if (customDeserialization.TryGetValue(type, out var method)) return method.Invoke(this);
+
 #if UNITY_2020
             Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {type}");
 #endif
@@ -481,11 +485,17 @@ namespace Rietmon.Serialization
             stream.Dispose();
         }
 
-        public static void AddCustomSerialization(Type type, Func<object, byte[]> serializationMethod) =>
+        public static void AddCustomSerialization(Type type, Func<object, byte[]> serializationMethod, Func<SerializationStream, object> deserializationMethod)
+        {
             customSerialization.Add(type, serializationMethod);
+            customDeserialization.Add(type, deserializationMethod);
+        }
 
-        public static void RemoveCustomSerialization(Type type) => 
+        public static void RemoveCustomSerialization(Type type)
+        {
             customSerialization.Remove(type);
+            customDeserialization.Remove(type);
+        }
     }
 }
 #endif
