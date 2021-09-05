@@ -35,9 +35,11 @@ namespace Rietmon.Linkers
             this.value = value;
         }
 
-        public void SetParent(HierarchyLinkerContainer<T> parent)
+        public void SetParent(HierarchyLinkerContainer<T> newParent)
         {
-            this.parent = parent;
+            parent.childes.Remove(this);
+            newParent.childes.Add(this);
+            parent = newParent;
         }
 
         public void AddChild(T child)

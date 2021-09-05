@@ -12,6 +12,14 @@ public static class DictionaryExtensions
         }
     }
 
+    public static void AddOrChange<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    {
+        if (dictionary.ContainsKey(key))
+            dictionary[key] = value;
+        else
+            dictionary.Add(key, value);
+    }
+
     public static Dictionary<TKey, TNewValue> SmartCast<TNewValue, TKey, TCurrentValue>(this Dictionary<TKey, TCurrentValue> dictionary,
         Func<TCurrentValue, TNewValue> castFunction)
     {

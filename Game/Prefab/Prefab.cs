@@ -28,7 +28,7 @@ namespace Rietmon.Game
             prefabObject = component;
         }
 
-        public T SimpleInstantiate() => Object.Instantiate(prefabObject);
+        public T SimpleInstantiate() => Object.Instantiate(prefabObject, DefaultParent);
 
         public T SimpleInstantiate(Transform transform) => Object.Instantiate(prefabObject, transform);
 
