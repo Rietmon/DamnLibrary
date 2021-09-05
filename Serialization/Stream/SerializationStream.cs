@@ -1,6 +1,7 @@
 ﻿#if ENABLE_SERIALIZATION
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,9 @@ namespace Rietmon.Serialization
 {
     public class SerializationStream
     {
+        private static readonly Dictionary<Type, Func<object, byte[]>> customSerialization =
+            new Dictionary<Type, Func<object, byte[]>>();
+        
         public bool IsReading { get; }
 
         public bool IsWriting { get; }
@@ -39,67 +43,50 @@ namespace Rietmon.Serialization
             stream = new MemoryStream(data);
         }
 
-        public void Write(Type objectType, object value)
+        public void Write<T>(T obj, Type serializeAs = null)
         {
-            if (objectType == typeof(object))
-                WriteValueType(value.GetType());
+            if (!IsWriting)
+                return;
             
-            switch (value)
-            {
-                case bool b: WriteByte(b ? (byte)1 : (byte)0); break;
-                case byte b: WriteByte(b); break;
-                case short s: WriteShort(s); break;
-                case int i: WriteInt(i); break;
-                case float f: WriteFloat(f); break;
-                case double d: WriteDouble(d); break;
-                case long l: WriteLong(l); break;
-                case string s: WriteString(s); break;
-                case ISerializable s: WriteSerializable(s); break;
-#if UNITY_2020
-                case Vector2 v: WriteVector2(v); break;
-                case Vector3 v: WriteVector3(v); break;
-                case Quaternion q: WriteQuaternion(q); break;
-#endif
-                case Array a: WriteArray(a); break;
-                case IList l: WriteList(l); break;
-                case IDictionary d: WriteDictionary(d); break;
-            }
-#if UNITY_2020
-            Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {objectType}");
-#endif
-        }
-
-        public void Write<T>(T obj)
-        {
-            if (typeof(T) == typeof(object))
+            if (serializeAs != null && serializeAs == typeof(object) || 
+                typeof(T) == typeof(object))
                 WriteValueType(obj.GetType());
             
             switch (obj)
             {
-                case bool b: WriteByte(b ? (byte)1 : (byte)0); break;
-                case byte b: WriteByte(b); break;
-                case short s: WriteShort(s); break;
-                case int i: WriteInt(i); break;
-                case float f: WriteFloat(f); break;
-                case double d: WriteDouble(d); break;
-                case long l: WriteLong(l); break;
-                case string s: WriteString(s); break;
-                case ISerializable s: WriteSerializable(s); break;
+                case bool b: WriteByte(b ? (byte)1 : (byte)0); return;
+                case byte b: WriteByte(b); return;
+                case sbyte b: WriteSByte(b); return;
+                case short s: WriteShort(s); return;
+                case ushort s: WriteUShort(s); return;
+                case int i: WriteInt(i); return;
+                case uint i: WriteUInt(i); return;
+                case float f: WriteFloat(f); return;
+                case double d: WriteDouble(d); return;
+                case long l: WriteLong(l); return;
+                case ulong l: WriteULong(l); return;
+                case string s: WriteString(s); return;
+                case ISerializable s: WriteSerializable(s); return;
 #if UNITY_2020
-                case Vector2 v: WriteVector2(v); break;
-                case Vector2Int v: WriteVector2Int(v); break;
-                case Vector3 v: WriteVector3(v); break;
-                case Vector3Int v: WriteVector3Int(v); break;
-                case Vector4 v: WriteVector4(v); break;
-                case Quaternion q: WriteQuaternion(q); break;
+                case Vector2 v: WriteVector2(v); return;
+                case Vector2Int v: WriteVector2Int(v); return;
+                case Vector3 v: WriteVector3(v); return;
+                case Vector3Int v: WriteVector3Int(v); return;
+                case Vector4 v: WriteVector4(v); return;
+                case Quaternion q: WriteQuaternion(q); return;
 #endif
-                case Array a: WriteArray(a); break;
-                case IList l: WriteList(l); break;
-                case IDictionary d: WriteDictionary(d); break;
-#if UNITY_2020
-                default: Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}"); break;
-#endif
+                case Array a: WriteArray(a); return;
+                case IList l: WriteList(l); return;
+                case IDictionary d: WriteDictionary(d); return;
             }
+
+            var targetSerializationType = serializeAs ?? obj.GetType();
+            if (customSerialization.TryGetValue(targetSerializationType, out var method))
+                WriteToStream(method.Invoke(obj));
+#if UNITY_2020
+            else
+                Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}");
+#endif
         }
 
         private void WriteToStream(params byte[] bytes)
@@ -116,13 +103,27 @@ namespace Rietmon.Serialization
         {
             WriteToStream(value);
         }
+        
+        private void WriteSByte(sbyte value)
+        {
+            WriteToStream((byte)(value + 128));
+        }
 
         private void WriteShort(short value)
         {
             WriteToStream(BitConverter.GetBytes(value));
         }
 
+        private void WriteUShort(ushort value)
+        {
+            WriteToStream(BitConverter.GetBytes(value));
+        }
+
         private void WriteInt(int value)
+        {
+            WriteToStream(BitConverter.GetBytes(value));
+        }
+        private void WriteUInt(uint value)
         {
             WriteToStream(BitConverter.GetBytes(value));
         }
@@ -138,6 +139,11 @@ namespace Rietmon.Serialization
         }
 
         private void WriteLong(long value)
+        {
+            WriteToStream(BitConverter.GetBytes(value));
+        }
+
+        private void WriteULong(ulong value)
         {
             WriteToStream(BitConverter.GetBytes(value));
         }
@@ -204,7 +210,7 @@ namespace Rietmon.Serialization
             for (var i = 0; i < value.Length; i++)
             {
                 var element = value.GetValue(i);
-                Write(elementsType, element);
+                Write(element, elementsType);
             }
         }
 
@@ -214,7 +220,7 @@ namespace Rietmon.Serialization
             var elementType = value.GetType().GetGenericArguments()[0];
             foreach (var element in value)
             {
-                Write(elementType, element);
+                Write(element, elementType);
             }
         }
         
@@ -226,9 +232,9 @@ namespace Rietmon.Serialization
             {
                 var dictionaryEntry = (DictionaryEntry)element;
                 
-                Write(genericTypes[0], dictionaryEntry.Key);
+                Write(dictionaryEntry.Key, genericTypes[0]);
                 
-                Write(genericTypes[1], dictionaryEntry.Value);
+                Write(dictionaryEntry.Value, genericTypes[1]);
             }
         }
 
@@ -236,24 +242,31 @@ namespace Rietmon.Serialization
 
         public object Read(Type type)
         {
+            if (!IsReading)
+                return null;
+            
             if (type == typeof(object))
                 type = ReadType();
             
             if (type == typeof(bool)) return ReadByte() == 1;
             if (type == typeof(byte)) return ReadByte();
+            if (type == typeof(sbyte)) return ReadSByte();
             if (type == typeof(short)) return ReadShort();
+            if (type == typeof(ushort)) return ReadUShort();
             if (type == typeof(int)) return ReadInt();
+            if (type == typeof(uint)) return ReadUInt();
             if (type == typeof(float)) return ReadFloat();
             if (type == typeof(double)) return ReadDouble();
             if (type == typeof(long)) return ReadLong();
+            if (type == typeof(ulong)) return ReadULong();
             if (type == typeof(string)) return ReadString();
             if (typeof(ISerializable).IsAssignableFrom(type)) return ReadSerializable(type);
 #if UNITY_2020
             if (type == typeof(Vector2)) return ReadVector2();
-            if (type == typeof(Vector2Int)) return ReadVector2();
+            if (type == typeof(Vector2Int)) return ReadVector2Int();
             if (type == typeof(Vector3)) return ReadVector3();
-            if (type == typeof(Vector3Int)) return ReadVector3();
-            if (type == typeof(Vector4)) return ReadVector3();
+            if (type == typeof(Vector3Int)) return ReadVector3Int();
+            if (type == typeof(Vector4)) return ReadVector4();
             if (type == typeof(Quaternion)) return ReadQuaternion();
 #endif
             if (type.IsArray) return ReadArray(type);
@@ -284,14 +297,29 @@ namespace Rietmon.Serialization
             return ReadFromStream(1).First();
         }
 
+        private sbyte ReadSByte()
+        {
+            return (sbyte)((sbyte)ReadFromStream(1).First() - 128);
+        }
+
         private short ReadShort()
         {
             return BitConverter.ToInt16(ReadFromStream(2), 0);
         }
 
+        private ushort ReadUShort()
+        {
+            return BitConverter.ToUInt16(ReadFromStream(2), 0);
+        }
+
         private int ReadInt()
         {
             return BitConverter.ToInt32(ReadFromStream(4), 0);
+        }
+
+        private uint ReadUInt()
+        {
+            return BitConverter.ToUInt32(ReadFromStream(4), 0);
         }
 
         private float ReadFloat()
@@ -307,6 +335,11 @@ namespace Rietmon.Serialization
         private long ReadLong()
         {
             return BitConverter.ToInt64(ReadFromStream(8), 0);
+        }
+
+        private ulong ReadULong()
+        {
+            return BitConverter.ToUInt64(ReadFromStream(8), 0);
         }
 
         private string ReadString()
@@ -447,6 +480,12 @@ namespace Rietmon.Serialization
         {
             stream.Dispose();
         }
+
+        public static void AddCustomSerialization(Type type, Func<object, byte[]> serializationMethod) =>
+            customSerialization.Add(type, serializationMethod);
+
+        public static void RemoveCustomSerialization(Type type) => 
+            customSerialization.Remove(type);
     }
 }
 #endif
