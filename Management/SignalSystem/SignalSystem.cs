@@ -59,9 +59,9 @@ namespace Rietmon.Management
         }
         
 #if ENABLE_UNI_TASK
-        public static async UniTask NotifyAsync<T>(T signal) where T : Signal
+        public static async UniTask NotifyAsync<T>(T signal, bool waitForComplete = true) where T : Signal
 #else
-        public static async Task NotifyAsync<T>(T signal) where T : Signal
+        public static async Task NotifyAsync<T>(T signal, bool waitForComplete = true) where T : Signal
 #endif
         {
             var signalType = signal.GetType();
@@ -71,11 +71,14 @@ namespace Rietmon.Management
             foreach (var callback in callbacks)
             {
                 var asyncResult = callback.Second?.BeginInvoke(signal, null, null);
+                if (waitForComplete)
+                {
 #if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => asyncResult.IsCompleted);
 #else
-                await TaskUtilities.WaitUntil(() => asyncResult.IsCompleted);
+                    await TaskUtilities.WaitUntil(() => asyncResult.IsCompleted);
 #endif
+                }
             }
         }
     } 
