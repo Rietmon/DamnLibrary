@@ -1,4 +1,4 @@
-﻿#if UNITY_2020 && ENABLE_DAMN_SCRIPT
+﻿#if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
 #else

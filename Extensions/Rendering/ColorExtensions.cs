@@ -1,4 +1,4 @@
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 
 namespace Rietmon.Extensions

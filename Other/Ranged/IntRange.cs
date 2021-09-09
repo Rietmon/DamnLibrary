@@ -1,6 +1,6 @@
 using System;
 using Rietmon.Extensions;
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
@@ -23,12 +23,12 @@ namespace Rietmon.Other
 
         public int RandomValue => RandomUtilities.Range(MinimalValue, MaximalValue);
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         [SerializeField]
 #endif
         private int minimalValue;
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         [SerializeField]
 #endif
         private int maximalValue;

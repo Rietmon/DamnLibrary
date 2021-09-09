@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
@@ -21,12 +21,12 @@ namespace Rietmon.Other
             set => second = value;
         }
         
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         [SerializeField] 
 #endif
         private T1 first;
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         [SerializeField] 
 #endif
         private T2 second;

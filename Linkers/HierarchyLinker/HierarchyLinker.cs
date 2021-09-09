@@ -1,5 +1,5 @@
 ﻿using System;
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
@@ -12,7 +12,7 @@ namespace Rietmon.Linkers
 
         public T Current => current.Value;
         
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         [SerializeField] 
 #endif
         private HierarchyLinkerContainer<T> entry;

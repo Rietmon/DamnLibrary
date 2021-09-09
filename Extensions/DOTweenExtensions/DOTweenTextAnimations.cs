@@ -1,4 +1,4 @@
-#if UNITY_2020 && ENABLE_DOTWEEN
+#if UNITY_5_3_OR_NEWER  && ENABLE_DOTWEEN
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;

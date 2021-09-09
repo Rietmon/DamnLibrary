@@ -1,4 +1,4 @@
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 #if ENABLE_UNI_TASK
 using Cysharp.Threading.Tasks;
 #else

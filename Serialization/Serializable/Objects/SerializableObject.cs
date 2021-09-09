@@ -1,4 +1,4 @@
-﻿#if ENABLE_SERIALIZATION && UNITY_2020
+﻿#if ENABLE_SERIALIZATION && UNITY_5_3_OR_NEWER 
 using System.Collections.Generic;
 using UnityEngine;
 

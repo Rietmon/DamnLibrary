@@ -1,4 +1,4 @@
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 namespace Rietmon.Behaviours
 {
     public class SingletonBehaviour<T> : UnityBehaviour where T : class

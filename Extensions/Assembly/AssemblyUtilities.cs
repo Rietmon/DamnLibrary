@@ -9,7 +9,7 @@ namespace Rietmon.Extensions
     {
         private static readonly string[] mainAssemblyNames =
         {
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
             "Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
             "Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
 #endif

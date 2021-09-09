@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Rietmon.Extensions;
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 using Rietmon.Behaviours;
 using Rietmon.Management;
 using UnityEditor;
@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Rietmon.Serialization
 {
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
     public class Serialization : UnityBehaviour
 #else
     public static class Serialization
@@ -19,17 +19,17 @@ namespace Rietmon.Serialization
     {
         public static short Version { get; set; } = 1;
         
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         public static Serialization Instance { get; private set; }
 #endif
 
         private static readonly Dictionary<short, Type> serializableStaticTypes = new Dictionary<short, Type>();
     
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         [SerializeField] private SerializableObject[] serializableObjects;
 #endif
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         private void OnEnable()
         {
             Instance = this;
@@ -61,7 +61,7 @@ namespace Rietmon.Serialization
             return stream;
         }
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         public static byte[] SerializeComponents(SerializationStream stream = null)
         {
             if (Instance == null)
@@ -157,7 +157,7 @@ namespace Rietmon.Serialization
                 var serializedBytes = stream.Read<byte[]>();
                 if (!serializableStaticTypes.TryGetValue(id, out var targetType))
                 {
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
                     Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to find component with id {id}");
 #endif
                     continue;

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-#if UNITY_2020
+using Rietmon.Extensions;
+#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
@@ -19,11 +20,13 @@ namespace Rietmon.Serialization
         private static readonly Dictionary<Type, Func<SerializationStream, object>> customDeserialization =
             new Dictionary<Type, Func<SerializationStream, object>>();
 
+        private static readonly List<Type> dynamicTypes = new List<Type>();
+        
         public bool IsReading { get; }
 
         public bool IsWriting { get; }
 
-        public int Version { get; internal set; }
+        public int Version { get; set; }
 
         public bool HasBytesToRead => stream.Position < stream.Length;
 
@@ -45,13 +48,13 @@ namespace Rietmon.Serialization
             stream = new MemoryStream(data);
         }
 
-        public void Write<T>(T obj, Type serializeAs = null)
+        public void Write<T>(T obj, Type realType = null)
         {
             if (!IsWriting)
                 return;
-            
-            if (serializeAs != null && serializeAs == typeof(object) || 
-                serializeAs == null && typeof(T) == typeof(object))
+
+            if (realType != null && IsDynamicType(realType) ||
+                realType == null && IsDynamicType(typeof(T)))
                 WriteValueType(obj.GetType());
             
             switch (obj)
@@ -69,7 +72,7 @@ namespace Rietmon.Serialization
                 case ulong l: WriteULong(l); return;
                 case string s: WriteString(s); return;
                 case ISerializable s: WriteSerializable(s); return;
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
                 case Vector2 v: WriteVector2(v); return;
                 case Vector2Int v: WriteVector2Int(v); return;
                 case Vector3 v: WriteVector3(v); return;
@@ -82,10 +85,10 @@ namespace Rietmon.Serialization
                 case IDictionary d: WriteDictionary(d); return;
             }
 
-            var targetSerializationType = serializeAs ?? obj.GetType();
+            var targetSerializationType = obj.GetType();
             if (customSerialization.TryGetValue(targetSerializationType, out var method))
                 WriteToStream(method.Invoke(obj));
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
             else
                 Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}");
 #endif
@@ -161,7 +164,7 @@ namespace Rietmon.Serialization
             value.Serialize(this);
         }
         
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         private void WriteVector2(Vector2 value)
         {
             WriteFloat(value.x);
@@ -208,11 +211,11 @@ namespace Rietmon.Serialization
         private void WriteArray(Array value)
         {
             WriteShort((short)value.Length);
-            var elementsType = value.GetType().GetElementType();
+            var elementType = value.GetType().GetElementType();
             for (var i = 0; i < value.Length; i++)
             {
                 var element = value.GetValue(i);
-                Write(element, elementsType);
+                Write(element, elementType);
             }
         }
 
@@ -247,7 +250,7 @@ namespace Rietmon.Serialization
             if (!IsReading)
                 return null;
             
-            if (type == typeof(object))
+            if (IsDynamicType(type))
                 type = ReadType();
             
             if (type == typeof(bool)) return ReadByte() == 1;
@@ -263,7 +266,7 @@ namespace Rietmon.Serialization
             if (type == typeof(ulong)) return ReadULong();
             if (type == typeof(string)) return ReadString();
             if (typeof(ISerializable).IsAssignableFrom(type)) return ReadSerializable(type);
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
             if (type == typeof(Vector2)) return ReadVector2();
             if (type == typeof(Vector2Int)) return ReadVector2Int();
             if (type == typeof(Vector3)) return ReadVector3();
@@ -277,7 +280,7 @@ namespace Rietmon.Serialization
 
             if (customDeserialization.TryGetValue(type, out var method)) return method.Invoke(this);
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
             Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {type}");
 #endif
             return default;
@@ -359,7 +362,7 @@ namespace Rietmon.Serialization
             return instance;
         }
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         private Vector2 ReadVector2()
         {
             return new Vector2
@@ -485,7 +488,8 @@ namespace Rietmon.Serialization
             stream.Dispose();
         }
 
-        public static void AddCustomSerialization(Type type, Func<object, byte[]> serializationMethod, Func<SerializationStream, object> deserializationMethod)
+        public static void AddCustomSerialization(Type type, Func<object, byte[]> serializationMethod, 
+            Func<SerializationStream, object> deserializationMethod)
         {
             customSerialization.Add(type, serializationMethod);
             customDeserialization.Add(type, deserializationMethod);
@@ -496,6 +500,14 @@ namespace Rietmon.Serialization
             customSerialization.Remove(type);
             customDeserialization.Remove(type);
         }
+
+        public static void AddDynamicType(Type type) => 
+            dynamicTypes.AddIfNotContains(type);
+        
+        public static void RemoveDynamicType(Type type) => 
+            dynamicTypes.Remove(type);
+
+        public static bool IsDynamicType(Type type) => type == typeof(object) || dynamicTypes.Contains(type);
     }
 }
 #endif

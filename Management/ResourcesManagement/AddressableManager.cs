@@ -1,4 +1,4 @@
-#if ENABLE_ADDRESSABLE && UNITY_2020
+#if ENABLE_ADDRESSABLE && UNITY_5_3_OR_NEWER 
 using System.Threading.Tasks;
 using Rietmon.Behaviours;
 using Rietmon.Game;

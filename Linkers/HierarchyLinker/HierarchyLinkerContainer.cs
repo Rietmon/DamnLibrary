@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
@@ -15,17 +15,17 @@ namespace Rietmon.Linkers
 
         public List<HierarchyLinkerContainer<T>> Childes => childes;
         
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         [SerializeField] 
 #endif
         private T value;
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         [SerializeField] 
 #endif
         private HierarchyLinkerContainer<T> parent;
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         [SerializeField] 
 #endif
         private List<HierarchyLinkerContainer<T>> childes = new List<HierarchyLinkerContainer<T>>();

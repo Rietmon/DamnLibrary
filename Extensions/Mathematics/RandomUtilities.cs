@@ -1,5 +1,5 @@
 using System;
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 using Random = UnityEngine.Random;
 #endif
 
@@ -9,25 +9,25 @@ namespace Rietmon.Extensions
     {
         public static bool RandomBool => RandomByte % 2 == 0;
         
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         public static byte RandomByte => (byte)Random.Range(byte.MinValue, byte.MaxValue);
 #else
         public static byte RandomByte => (byte)Range(byte.MinValue, byte.MaxValue);
 #endif
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         public static short RandomShort => (short)Random.Range(short.MinValue, short.MaxValue);
 #else
         public static short RandomShort => (short)Range(short.MinValue, short.MaxValue);
 #endif
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         public static int RandomInt => Random.Range(int.MinValue, int.MaxValue);
 #else
         public static int RandomInt => Range(int.MinValue, int.MaxValue);
 #endif
 
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
         public static uint RandomUInt => (uint)Random.Range(uint.MinValue, uint.MaxValue);
 #else
         public static uint RandomUInt => (uint)Range(0, uint.MaxValue);
@@ -49,7 +49,7 @@ namespace Rietmon.Extensions
 
         public static int Range(int min, int max)
         {
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
             return Random.Range(min, max);
 #else
             return new Random().Next(min, max);
@@ -58,7 +58,7 @@ namespace Rietmon.Extensions
         
         public static double Range(double min, double max)
         {
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
             return Random.Range((float)min, (float)max);
 #else
             return new Random().NextDouble() % max + min;
@@ -67,7 +67,7 @@ namespace Rietmon.Extensions
         
         public static float Range(float min, float max)
         {
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
             return Random.Range(min, max);
 #else
             return (float)(new Random().NextDouble() % max + min);

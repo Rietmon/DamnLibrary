@@ -1,4 +1,4 @@
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 using System;
 using System.Threading.Tasks;
 #if ENABLE_UNI_TASK

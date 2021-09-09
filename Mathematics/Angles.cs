@@ -1,5 +1,5 @@
 ﻿using System;
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
@@ -30,7 +30,7 @@ namespace Rietmon.Mathematics
 
         private static bool IsAngleLess(float angle, float min, float max)
         {
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
             var center = Mathf.Abs(max - min + 180);
 #else
             var center = Math.Abs(max - min + 180);

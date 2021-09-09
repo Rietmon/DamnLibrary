@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
@@ -14,7 +14,7 @@ namespace Rietmon.Extensions
                 BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);
             if (methodInfo == null)
             {
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
                 Debug.LogWarning(
                     $"[{nameof(TypeExtensions)}] ({nameof(SafeInvokeStaticMethod)}) Unable to find static method \"{methodName}\" in type {type.FullName}!");
 #endif
@@ -30,7 +30,7 @@ namespace Rietmon.Extensions
                 BindingFlags.Public | BindingFlags.NonPublic);
             if (methodInfo == null)
             {
-#if UNITY_2020
+#if UNITY_5_3_OR_NEWER 
                 Debug.LogWarning(
                     $"[{nameof(TypeExtensions)}] ({nameof(SafeInvokeMethod)}) Unable to find method \"{methodName}\" in type {type.FullName}!");
 #endif
