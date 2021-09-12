@@ -12,28 +12,17 @@ using UnityEngine;
 namespace Rietmon.Serialization
 {
 #if UNITY_5_3_OR_NEWER 
-    public class Serialization : UnityBehaviour
+    public class Serialization : SingletonBehaviour<Serialization>
 #else
     public static class Serialization
 #endif
     {
         public static short Version { get; set; } = 1;
-        
-#if UNITY_5_3_OR_NEWER 
-        public static Serialization Instance { get; private set; }
-#endif
 
         private static readonly Dictionary<short, Type> serializableStaticTypes = new Dictionary<short, Type>();
     
 #if UNITY_5_3_OR_NEWER 
         [SerializeField] private SerializableObject[] serializableObjects;
-#endif
-
-#if UNITY_5_3_OR_NEWER 
-        private void OnEnable()
-        {
-            Instance = this;
-        }
 #endif
 
         public static void FindStaticSerializable()

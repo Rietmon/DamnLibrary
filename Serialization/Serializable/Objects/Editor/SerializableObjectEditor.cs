@@ -13,11 +13,13 @@ namespace Rietmon.Serialization
     {
         private SerializedProperty serializeAllComponentsProperty;
         private SerializedProperty serializableComponentsProperty;
+        private SerializedProperty serializableIdProperty;
         private SerializedProperty scriptProperty;
 
         private void OnEnable()
         {
             scriptProperty = serializedObject.FindProperty("m_Script");
+            serializableIdProperty = serializedObject.FindProperty("serializableId");
             serializeAllComponentsProperty = serializedObject.FindProperty("serializeAllComponents");
             serializableComponentsProperty = serializedObject.FindProperty("serializableComponents");
         }
@@ -28,6 +30,7 @@ namespace Rietmon.Serialization
             GUI.enabled = false;
             EditorGUILayout.PropertyField(scriptProperty, true);
             GUI.enabled = true;
+            EditorGUILayout.PropertyField(serializableIdProperty);
             EditorGUILayout.PropertyField(serializeAllComponentsProperty);
             if (!serializeAllComponentsProperty.boolValue)
                 EditorGUILayout.PropertyField(serializableComponentsProperty);

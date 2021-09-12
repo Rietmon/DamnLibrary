@@ -55,8 +55,9 @@ namespace Rietmon.Serialization
             }
         }
 
-        private void Reset()
+        protected override void Reset()
         {
+            base.Reset();
             serializeAllComponents = true;
         }
     }

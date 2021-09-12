@@ -2,7 +2,6 @@
 using Rietmon.Attributes;
 using Rietmon.Behaviours;
 using Rietmon.Extensions;
-using Rietmon.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -10,8 +9,7 @@ using UnityEngine;
 
 namespace Rietmon.Serialization
 {
-    [RequireComponent(typeof(SerializableObject))]
-    public abstract class SerializableUnityBehaviour : UnityBehaviour, ISerializable
+    public abstract class SerializableUnityBehaviour : UnityBehaviour
     {
         public short SerializableId => serializableId;
 
@@ -19,14 +17,14 @@ namespace Rietmon.Serialization
 
         [SerializeField, ReadOnly] private short serializableId;
 
-        public void Serialize(SerializationStream stream)
+        internal void Serialize(SerializationStream stream)
         {
             OnSerialize(stream);
         }
 
         protected virtual void OnSerialize(SerializationStream stream) { }
 
-        public void Deserialize(SerializationStream stream)
+        internal void Deserialize(SerializationStream stream)
         {
             OnDeserialize(stream);
             WasDeserialized = true;

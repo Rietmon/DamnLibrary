@@ -19,16 +19,10 @@ namespace Rietmon.Behaviours
                 return _transform;
             }
         }
-        
-        public bool WasAllDeserialized { get; set; }
 
         private readonly Dictionary<Type, Component> pullComponents = new Dictionary<Type, Component>();
 
         private Transform _transform;
-
-        public virtual void OnAfterAllSerialize() { }
-        
-        public virtual void OnAfterAllDeserialize() { }
 
         public T AddComponent<T>() where T : Component => gameObject.AddComponent<T>();
 
