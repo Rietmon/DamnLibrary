@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿#if ENABLE_UNI_TASK
+using Cysharp.Threading.Tasks;
 
 namespace Rietmon.Extensions
 {
@@ -7,3 +8,4 @@ namespace Rietmon.Extensions
         public static void Wait(this UniTask task) => task.AsTask().Wait();
     }
 }
+#endif
