@@ -205,7 +205,11 @@ namespace Rietmon.Management
             return null;
         }
         
+#if ENABLE_UNI_TASK
+        private static async UniTask<Prefab<WindowBehaviour>> GetPrefabAsync(string windowName)
+#else
         private static async Task<Prefab<WindowBehaviour>> GetPrefabAsync(string windowName)
+#endif
         {
             switch (DataProviderType)
             {
