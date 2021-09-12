@@ -137,7 +137,7 @@ namespace Rietmon.Management
                 var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetArgument(0));
 
 #if ENABLE_UNI_TASK
-            await UniTask.WaitUntil(() => GetKeyDown(targetKey));
+                await UniTask.WaitUntil(() => GetKeyDown(targetKey));
 #else
                 await TaskUtilities.WaitUntil(() => GetKeyDown(targetKey));
 #endif
@@ -150,7 +150,7 @@ namespace Rietmon.Management
                 var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetArgument(0));
 
 #if ENABLE_UNI_TASK
-            await UniTask.WaitUntil(() => GetKey(targetKey));
+                await UniTask.WaitUntil(() => GetKey(targetKey));
 #else
                 await TaskUtilities.WaitUntil(() => GetKey(targetKey));
 #endif
@@ -163,7 +163,7 @@ namespace Rietmon.Management
                 var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetArgument(0));
 
 #if ENABLE_UNI_TASK
-            await UniTask.WaitUntil(() => GetKeyUp(targetKey));
+                await UniTask.WaitUntil(() => GetKeyUp(targetKey));
 #else
                 await TaskUtilities.WaitUntil(() => GetKeyUp(targetKey));
 #endif

@@ -101,7 +101,7 @@ namespace Rietmon.Management
                 endCallback += () =>
                 {
                     OnWillFree?.Invoke(obj);
-                    Object.Destroy(obj);
+                    obj.TotalDestroy();
                 };
 
                 OnWillBusy?.Invoke(obj);
@@ -176,10 +176,10 @@ namespace Rietmon.Management
         public void Dispose()
         {
             foreach (var obj in objectsPull)
-                Object.Destroy(obj);
+                obj.TotalDestroy();
 
             foreach (var obj in objectPullExecuting)
-                Object.Destroy(obj);
+                obj.TotalDestroy();
         }
     }
 }

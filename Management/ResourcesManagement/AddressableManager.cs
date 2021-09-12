@@ -16,6 +16,7 @@ namespace Rietmon.Management
         private const string PathToTextures = "Assets/Data/Runtime/Textures/{0}";
         private const string PathToPrefabs = "Assets/Data/Runtime/Prefabs/{0}.prefab";
         private const string PathToAudio = "Assets/Data/Runtime/Audio/{0}";
+        
         public static async Task<Prefab<WindowBehaviour>> GetWindowPrefabAsync(string windowName) =>
             await GetGameObjectOrComponentAsync<WindowBehaviour>(PathToDataWindows.Format(windowName));
         public static Prefab<WindowBehaviour> GetWindowPrefab(string windowName) =>
