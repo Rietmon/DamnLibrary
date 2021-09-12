@@ -13,8 +13,8 @@ namespace Rietmon.Other
         {
             this.identification = identification;
         }
-        
-        public void Serialize(SerializationStream stream)
+
+        void ISerializable.Serialize(SerializationStream stream)
         {
             if (identification == null)
             {
@@ -26,7 +26,7 @@ namespace Rietmon.Other
             stream.Write(identification.Id);
         }
 
-        public void Deserialize(SerializationStream stream)
+        void ISerializable.Deserialize(SerializationStream stream)
         {
             var identificationSize = stream.Read<byte>();
 
