@@ -70,6 +70,7 @@ namespace Rietmon.Serialization
                 case double d: WriteDouble(d); return;
                 case long l: WriteLong(l); return;
                 case ulong l: WriteULong(l); return;
+                case decimal l: WriteDecimal(l); return;
                 case string s: WriteString(s); return;
                 case ISerializable s: WriteSerializable(s); return;
 #if UNITY_5_3_OR_NEWER 
@@ -151,6 +152,11 @@ namespace Rietmon.Serialization
         private void WriteULong(ulong value)
         {
             WriteToStream(BitConverter.GetBytes(value));
+        }
+
+        private void WriteDecimal(decimal value)
+        {
+            WriteToStream(DecimalUtilities.GetBytes(value));
         }
 
         private void WriteString(string value)
@@ -264,6 +270,7 @@ namespace Rietmon.Serialization
             if (type == typeof(double)) return ReadDouble();
             if (type == typeof(long)) return ReadLong();
             if (type == typeof(ulong)) return ReadULong();
+            if (type == typeof(decimal)) return ReadDecimal();
             if (type == typeof(string)) return ReadString();
             if (typeof(ISerializable).IsAssignableFrom(type)) return ReadSerializable(type);
 #if UNITY_5_3_OR_NEWER 
@@ -347,6 +354,11 @@ namespace Rietmon.Serialization
         private ulong ReadULong()
         {
             return BitConverter.ToUInt64(ReadFromStream(8), 0);
+        }
+
+        private object ReadDecimal()
+        {
+            return DecimalUtilities.FromBytes(ReadFromStream(16));
         }
 
         private string ReadString()

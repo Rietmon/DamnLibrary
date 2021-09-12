@@ -1,162 +1,64 @@
-// using System;
-// using System.Linq;
-// using System.Reflection;
-// using Rietmon.Extensions;
-// #if UNITY_EDITOR
-// using UnityEditor;
-// #endif
-// #if UNITY_5_3_OR_NEWER 
-// using UnityEngine;
-// #endif
-//
-// namespace Rietmon.Other
-// {
-//     [Serializable]
-//     public struct Id
-//     {
-//         private Internal_Id InternalId
-//         {
-//             get
-//             {
-//                 if (internalId.Type == 0)
-//                 {
-//                     var bytes = internalId.valueBytes;
-//                     internalId = internalId.valueBytes.Length switch
-//                     {
-//                         1 => new Internal_Id8 {valueBytes = bytes},
-//                         2 => new Internal_Id16 {valueBytes = bytes},
-//                         _ => internalId
-//                     };
-//                 }
-//
-//                 return internalId;
-//             }
-//         }
-//
-// #if UNITY_5_3_OR_NEWER 
-//         [SerializeField]
-// #endif
-//         private Internal_Id internalId;
-//
-//         public static Id Create8(byte value) => new Id
-//         {
-//             internalId = new Internal_Id8
-//             {
-//                 valueBytes = new[] {value}
-//             }
-//         };
-//
-//         public static Id Create16(short value) => new Id
-//         {
-//             internalId = new Internal_Id16
-//             {
-//                 valueBytes = BitConverter.GetBytes(value)
-//             }
-//         };
-//
-//         public static bool operator ==(Id first, Id second)
-//         {
-//             var isFirstNull = Equals(first, null);
-//             var isSecondNull = Equals(second, null);
-//
-//             if (isFirstNull && isSecondNull)
-//                 return true;
-//
-//             if (isFirstNull != isSecondNull)
-//                 return false;
-//
-//             return first.internalId == second.internalId;
-//         }
-//
-//         public static bool operator !=(Id first, Id second) => !(first == second);
-//
-//         [Serializable]
-//         private class Internal_Id
-//         {
-//             public virtual byte Type => 0;
-//
-//             public byte[] valueBytes;
-//
-//             protected virtual bool CompareWith(Internal_Id other) => false;
-//
-//             public static bool operator ==(Internal_Id first, Internal_Id second)
-//             {
-//                 var preCompare = CompareUtilities.PreCompare(first, second);
-//                 if (preCompare != null)
-//                     return preCompare.Value;
-//
-//                 var greaterSizeValue = first.valueBytes.Length > second.valueBytes.Length ? first : second;
-//                 var smallerSizeValue = first.valueBytes.Length > second.valueBytes.Length ? second : first;
-//                 return greaterSizeValue.CompareWith(smallerSizeValue);
-//             }
-//
-//             public static bool operator !=(Internal_Id first, Internal_Id second) => !(first == second);
-//         }
-//
-//         [Serializable]
-//         private class Internal_Id8 : Internal_Id
-//         {
-//             public override byte Type => 1;
-//
-//             public byte Value => value ?? (byte)(value = valueBytes.First());
-//
-//             private byte? value;
-//
-//             protected override bool CompareWith(Internal_Id other)
-//             {
-//                 if (other is Internal_Id8 id8)
-//                     return Value == id8.Value;
-//
-//                 return false;
-//             }
-//         }
-//
-//         [Serializable]
-//         private class Internal_Id16 : Internal_Id
-//         {
-//             public override byte Type => 2;
-//
-//             public short Value => value ?? (short)(value = BitConverter.ToInt16(valueBytes, 0));
-//
-//             private short? value;
-//
-//             protected override bool CompareWith(Internal_Id other)
-//             {
-//                 if (other is Internal_Id8 id8)
-//                     return Value == id8.Value;
-//
-//                 if (other is Internal_Id16 id16)
-//                     return Value == id16.Value;
-//
-//                 return false;
-//             }
-//         }
-//
-// #if UNITY_EDITOR
-//         [CustomPropertyDrawer(typeof(Id), true)]
-//         private class Internal_IdPropertyDrawer : PropertyDrawer
-//         {
-//             public override float GetPropertyHeight(SerializedProperty property, GUIContent label) =>
-//                 EditorGUI.GetPropertyHeight(property, label, true);
-//
-//             public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-//             {
-//                 GUI.enabled = false;
-//                 var internalId = (Id)property.serializedObject.targetObject.GetType()
-//                     .GetField(property.propertyPath,
-//                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-//                     .GetValue(property.serializedObject.targetObject);
-//                 var labelValue = internalId.InternalId switch
-//                 {
-//                     Internal_Id8 id8 => id8.Value.ToString(),
-//                     Internal_Id16 id16 => id16.Value.ToString(),
-//                     _ => "null"
-//                 };
-//
-//                 EditorGUI.LabelField(position, label.text, labelValue);
-//                 GUI.enabled = true;
-//             }
-//         }
-// #endif
-//     }
-// }
+using System;
+using Rietmon.Extensions;
+using Rietmon.Serialization;
+
+namespace Rietmon.Other
+{
+    [Serializable]
+    public struct Id : ISerializable
+    {
+        private Identification identification;
+
+        private Id(Identification identification)
+        {
+            this.identification = identification;
+        }
+        
+        public void Serialize(SerializationStream stream)
+        {
+            if (identification == null)
+            {
+                stream.Write<byte>(0);
+                return;
+            }
+            
+            stream.Write(identification.Size);
+            stream.Write(identification.Id);
+        }
+
+        public void Deserialize(SerializationStream stream)
+        {
+            var identificationSize = stream.Read<byte>();
+
+            switch (identificationSize)
+            {
+                case 1: identification = new Identification8(stream.Read<byte>()); break;
+                case 2: identification = new Identification16(stream.Read<short>()); break;
+                case 4: identification = new Identification32(stream.Read<int>()); break;
+                case 8: identification = new Identification64(stream.Read<long>()); break;
+                case 16: identification = new Identification128(stream.Read<decimal>()); break;
+            }
+        }
+
+        public static bool operator ==(Id left, Id right) => 
+            left.identification == right.identification;
+
+        public static bool operator !=(Id first, Id second) => 
+            !(first == second);
+
+        public static Id Create8() => Create8(RandomUtilities.RandomByte);
+        public static Id Create8(byte id) => new Id(new Identification8(id));
+        
+        public static Id Create16() => Create16(RandomUtilities.RandomShort);
+        public static Id Create16(short id) => new Id(new Identification16(id));
+        
+        public static Id Create32() => Create32(RandomUtilities.RandomInt);
+        public static Id Create32(int id) => new Id(new Identification32(id));
+        
+        public static Id Create64() => Create64(RandomUtilities.RandomLong);
+        public static Id Create64(long id) => new Id(new Identification64(id));
+        
+        public static Id Create128() => Create128(RandomUtilities.RandomDecimal);
+        public static Id Create128(decimal id) => new Id(new Identification128(id));
+    }
+}
