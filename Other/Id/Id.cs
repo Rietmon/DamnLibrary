@@ -1,11 +1,16 @@
 using System;
 using Rietmon.Extensions;
+#if ENABLE_SERIALIZATION
 using Rietmon.Serialization;
+#endif
 
 namespace Rietmon.Other
 {
     [Serializable]
-    public struct Id : ISerializable
+    public struct Id 
+#if ENABLE_SERIALIZATION
+        : ISerializable
+#endif
     {
         private Identification identification;
 
@@ -14,6 +19,7 @@ namespace Rietmon.Other
             this.identification = identification;
         }
 
+#if ENABLE_SERIALIZATION
         void ISerializable.Serialize(SerializationStream stream)
         {
             if (identification == null)
@@ -39,6 +45,7 @@ namespace Rietmon.Other
                 case 16: identification = new Identification128(stream.Read<decimal>()); break;
             }
         }
+#endif
 
         public static bool operator ==(Id left, Id right) => 
             left.identification == right.identification;

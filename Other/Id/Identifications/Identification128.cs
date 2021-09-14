@@ -1,6 +1,4 @@
-﻿using Rietmon.Serialization;
-
-namespace Rietmon.Other
+﻿namespace Rietmon.Other
 {
     internal class Identification128 : Identification
     {
