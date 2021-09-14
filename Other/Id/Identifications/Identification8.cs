@@ -6,7 +6,7 @@
 
         public override object Id => id;
 
-        public byte id;
+        public readonly byte id;
 
         public Identification8(byte id)
         {

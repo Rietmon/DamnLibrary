@@ -6,7 +6,7 @@
 
         public override object Id => id;
 
-        public short id;
+        public readonly short id;
 
         public Identification16(short id)
         {

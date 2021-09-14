@@ -6,7 +6,7 @@
 
         public override object Id => id;
 
-        public decimal id;
+        public readonly decimal id;
 
         public Identification128(decimal id)
         {

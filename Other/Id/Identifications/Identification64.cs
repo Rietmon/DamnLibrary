@@ -6,7 +6,7 @@
 
         public override object Id => id;
 
-        public long id;
+        public readonly long id;
 
         public Identification64(long id)
         {

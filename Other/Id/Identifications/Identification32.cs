@@ -6,7 +6,7 @@
 
         public override object Id => id;
 
-        public int id;
+        public readonly int id;
 
         public Identification32(int id)
         {
