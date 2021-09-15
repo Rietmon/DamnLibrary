@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rietmon.DamnScript.Parsers;
+using Rietmon.Debugging;
 
 namespace Rietmon.DamnScript.Data
 {
@@ -12,6 +13,9 @@ namespace Rietmon.DamnScript.Data
 
         public static ScriptData Create(string name, string code)
         {
+            var debugStopwatch = new DebugStopwatch();
+            debugStopwatch.Start();
+            
             var regions = ScriptParser.ParseRegions(code);
             var regionsData = new ScriptRegionData[regions.Length];
             for (var i = 0; i < regions.Length; i++)
@@ -31,6 +35,9 @@ namespace Rietmon.DamnScript.Data
             var scriptData = new ScriptData(name, regionsData);
             
             scriptsData.Add(name, scriptData);
+            
+            debugStopwatch.Stop("Parsed ScriptData in {0} ms.");
+            
             return scriptData;
         }
     }

@@ -8,7 +8,7 @@ namespace Rietmon.DamnScript.Data
     {
         public readonly string name;
 
-        private readonly ScriptRegionData[] regionsData;
+        internal readonly ScriptRegionData[] regionsData;
 
         public ScriptData(string name, ScriptRegionData[] regionsData)
         {

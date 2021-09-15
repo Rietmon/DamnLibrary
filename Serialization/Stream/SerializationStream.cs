@@ -161,7 +161,7 @@ namespace Rietmon.Serialization
 
         private void WriteString(string value)
         {
-            WriteShort((short)value.Length);
+            WriteUShort((ushort)value.Length);
             WriteToStream(Encoding.UTF8.GetBytes(value));
         }
 
@@ -216,7 +216,7 @@ namespace Rietmon.Serialization
 
         private void WriteArray(Array value)
         {
-            WriteShort((short)value.Length);
+            WriteUShort((ushort)value.Length);
             var elementType = value.GetType().GetElementType();
             for (var i = 0; i < value.Length; i++)
             {
@@ -227,7 +227,7 @@ namespace Rietmon.Serialization
 
         private void WriteList(IList value)
         {
-            WriteShort((short)value.Count);
+            WriteUShort((ushort)value.Count);
             var elementType = value.GetType().GetGenericArguments()[0];
             foreach (var element in value)
             {
@@ -237,7 +237,7 @@ namespace Rietmon.Serialization
         
         private void WriteDictionary(IDictionary value)
         {
-            WriteShort((short)value.Count);
+            WriteUShort((ushort)value.Count);
             var genericTypes = value.GetType().GetGenericArguments();
             foreach (var element in value)
             {
@@ -363,7 +363,7 @@ namespace Rietmon.Serialization
 
         private string ReadString()
         {
-            var length = ReadShort();
+            var length = ReadUShort();
             return Encoding.UTF8.GetString(ReadFromStream(length));
         }
 
@@ -438,7 +438,7 @@ namespace Rietmon.Serialization
 
         private Array ReadArray(Type type)
         {
-            var length = ReadShort();
+            var length = ReadUShort();
             var elementType = type.GetElementType();
             var array = Array.CreateInstance(elementType, length);
             
@@ -452,7 +452,7 @@ namespace Rietmon.Serialization
 
         private IList ReadList(Type type)
         {
-            var length = ReadShort();
+            var length = ReadUShort();
             var elementType = type.GetGenericArguments().First();
             var list = (IList)Activator.CreateInstance(type);
             
@@ -466,7 +466,7 @@ namespace Rietmon.Serialization
         
         private IDictionary ReadDictionary(Type type)
         {
-            var length = ReadShort();
+            var length = ReadUShort();
             var keyType = type.GetGenericArguments()[0];
             var valueType = type.GetGenericArguments()[1];
             var dictionary = (IDictionary)Activator.CreateInstance(type);

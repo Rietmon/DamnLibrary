@@ -23,6 +23,19 @@ namespace Rietmon.DamnScript
             Script = new Script(data, this);
         }
 
+#if ENABLE_SERIALIZATION
+        public virtual void CreateScriptFromCompiledFile(string filePath)
+        {
+            var data = ScriptEngine.CreateFromCompiledFile(filePath);
+            Script = new Script(data, this);
+        }
+
+        public virtual void CreateScriptFromCompiledCote(string name, byte[] code)
+        {
+            var data = ScriptEngine.CreateDataFromCompiledCode(name, code);
+            Script = new Script(data, this);
+        }
+
         void ISerializable.Serialize(SerializationStream stream)
         {
             ((ISerializable)Script).Serialize(stream);
@@ -32,5 +45,6 @@ namespace Rietmon.DamnScript
         {
             ((ISerializable)Script).Deserialize(stream);
         }
+#endif
     }
 }

@@ -5,16 +5,18 @@ using Rietmon.Extensions;
 #if UNITY_5_3_OR_NEWER 
 using Rietmon.Behaviours;
 using Rietmon.Management;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 #endif
 
 namespace Rietmon.Serialization
 {
 #if UNITY_5_3_OR_NEWER 
-    public class Serialization : SingletonBehaviour<Serialization>
+    public class SerializationManager : SingletonBehaviour<Serialization>
 #else
-    public static class Serialization
+    public static class SerializationManager
 #endif
     {
         public static short Version { get; set; } = 1;

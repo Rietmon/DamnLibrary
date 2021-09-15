@@ -6,6 +6,7 @@ using System.Linq;
 using Rietmon.DamnScript.Executing;
 using Rietmon.DamnScript.Parsers;
 using System.Threading.Tasks;
+using Rietmon.DamnScript.Compiling;
 using Rietmon.DamnScript.Data;
 using Rietmon.Debugging;
 using Rietmon.Extensions;
@@ -61,6 +62,21 @@ namespace Rietmon.DamnScript
             var data = ScriptDatasManager.Get(name);
             return data ?? ScriptDatasManager.Create(name, code);
         }
+        
+#if ENABLE_SERIALIZATION
+        public static ScriptData CreateDataFromCompiledCode(string name, byte[] code)
+        {
+            var data = ScriptDatasManager.Get(name);
+            return data ?? ScriptCompiler.DecompileFromBytes(code);
+        }
+
+        public static ScriptData CreateFromCompiledFile(string filePath)
+        {
+            var name = Path.GetFileNameWithoutExtension(filePath);
+            var data = ScriptDatasManager.Get(name);
+            return data ?? ScriptCompiler.DecompileFromFile(filePath);
+        }
+#endif
 
         private static bool PrepareToInvoke(string[] codes, out NativeMethod method, out string[] arguments)
         {
