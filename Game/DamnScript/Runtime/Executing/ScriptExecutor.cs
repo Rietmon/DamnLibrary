@@ -1,11 +1,16 @@
 ﻿using System.IO;
 using Rietmon.DamnScript.Data;
 using Rietmon.DamnScript.Executing;
+#if ENABLE_SERIALIZATION
 using Rietmon.Serialization;
+#endif
 
 namespace Rietmon.DamnScript
 {
-    public class ScriptExecutor : IScriptExecutor, ISerializable
+    public class ScriptExecutor : IScriptExecutor
+#if ENABLE_SERIALIZATION
+        , ISerializable
+#endif
     {
         public Script Script { get; set; }
 

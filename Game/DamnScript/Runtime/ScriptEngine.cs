@@ -6,7 +6,9 @@ using System.Linq;
 using Rietmon.DamnScript.Executing;
 using Rietmon.DamnScript.Parsers;
 using System.Threading.Tasks;
+#if ENABLE_SERIALIZATION
 using Rietmon.DamnScript.Compiling;
+#endif
 using Rietmon.DamnScript.Data;
 using Rietmon.Debugging;
 using Rietmon.Extensions;
