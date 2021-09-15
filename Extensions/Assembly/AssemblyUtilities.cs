@@ -45,7 +45,7 @@ namespace Rietmon.Extensions
 
         public static IEnumerable<Type> GetAllAttributeInherits<T>(params string[] assemblyNames)
         {
-            var assemblies = assemblyNames != null && assemblyNames.Length > 0
+            var assemblies = assemblyNames == null || assemblyNames.Length == 0
                 ? AppDomain.CurrentDomain.GetAssemblies()
                 : MainAssemblies;
             foreach (var assembly in assemblies)

@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEngine;
 
-namespace Rietmon.DS
+namespace Rietmon.DamnScript
 {
     [ScriptedImporter(1, "ds")]
     public class DamnScriptImporter : ScriptedImporter

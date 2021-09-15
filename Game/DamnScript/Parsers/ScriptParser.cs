@@ -1,14 +1,15 @@
-﻿#if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
+﻿#if ENABLE_DAMN_SCRIPT
 using System.Collections.Generic;
 using System.Linq;
+using Rietmon.Other;
 
-namespace Rietmon.DS
+namespace Rietmon.DamnScript.Parsers
 {
-    public static class DamnScriptParser
+    public static class ScriptParser
     {
         private static readonly char[] ignoreSymbols = {'\n', '\t', '\r', '\a', '\v'};
 
-        public static KeyValuePair<string, string>[] ParseRegions(string code)
+        public static Pair<string, string>[] ParseRegions(string code)
         {
             bool TryFindRegion(int offset, out int start, out int end)
             {
@@ -17,7 +18,7 @@ namespace Rietmon.DS
                 return start != -1 || end != -1;
             }
 
-            var result = new List<KeyValuePair<string, string>>();
+            var result = new List<Pair<string, string>>();
 
             var currentOffset = 0;
             while (TryFindRegion(currentOffset, out var startPosition, out var endPosition))
@@ -25,7 +26,7 @@ namespace Rietmon.DS
                 var regionName = code.Substring(currentOffset, startPosition - currentOffset).Replace(" ", "");
                 var regionCode = code.Substring(startPosition + 1, endPosition - startPosition - 1);
 
-                result.Add(new KeyValuePair<string, string>(regionName, regionCode));
+                result.Add(new Pair<string, string>(regionName, regionCode));
                 currentOffset = endPosition + 1;
             }
 

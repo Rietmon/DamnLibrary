@@ -63,10 +63,10 @@ namespace Rietmon.Extensions
             return tempList.ToArray();
         }
 
-        public static T GetArgument<T>(this T[] array, int index, T defaultValue = default) =>
+        public static T GetObject<T>(this T[] array, int index, T defaultValue = default) =>
             array.Length <= index ? defaultValue : array[index];
         
-        public static T GetArgument<T>(this object[] array, int index, T defaultValue = default) =>
+        public static T GetObject<T>(this object[] array, int index, T defaultValue = default) =>
             array.Length <= index ? defaultValue : (T)array[index];
 
         public static TOut[] SmartCast<TOut, TIn>(this TIn[] array, Func<TIn, TOut> castFunction)

@@ -1,7 +1,7 @@
-#if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
+#if ENABLE_DAMN_SCRIPT
 using System;
 
-namespace Rietmon.DS
+namespace Rietmon.DamnScript
 {
     public class DamnScriptableAttribute : Attribute { }
 }

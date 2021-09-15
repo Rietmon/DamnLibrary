@@ -1,12 +1,29 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Rietmon.Other;
 
 public static class DictionaryExtensions
 {
     public static void AddRange<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, Dictionary<TKey, TValue> other)
     {
         foreach (var otherPair in other)
+        {
+            dictionary.Add(otherPair.Key, otherPair.Value);
+        }
+    }
+    
+    public static void AddRange<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, Pair<TKey, TValue>[] pairs)
+    {
+        foreach (var otherPair in pairs)
+        {
+            dictionary.Add(otherPair.First, otherPair.Second);
+        }
+    }
+    
+    public static void AddRange<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, KeyValuePair<TKey, TValue>[] pairs)
+    {
+        foreach (var otherPair in pairs)
         {
             dictionary.Add(otherPair.Key, otherPair.Value);
         }
