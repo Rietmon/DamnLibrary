@@ -19,6 +19,33 @@ public static class DictionaryExtensions
         else
             dictionary.Add(key, value);
     }
+    
+    public static bool AddIfNotExist<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    {
+        if (dictionary.ContainsKey(key)) 
+            return false;
+        
+        dictionary.Add(key, value);
+        return true;
+    }
+    
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    {
+        if (dictionary.TryGetValue(key, out var result))
+            return result;
+        
+        dictionary.Add(key, value);
+        return value;
+    }
+
+    public static bool ChangeIfExist<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    {
+        if (dictionary.ContainsKey(key))
+            return false;
+
+        dictionary[key] = value;
+        return true;
+    }
 
     public static Dictionary<TKey, TNewValue> SmartCast<TNewValue, TKey, TCurrentValue>(this Dictionary<TKey, TCurrentValue> dictionary,
         Func<TCurrentValue, TNewValue> castFunction)
