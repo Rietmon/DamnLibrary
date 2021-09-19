@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Rietmon.DamnScript.Data;
+﻿#if ENABLE_DAMN_SCRIPT
 using Rietmon.DamnScript.Executing;
 using Rietmon.Extensions;
 #if ENABLE_SERIALIZATION
@@ -8,8 +7,15 @@ using Rietmon.Serialization;
 
 namespace Rietmon.DamnScript
 {
-    [DamnScriptable, DontCreateInstanceAtDeserialization]
-    public class ScriptExecutor : IScriptExecutor, ISerializable
+    [DamnScriptable
+#if ENABLE_SERIALIZATION
+     , DontCreateInstanceAtDeserialization
+#endif
+    ]
+    public class ScriptExecutor : IScriptExecutor
+#if ENABLE_SERIALIZATION
+        , ISerializable
+#endif
     {
         public Script Script { get; private set; }
 
@@ -45,6 +51,16 @@ namespace Rietmon.DamnScript
             var data = ScriptEngine.CreateDataFromCompiledCode(name, code);
             Script = new Script(data, this);
         }
+        
+        public void Serialize(SerializationStream stream)
+        {
+            ((ISerializable)Script).Serialize(stream);
+        }
+
+        public void Deserialize(SerializationStream stream)
+        {
+            ((ISerializable)Script).Deserialize(stream);
+        }
 #endif
 
         private static void RegisterDamnScriptMethods()
@@ -77,15 +93,6 @@ namespace Rietmon.DamnScript
                 return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
         }
-
-        public void Serialize(SerializationStream stream)
-        {
-            ((ISerializable)Script).Serialize(stream);
-        }
-
-        public void Deserialize(SerializationStream stream)
-        {
-            ((ISerializable)Script).Deserialize(stream);
-        }
     }
 }
+#endif

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-
+﻿#if ENABLE_DAMN_SCRIPT
 namespace Rietmon.DamnScript.Data
 {
     public class ScriptRegionData
@@ -20,3 +19,4 @@ namespace Rietmon.DamnScript.Data
             index >= codesData.Length ? null : codesData[index];
     }
 }
+#endif

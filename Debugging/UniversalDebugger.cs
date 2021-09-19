@@ -1,5 +1,7 @@
 ﻿using System;
+#if ENABLE_DAMN_SCRIPT
 using Rietmon.DamnScript;
+#endif
 using Rietmon.Extensions;
 
 namespace Rietmon.Debugging

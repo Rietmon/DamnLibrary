@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if ENABLE_DAMN_SCRIPT
+using System.Collections.Generic;
 
 namespace Rietmon.DamnScript
 {
@@ -14,3 +15,4 @@ namespace Rietmon.DamnScript
         public static bool TryGet(string name, out NativeMethod method) => methods.TryGetValue(name, out method);
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if ENABLE_DAMN_SCRIPT
+using System.Collections.Generic;
 using Rietmon.DamnScript.Parsers;
 using Rietmon.Debugging;
 
@@ -42,3 +43,4 @@ namespace Rietmon.DamnScript.Data
         }
     }
 }
+#endif

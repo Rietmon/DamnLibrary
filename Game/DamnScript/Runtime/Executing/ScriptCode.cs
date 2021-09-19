@@ -1,10 +1,6 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-#if ENABLE_UNI_TASK
-using Cysharp.Threading.Tasks;
-#else
 using System.Threading.Tasks;
 using Rietmon.DamnScript.Data;
-#endif
 
 namespace Rietmon.DamnScript.Executing
 {

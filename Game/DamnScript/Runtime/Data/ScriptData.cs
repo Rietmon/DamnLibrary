@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Rietmon.DamnScript.Executing;
+﻿#if ENABLE_DAMN_SCRIPT
 using Rietmon.Extensions;
 
 namespace Rietmon.DamnScript.Data
@@ -20,3 +19,4 @@ namespace Rietmon.DamnScript.Data
             regionsData.Find((data) => data.name == regionName);
     }
 }
+#endif

@@ -2,9 +2,7 @@
 #if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
 using Rietmon.DS;
 #endif
-using Rietmon.Extensions;
 #if ENABLE_SERIALIZATION
-using Rietmon.Serialization;
 #endif
 
 namespace Rietmon.Game

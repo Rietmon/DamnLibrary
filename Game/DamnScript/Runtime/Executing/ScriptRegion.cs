@@ -1,22 +1,22 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using System;
-using System.Collections.Generic;
-using Rietmon.DamnScript.Parsers;
-#if ENABLE_UNI_TASK
-using Cysharp.Threading.Tasks;
-#else
 using System.Threading.Tasks;
 using Rietmon.DamnScript.Data;
 using Rietmon.Extensions;
-#endif
 #if ENABLE_SERIALIZATION
 using Rietmon.Serialization;
 #endif
 
 namespace Rietmon.DamnScript.Executing
 {
-    [DamnScriptable, DontCreateInstanceAtDeserialization]
-    public class ScriptRegion : ISerializable
+    [DamnScriptable
+#if ENABLE_SERIALIZATION
+     , DontCreateInstanceAtDeserialization
+#endif
+    ]
+    public class ScriptRegion 
+#if ENABLE_SERIALIZATION
+        : ISerializable
+#endif
     {
         public string Name => regionData.name;
         public Script Parent { get; }
@@ -94,7 +94,8 @@ namespace Rietmon.DamnScript.Executing
             
             return codeData == null ? null : new ScriptCode(this, codeData);
         }
-
+        
+#if ENABLE_SERIALIZATION
         void ISerializable.Serialize(SerializationStream stream)
         {
             stream.Write(currentCodeIndex);
@@ -111,6 +112,7 @@ namespace Rietmon.DamnScript.Executing
             if (IsExecuting)
                 Start(false);
         }
+#endif
 
         private static void RegisterDamnScriptMethods()
         {

@@ -8,8 +8,13 @@ using Rietmon.Serialization;
 
 namespace Rietmon.DamnScript.Executing
 {
+#if ENABLE_SERIALIZATION
     [DontCreateInstanceAtDeserialization]
-    public class Script : ISerializable
+#endif
+    public class Script 
+#if ENABLE_SERIALIZATION
+        : ISerializable
+#endif
     {
         public string Name => scriptData.name;
         public IScriptExecutor Parent { get; }
@@ -80,6 +85,7 @@ namespace Rietmon.DamnScript.Executing
         internal void OnRegionEnd(ScriptRegion region) => 
             ExecutingRegions.Remove(region);
 
+#if ENABLE_SERIALIZATION
         void ISerializable.Serialize(SerializationStream stream)
         {
             stream.Write((ushort)ExecutingRegions.Count);
@@ -100,6 +106,7 @@ namespace Rietmon.DamnScript.Executing
                 ((ISerializable)region).Deserialize(stream);
             }
         }
+#endif
     }   
 }
 #endif

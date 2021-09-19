@@ -1,4 +1,5 @@
-﻿namespace Rietmon.DamnScript.Data
+﻿#if ENABLE_DAMN_SCRIPT
+namespace Rietmon.DamnScript.Data
 {
     public class ScriptCodeData
     {
@@ -10,3 +11,4 @@
         }
     }
 }
+#endif
