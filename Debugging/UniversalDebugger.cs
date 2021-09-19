@@ -1,7 +1,12 @@
 ﻿using System;
+using Rietmon.DamnScript;
+using Rietmon.Extensions;
 
 namespace Rietmon.Debugging
 {
+#if ENABLE_DAMN_SCRIPT
+    [DamnScriptable]
+#endif
     public static class UniversalDebugger
     {
         public static Action<string> OnLog { get; set; }
@@ -32,5 +37,26 @@ namespace Rietmon.Debugging
             Console.WriteLine(message);
             Console.ForegroundColor = cashedColor;
         }
+
+#if ENABLE_DAMN_SCRIPT
+        private static void RegisterDamnScriptMethods()
+        {
+            ScriptEngine.AddMethod("Log", async (code, arguments) =>
+            {
+                Log($"[DamnScript] (Log): {arguments.GetObject(0)}");
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+            });
+            ScriptEngine.AddMethod("LogWarning", async (code, arguments) =>
+            {
+                LogWarning($"[DamnScript] (LogWarning): {arguments.GetObject(0)}");
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+            });
+            ScriptEngine.AddMethod("LogError", async (code, arguments) =>
+            {
+                LogError($"[DamnScript] (LogError): {arguments.GetObject(0)}");
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+            });
+        }
+#endif
     }
 }

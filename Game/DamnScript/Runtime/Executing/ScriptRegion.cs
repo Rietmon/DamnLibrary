@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 #else
 using System.Threading.Tasks;
 using Rietmon.DamnScript.Data;
+using Rietmon.Extensions;
 #endif
 #if ENABLE_SERIALIZATION
 using Rietmon.Serialization;
@@ -14,20 +15,22 @@ using Rietmon.Serialization;
 
 namespace Rietmon.DamnScript.Executing
 {
-    public class ScriptRegion
+    [DamnScriptable, DontCreateInstanceAtDeserialization]
+    public class ScriptRegion : ISerializable
     {
+        public string Name => regionData.name;
         public Script Parent { get; }
-
-        public List<ScriptCode> ExecutingCodes { get; } = new List<ScriptCode>();
 
         public bool IsOver => currentCodeIndex >= regionData.CodesCount;
 
         public bool IsPaused { get; private set; }
         
-        public bool IsStopped { get; private set; }
+        public bool IsStopping { get; private set; }
+        
+        public bool IsExecuting { get; private set; }
 
         private readonly ScriptRegionData regionData;
-
+        
         private int currentCodeIndex;
 
         public ScriptRegion(Script parent, ScriptRegionData regionData)
@@ -36,38 +39,53 @@ namespace Rietmon.DamnScript.Executing
             this.regionData = regionData;
         }
 
-        public void Begin()
+        public void Start(bool resetValues = true)
         {
-            IsPaused = false;
-            IsStopped = false;
-            currentCodeIndex = 0;
+            if (resetValues)
+            {
+                IsPaused = false;
+                IsStopping = false;
+                currentCodeIndex = 0;
+            }
             Parent.OnRegionStart(this);
             Handler();
         }
 
+        public void Resume() => IsPaused = false;
+
         public void Pause() => IsPaused = true;
 
-        public void Stop() => IsStopped = true;
+        public void Stop() => IsStopping = true;
 
         private async void Handler()
         {
-            while (true)
+            IsExecuting = true;
+
+            var stopTask = TaskUtilities.WaitUntil(() => IsStopping);
+            while (!IsOver)
             {
-                if (IsOver || IsStopped)
+                await Task.WhenAny(
+                    TaskUtilities.WaitUntil(() => !IsPaused), 
+                    stopTask);
+                
+                var code = CreateCode(currentCodeIndex);
+                var codeTask = code.ExecuteAsync();
+                await Task.WhenAny(codeTask, stopTask);
+
+                if (stopTask.IsCompleted)
                 {
-                    await Task.Yield();
-                    
-                    IsStopped = false;
+                    IsStopping = false;
                     Parent.OnRegionEnd(this);
-                    return;
+                    break;
                 }
 
-                var code = CreateCode(currentCodeIndex);
-                if (await code.ExecuteAsync()) 
+                if (codeTask.IsCompleted && codeTask.Result)
                     currentCodeIndex++;
 
                 await Task.Yield();
             }
+
+            IsExecuting = false;
         }
 
         private ScriptCode CreateCode(int index)
@@ -75,6 +93,32 @@ namespace Rietmon.DamnScript.Executing
             var codeData = regionData.GetCodeData(index);
             
             return codeData == null ? null : new ScriptCode(this, codeData);
+        }
+
+        void ISerializable.Serialize(SerializationStream stream)
+        {
+            stream.Write(currentCodeIndex);
+            stream.Write(IsExecuting);
+            stream.Write(IsPaused);
+        }
+
+        void ISerializable.Deserialize(SerializationStream stream)
+        {
+            currentCodeIndex = stream.Read<int>();
+            IsExecuting = stream.Read<bool>();
+            IsPaused = stream.Read<bool>();
+
+            if (IsExecuting)
+                Start(false);
+        }
+
+        private static void RegisterDamnScriptMethods()
+        {
+            ScriptEngine.AddMethod("ForceNextCode", async (code, arguments) =>
+            {
+                code.Parent.currentCodeIndex++;
+                return await ScriptEngine.TryExecuteMoreAsync(0, code, arguments);
+            });
         }
     }   
 }

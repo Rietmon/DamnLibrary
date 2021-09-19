@@ -91,22 +91,6 @@ namespace Rietmon.DamnScript
         [DamnScriptable]
         private static void RegisterDamnScriptMethods()
         {
-            AddMethod("Log", async (code, arguments) =>
-            {
-                UniversalDebugger.Log($"[DamnScript] (Log): {arguments.GetObject(0)}");
-                return await TryExecuteMoreAsync(1, code, arguments);
-            });
-            AddMethod("LogWarning", async (code, arguments) =>
-            {
-                UniversalDebugger.LogWarning($"[DamnScript] (LogWarning): {arguments.GetObject(0)}");
-                return await TryExecuteMoreAsync(1, code, arguments);
-            });
-            AddMethod("LogError", async (code, arguments) =>
-            {
-                UniversalDebugger.LogError($"[DamnScript] (LogError): {arguments.GetObject(0)}");
-                return await TryExecuteMoreAsync(1, code, arguments);
-            });
-
             AddMethod("If", async (code, arguments) =>
             {
                 var thenConditionIndex = arguments.IndexOf("Then");
@@ -159,20 +143,6 @@ namespace Rietmon.DamnScript
 
             AddMethod("TRUE", async (code, arguments) => await TryExecuteMoreAsync(0, code, arguments));
             AddMethod("FALSE", async (code, arguments) => await TryExecuteMoreAsync(0, code, arguments, false));
-
-            AddMethod("GoTo", async (code, arguments) =>
-            {
-                code.Script.Begin(arguments[0]);
-                return await TryExecuteMoreAsync(1, code, arguments);
-            });
-            AddMethod("GoToAndReturn", async (code, arguments) =>
-            {
-                var damnScript = code.Script;
-                damnScript.Begin(arguments[0]);
-                code.Parent.Stop();
-
-                return await TryExecuteMoreAsync(1, code, arguments);
-            });
         }
     }
 }

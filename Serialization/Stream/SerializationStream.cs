@@ -4,7 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using Rietmon.Debugging;
 using Rietmon.Extensions;
 #if UNITY_5_3_OR_NEWER 
 using UnityEngine;
@@ -369,6 +371,12 @@ namespace Rietmon.Serialization
 
         private ISerializable ReadSerializable(Type type)
         {
+            if (type.GetCustomAttribute<DontCreateInstanceAtDeserializationAttribute>() != null)
+            {
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(ReadSerializable)}) Unable to create instance of type {type.FullName}. " +
+                                           $"Create instance by self and call internal Deserialize method from object!");
+                return null;
+            }
             var instance = (ISerializable)Activator.CreateInstance(type);
             instance.Deserialize(this);
             return instance;

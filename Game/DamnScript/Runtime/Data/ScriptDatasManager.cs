@@ -26,7 +26,7 @@ namespace Rietmon.DamnScript.Data
                 var codesData = new ScriptCodeData[regionCodes.GetLength(0)];
                 for (var j = 0; j < codesData.Length; j++)
                 {
-                    codesData[j] = new ScriptCodeData(regionCodes[i]);
+                    codesData[j] = new ScriptCodeData(regionCodes[j]);
                 }
 
                 regionsData[i] = new ScriptRegionData(currentRegion.First, codesData);
