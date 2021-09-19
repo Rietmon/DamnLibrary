@@ -8,6 +8,22 @@ namespace Rietmon.DamnScript.Compiling
 {
     public static class ScriptCompiler
     {
+        public static void CompileFromFileToFile(string inputFile, string outputFile = null)
+        {
+            outputFile ??= inputFile + "c";
+
+            var scriptData = ScriptEngine.CreateDataFromFile(inputFile);
+
+            CompileToFile(scriptData, outputFile);
+        }
+        
+        public static byte[] CompileFromFileToBytes(string inputFile)
+        {
+            var scriptData = ScriptEngine.CreateDataFromFile(inputFile);
+
+            return CompileToBytes(scriptData);
+        }
+        
         public static void CompileToFile(ScriptData scriptData, string path)
         {
             var bytes = CompileToBytes(scriptData);

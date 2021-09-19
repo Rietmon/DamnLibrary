@@ -23,7 +23,7 @@ namespace Rietmon.DamnScript.Parsers
             var currentOffset = 0;
             while (TryFindRegion(currentOffset, out var startPosition, out var endPosition))
             {
-                var regionName = code.Substring(currentOffset, startPosition - currentOffset).Replace(" ", "");
+                var regionName = code.Substring(currentOffset, startPosition - currentOffset).ClearName();
                 var regionCode = code.Substring(startPosition + 1, endPosition - startPosition - 1);
 
                 result.Add(new Pair<string, string>(regionName, regionCode));
@@ -107,6 +107,29 @@ namespace Rietmon.DamnScript.Parsers
             }
 
             return result.ToArray();
+        }
+
+        private static string ClearName(this string str)
+        {
+            while (true)
+            {
+                var symbol = str.First();
+                if (ignoreSymbols.Contains(symbol) || symbol == ' ')
+                    str = str.Remove(0, 1);
+                else
+                    break;
+            }
+            
+            while (true)
+            {
+                var symbol = str.Last();
+                if (ignoreSymbols.Contains(symbol) || symbol == ' ')
+                    str = str.Remove(str.Length - 1, 1);
+                else
+                    break;
+            }
+
+            return str;
         }
     }
 }

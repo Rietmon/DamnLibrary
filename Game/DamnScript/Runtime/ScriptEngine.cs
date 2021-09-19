@@ -37,13 +37,15 @@ namespace Rietmon.DamnScript
             InvokeAsync(owner, codes).Result;
         
         public static async Task<bool> TryExecuteMoreAsync(int wasUsedArguments, ScriptCode code,
-            string[] arguments, bool defaultReturnValue = true)
+            string[] arguments, bool? forceReturnValue = null)
         {
             if (arguments.Length <= wasUsedArguments)
-                return defaultReturnValue;
+                return forceReturnValue ?? true;
 
             var otherArguments = arguments.CopyFromTo(wasUsedArguments, arguments.Length - 1);
-            return await InvokeAsync(code, otherArguments);
+            var executingMoreResult = await InvokeAsync(code, otherArguments);
+
+            return forceReturnValue ?? executingMoreResult;
         }
 
         public static bool TryExecuteMore(int wasUsedArguments, ScriptCode code, string[] arguments, bool defaultReturnValue = true) =>

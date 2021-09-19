@@ -57,6 +57,8 @@ namespace Rietmon.DamnScript.Executing
 
         public void Stop() => IsStopping = true;
 
+        public void ForceNextCode() => currentCodeIndex++;
+
         private async void Handler()
         {
             IsExecuting = true;
@@ -118,8 +120,8 @@ namespace Rietmon.DamnScript.Executing
         {
             ScriptEngine.AddMethod("ForceNextCode", async (code, arguments) =>
             {
-                code.Parent.currentCodeIndex++;
-                return await ScriptEngine.TryExecuteMoreAsync(0, code, arguments);
+                code.Parent.ForceNextCode();
+                return await ScriptEngine.TryExecuteMoreAsync(0, code, arguments, false);
             });
         }
     }   
