@@ -3,6 +3,7 @@ using Rietmon.Extensions;
 #if ENABLE_SERIALIZATION
 using Rietmon.Serialization;
 #endif
+#pragma warning disable 660,661
 
 namespace Rietmon.Other
 {

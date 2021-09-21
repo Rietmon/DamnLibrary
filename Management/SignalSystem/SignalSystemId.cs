@@ -1,5 +1,6 @@
 using System;
 using Rietmon.Extensions;
+#pragma warning disable 660,661
 
 namespace Rietmon.Management
 {

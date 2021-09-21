@@ -57,6 +57,19 @@ public static unsafe class MemoryUtilities
         return (T)handler.Target;
     }
 
+    public static T[] FromPointerToArray<T>(void* pointer, int elementsCount) where T : unmanaged
+    {
+        if (elementsCount < 0)
+            return Array.Empty<T>();
+        
+        var result = new T[elementsCount];
+        var managedPointer = (T*)pointer;
+        for (var i = 0; i < elementsCount; i++)
+            result[i] = managedPointer[i];
+
+        return result;
+    }
+
     public static int GetCharPointerLength(char* pointer) => new string(pointer).Length;
 }
 #endif

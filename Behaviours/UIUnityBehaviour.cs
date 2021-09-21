@@ -68,8 +68,6 @@ namespace Rietmon.Behaviours
         public void DestroyObject(MonoBehaviour monoBehaviour) => Destroy(monoBehaviour.gameObject);
 
         public void SetObjectActive(bool state) => gameObject.SetActive(state);
-
-        protected virtual void OnDestroy() { }
     }
 }
 #endif

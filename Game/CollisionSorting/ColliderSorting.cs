@@ -17,7 +17,7 @@ public class ColliderSorting : UnityBehaviour
     
     [SerializeField] private int sortingLayer;
 
-    [SerializeField] private Collider2D collider;
+    [SerializeField] private new Collider2D collider;
 
     private void Reset()
     {

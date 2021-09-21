@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Rietmon.Behaviours;
 using Rietmon.Management;
 using UnityEngine;
+#pragma warning disable 1998
 
 namespace Rietmon.Behaviours
 {

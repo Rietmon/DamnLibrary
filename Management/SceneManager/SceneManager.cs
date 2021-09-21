@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 #endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#pragma warning disable 4014
 
 namespace Rietmon.Management
 {

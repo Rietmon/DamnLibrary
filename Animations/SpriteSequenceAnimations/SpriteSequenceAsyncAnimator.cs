@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 #endif
 using UnityEngine;
 using Rietmon.Extensions;
+#pragma warning disable 4014
 
 namespace Rietmon.Animations
 {

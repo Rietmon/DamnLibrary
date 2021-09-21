@@ -9,6 +9,7 @@ using Rietmon.Extensions;
 using Rietmon.Behaviours;
 using Rietmon.Game;
 using UnityEngine;
+#pragma warning disable 4014
 
 namespace Rietmon.Management
 {
