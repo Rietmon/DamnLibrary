@@ -3,6 +3,9 @@
 using Rietmon.DamnScript;
 #endif
 using Rietmon.Extensions;
+#if UNITY_5_3_OR_NEWER
+using UnityEngine;
+#endif
 
 namespace Rietmon.Debugging
 {
@@ -18,9 +21,9 @@ namespace Rietmon.Debugging
         static UniversalDebugger()
         {
 #if UNITY_5_3_OR_NEWER
-            OnLog = (message) => Debug.Log(message);
-            OnWarning = (message) => Debug.LogWarning(message);
-            OnError = (message) => Debug.LogError(message);
+            OnLog = Debug.Log;
+            OnWarning = Debug.LogWarning;
+            OnError = Debug.LogError;
 #else
             OnLog = (message) => WriteToConsole(message, ConsoleColor.White);
             OnWarning = (message) => WriteToConsole(message, ConsoleColor.Yellow);

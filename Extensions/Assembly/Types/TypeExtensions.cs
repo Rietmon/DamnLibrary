@@ -39,5 +39,23 @@ namespace Rietmon.Extensions
 
             methodInfo.Invoke(owner, arguments);
         }
+
+        public static FieldInfo GetFieldByName(this Type type, string name)
+        {
+            var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            return fields.Find((fieldInfo) => fieldInfo.Name == name);
+        }
+
+        public static PropertyInfo GetPropertyByName(this Type type, string name)
+        {
+            var properties = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            return properties.Find((propertyInfo) => propertyInfo.Name == name);
+        }
+
+        public static MethodInfo GetMethodByName(this Type type, string name)
+        {
+            var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            return methods.Find((methodInfo) => methodInfo.Name == name);
+        }
     }
 }
