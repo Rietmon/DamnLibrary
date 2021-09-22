@@ -11,6 +11,9 @@ public static unsafe class MemoryUtilities
 #if ENABLE_WINDOWS_UTILITIES
     [DllImport("kernel32.dll", SetLastError = true, EntryPoint = "CopyMemory")]
     public static extern void CopyMemory(void* destination, void* source, int size);
+
+    [DllImport("kernel32.dll", SetLastError = true, EntryPoint = "memset")]
+    public static extern void MemorySet(void* destination, int value, int count);
 #endif
 
     public static void* Allocate(int count) => Marshal.AllocHGlobal(count).ToPointer();
@@ -59,13 +62,27 @@ public static unsafe class MemoryUtilities
 
     public static T[] FromPointerToArray<T>(void* pointer, int elementsCount) where T : unmanaged
     {
-        if (elementsCount < 0)
+        if (elementsCount <= 0)
             return Array.Empty<T>();
-        
+
         var result = new T[elementsCount];
         var managedPointer = (T*)pointer;
         for (var i = 0; i < elementsCount; i++)
             result[i] = managedPointer[i];
+
+        return result;
+    }
+
+    public static T[] FromPointerToStructureArray<T>(void* pointer, int elementsCount) where T : struct
+    {
+        if (elementsCount <= 0)
+            return Array.Empty<T>();
+
+        var structureSize = Marshal.SizeOf<T>();
+        
+        var result = new T[elementsCount];
+        for (var i = 0; i < elementsCount; i++)
+            result[i] = Marshal.PtrToStructure<T>(IntPtr.Add(new IntPtr(pointer), i * structureSize));
 
         return result;
     }
