@@ -87,6 +87,24 @@ public static unsafe class MemoryUtilities
         return result;
     }
 
+    public static string FromBytesToString(void* pointer, int length)
+    {
+        var bytes = FromPointerToStructureArray<byte>(pointer, length);
+        return Encoding.UTF8.GetString(bytes, 0, length);
+    }
+
+    public static int SizeOf<T>()
+    {
+        var type = typeof(T);
+        if (type == typeof(byte) || type == typeof(sbyte) || type == typeof(char) || type == typeof(bool)) return 1;
+        if (type == typeof(short) || type == typeof(ushort)) return 2;
+        if (type == typeof(int) || type == typeof(uint) || type == typeof(float)) return 4;
+        if (type == typeof(long) || type == typeof(ulong) || type == typeof(double)) return 8;
+        if (type == typeof(decimal)) return 16;
+
+        return Marshal.SizeOf<T>();
+    }
+
     public static int GetCharPointerLength(char* pointer) => new string(pointer).Length;
 }
 #endif

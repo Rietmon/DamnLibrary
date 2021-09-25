@@ -63,11 +63,19 @@ namespace Rietmon.Extensions
             return tempList.ToArray();
         }
 
+        public static T[] CopyWith<T>(this T[] array, params int[] indices)
+        {
+            var result = new T[indices.Length];
+            for (var i = 0; i < result.Length; i++)
+                result[i] = array[indices[i]];
+            return result;
+        }
+
         public static T GetObject<T>(this T[] array, int index, T defaultValue = default) =>
-            array.Length <= index ? defaultValue : array[index];
+            array.Length <= index || index < 0 ? defaultValue : array[index];
         
         public static T GetObject<T>(this object[] array, int index, T defaultValue = default) =>
-            array.Length <= index ? defaultValue : (T)array[index];
+            array.Length <= index || index < 0 ? defaultValue : (T)array[index];
 
         public static TOut[] SmartCast<TOut, TIn>(this TIn[] array, Func<TIn, TOut> castFunction)
         {
@@ -114,5 +122,7 @@ namespace Rietmon.Extensions
 
             return array[(int)centralIndex];
         }
+
+        public static void Sort<T>(this T[] array) => Array.Sort(array);
     }
 }
