@@ -14,6 +14,9 @@ public static unsafe class MemoryUtilities
 
     [DllImport("kernel32.dll", SetLastError = true, EntryPoint = "memset")]
     public static extern void MemorySet(void* destination, int value, int count);
+
+    [DllImport("kernel32.dll", SetLastError = true, EntryPoint = "IsBadReadPtr")]
+    public static extern bool IsBadReadPointer(void* pointer, int length);
 #endif
 
     public static void* Allocate(int count) => Marshal.AllocHGlobal(count).ToPointer();

@@ -19,5 +19,12 @@ namespace Rietmon.Debugging
             var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
             UniversalDebugger.Log($"[{nameof(DebugStopwatch)}]: {messageFormat.Format(elapsedMilliseconds)}");
         }
+
+        public long Stop()
+        {
+            stopwatch.Stop();
+
+            return stopwatch.ElapsedMilliseconds;
+        }
     }
 }
