@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 #endif
 using Rietmon.Behaviours;
 #if ENABLE_DAMN_SCRIPT
-using Rietmon.DS;
+using Rietmon.DamnScript;
 #endif
 using Rietmon.Extensions;
 using UnityEngine;
@@ -132,9 +132,9 @@ namespace Rietmon.Management
 #if ENABLE_DAMN_SCRIPT
         private static void RegisterDamnScriptMethods()
         {
-            DamnScriptEngine.RegisterMethod("OnKeyDown", async (code, arguments) =>
+            ScriptEngine.AddMethod("OnKeyDown", async (code, arguments) =>
             {
-                var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetArgument(0));
+                var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetObject(0));
 
 #if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => GetKeyDown(targetKey));
@@ -142,12 +142,12 @@ namespace Rietmon.Management
                 await TaskUtilities.WaitUntil(() => GetKeyDown(targetKey));
 #endif
 
-                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
 
-            DamnScriptEngine.RegisterMethod("OnKey", async (code, arguments) =>
+            ScriptEngine.AddMethod("OnKey", async (code, arguments) =>
             {
-                var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetArgument(0));
+                var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetObject(0));
 
 #if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => GetKey(targetKey));
@@ -155,12 +155,12 @@ namespace Rietmon.Management
                 await TaskUtilities.WaitUntil(() => GetKey(targetKey));
 #endif
 
-                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
 
-            DamnScriptEngine.RegisterMethod("OnKeyUp", async (code, arguments) =>
+            ScriptEngine.AddMethod("OnKeyUp", async (code, arguments) =>
             {
-                var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetArgument(0));
+                var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetObject(0));
 
 #if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => GetKeyUp(targetKey));
@@ -168,7 +168,7 @@ namespace Rietmon.Management
                 await TaskUtilities.WaitUntil(() => GetKeyUp(targetKey));
 #endif
 
-                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
         }
 #endif

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Rietmon.Extensions;
 #if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
-using Rietmon.DS;
+using Rietmon.DamnScript;
 #endif
 #if ENABLE_SERIALIZATION
 #endif
@@ -29,27 +30,27 @@ namespace Rietmon.Game
 #if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
         private static void RegisterDamnScriptMethods()
         {
-            DamnScriptEngine.RegisterMethod("HasInfoportion", async (code, arguments) =>
+            ScriptEngine.AddMethod("HasInfoportion", async (code, arguments) =>
             {
-                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments, 
-                    HasInfoportion(arguments.GetArgument(0)));
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments, 
+                    HasInfoportion(arguments.GetObject(0)));
             });
             
-            DamnScriptEngine.RegisterMethod("AddInfoportion", async (code, arguments) =>
+            ScriptEngine.AddMethod("AddInfoportion", async (code, arguments) =>
             {
                 AddInfoportion(arguments[0]);
 
-                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
             
-            DamnScriptEngine.RegisterMethod("RemoveInfoportion", async (code, arguments) =>
+            ScriptEngine.AddMethod("RemoveInfoportion", async (code, arguments) =>
             {
                 RemoveInfoportion(arguments[0]);
 
-                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
             
-            DamnScriptEngine.RegisterMethod("OnHasInfoportion", async (code, arguments) =>
+            ScriptEngine.AddMethod("OnHasInfoportion", async (code, arguments) =>
             {
 #if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => HasInfoportion(arguments[0]));
@@ -57,10 +58,10 @@ namespace Rietmon.Game
                 await TaskUtilities.WaitUntil(() => HasInfoportion(arguments[0]));
 #endif
 
-                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
             
-            DamnScriptEngine.RegisterMethod("OnHasntInfoportion", async (code, arguments) =>
+            ScriptEngine.AddMethod("OnHasntInfoportion", async (code, arguments) =>
             {
 #if ENABLE_UNI_TASK
                 await UniTask.WaitUntil(() => !HasInfoportion(arguments[0]));
@@ -68,7 +69,7 @@ namespace Rietmon.Game
                 await TaskUtilities.WaitUntil(() => !HasInfoportion(arguments[0]));
 #endif
 
-                return await DamnScriptEngine.TryExecuteMoreAsync(1, code, arguments);
+                return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
         }
 #endif

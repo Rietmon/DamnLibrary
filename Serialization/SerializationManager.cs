@@ -14,7 +14,7 @@ using UnityEngine;
 namespace Rietmon.Serialization
 {
 #if UNITY_5_3_OR_NEWER 
-    public class SerializationManager : SingletonBehaviour<Serialization>
+    public class SerializationManager : SingletonBehaviour<SerializationManager>
 #else
     public static class SerializationManager
 #endif
