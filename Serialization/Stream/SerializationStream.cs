@@ -82,6 +82,7 @@ namespace Rietmon.Serialization
                 case Vector3Int v: WriteVector3Int(v); return;
                 case Vector4 v: WriteVector4(v); return;
                 case Quaternion q: WriteQuaternion(q); return;
+                case Bounds b: WriteBounds(b); return;
 #endif
                 case Array a: WriteArray(a); return;
                 case IList l: WriteList(l); return;
@@ -214,6 +215,12 @@ namespace Rietmon.Serialization
             WriteFloat(value.z);
             WriteFloat(value.w);
         }
+
+        private void WriteBounds(Bounds bounds)
+        {
+            WriteVector3(bounds.center);
+            WriteVector3(bounds.size);
+        }
 #endif
 
         private void WriteArray(Array value)
@@ -282,6 +289,7 @@ namespace Rietmon.Serialization
             if (type == typeof(Vector3Int)) return ReadVector3Int();
             if (type == typeof(Vector4)) return ReadVector4();
             if (type == typeof(Quaternion)) return ReadQuaternion();
+            if (type == typeof(Bounds)) return ReadBounds();
 #endif
             if (type.IsArray) return ReadArray(type);
             if (typeof(IList).IsAssignableFrom(type)) return ReadList(type);
@@ -440,6 +448,15 @@ namespace Rietmon.Serialization
                 y = ReadFloat(),
                 z = ReadFloat(),
                 w = ReadFloat()
+            };
+        }
+        
+        private Bounds ReadBounds()
+        {
+            return new Bounds
+            {
+                center = ReadVector3(),
+                size = ReadVector3()
             };
         }
 #endif
