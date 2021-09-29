@@ -1,6 +1,8 @@
-﻿namespace Rietmon.Extensions
+﻿using System;
+
+namespace Rietmon.Extensions
 {
-    public unsafe class UnsafeArray<T> where T : struct
+    public unsafe class UnsafeArray<T> : IDisposable where T : struct
     {
         public int Length
         {
@@ -44,15 +46,20 @@
             if (index >= length)
                 return;
             
-            MemoryUtilities.CopyMemory((void*)arrayPointer[index], value.ToPointer(), structSize);
+            MemoryUtilities.CopyMemory(arrayPointer + index * structSize, value.ToPointer(), structSize);
         }
 
         private void Resize(int newLength, int oldLength)
         {
             var oldPointer = arrayPointer;
             arrayPointer = (byte*)MemoryUtilities.Allocate(structSize * newLength);
-            MemoryUtilities.CopyMemory(arrayPointer, oldPointer, newLength > oldLength ? oldLength : newLength);
+            MemoryUtilities.CopyMemory(arrayPointer, oldPointer, oldLength * structSize);
             MemoryUtilities.Free(oldPointer);
+        }
+
+        void IDisposable.Dispose()
+        {
+            MemoryUtilities.Free(arrayPointer);
         }
     }
     
