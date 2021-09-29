@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading.Tasks;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -6,12 +7,15 @@ using UnityEditor;
 using UnityEngine;
 #endif
 
-namespace Rietmon.IO
+namespace Rietmon.FileSystem
 {
-    public static class IOManager
+    public static class FileSystemUtilities
     {
         public static void CheckOrCreateDirectory(string directory)
         {
+            if (Path.HasExtension(directory))
+                directory = Path.GetDirectoryName(directory);
+            
             void CheckDirectory(string p)
             {
                 if (Directory.Exists(p)) return;
@@ -21,6 +25,20 @@ namespace Rietmon.IO
             }
 
             CheckDirectory(directory);
+        }
+
+        public static async Task WriteAllBytesAsync(string path, byte[] bytes)
+        {
+            var fileStream = File.Open(path, FileMode.OpenOrCreate);
+            await fileStream.WriteAsync(bytes, 0, bytes.Length);
+        }
+
+        public static async Task<byte[]> ReadAllBytesAsync(string path)
+        {
+            var fileStream = File.OpenRead(path);
+            var bytes = new byte[fileStream.Length];
+            await fileStream.ReadAsync(bytes, 0, bytes.Length);
+            return bytes;
         }
 
 #if UNITY_EDITOR
