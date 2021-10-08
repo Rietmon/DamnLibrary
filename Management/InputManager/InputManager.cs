@@ -2,10 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if ENABLE_UNI_TASK
-using Cysharp.Threading.Tasks;
-#else
-#endif
 using Rietmon.Behaviours;
 #if ENABLE_DAMN_SCRIPT
 using Rietmon.DamnScript;
@@ -136,11 +132,7 @@ namespace Rietmon.Management
             {
                 var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetObject(0));
 
-#if ENABLE_UNI_TASK
-                await UniTask.WaitUntil(() => GetKeyDown(targetKey));
-#else
                 await TaskUtilities.WaitUntil(() => GetKeyDown(targetKey));
-#endif
 
                 return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
@@ -149,11 +141,7 @@ namespace Rietmon.Management
             {
                 var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetObject(0));
 
-#if ENABLE_UNI_TASK
-                await UniTask.WaitUntil(() => GetKey(targetKey));
-#else
                 await TaskUtilities.WaitUntil(() => GetKey(targetKey));
-#endif
 
                 return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
@@ -162,11 +150,7 @@ namespace Rietmon.Management
             {
                 var targetKey = (KeyCode)Enum.Parse(typeof(KeyCode), arguments.GetObject(0));
 
-#if ENABLE_UNI_TASK
-                await UniTask.WaitUntil(() => GetKeyUp(targetKey));
-#else
                 await TaskUtilities.WaitUntil(() => GetKeyUp(targetKey));
-#endif
 
                 return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });

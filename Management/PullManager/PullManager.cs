@@ -2,11 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if ENABLE_UNI_TASK
-using Cysharp.Threading.Tasks;
-#else
 using System.Threading.Tasks;
-#endif
 using Rietmon.Extensions;
 using Rietmon.Game;
 using UnityEngine;
@@ -59,11 +55,7 @@ namespace Rietmon.Management
             }
         }
         
-#if ENABLE_UNI_TASK
-        public async UniTask ForEachFreeObjectAsync(Func<T, UniTask> action)
-#else
         public async Task ForEachFreeObjectAsync(Func<T, Task> action)
-#endif
         {
             for (var i = 0; i < objectsPull.Count; i++)
             {

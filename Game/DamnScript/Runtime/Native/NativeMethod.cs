@@ -12,6 +12,7 @@ namespace Rietmon.DamnScript
         public NativeMethod(Func<ScriptCode, string[], Task<bool>> function) => asyncFunction = function;
 
         public bool Invoke(ScriptCode code, string[] arguments) => asyncFunction.Invoke(code, arguments).Result;
+        
         public async Task<bool> InvokeAsync(ScriptCode code, string[] arguments) =>
             await asyncFunction.Invoke(code, arguments);
 

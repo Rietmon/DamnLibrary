@@ -52,22 +52,14 @@ namespace Rietmon.Game
             
             ScriptEngine.AddMethod("OnHasInfoportion", async (code, arguments) =>
             {
-#if ENABLE_UNI_TASK
-                await UniTask.WaitUntil(() => HasInfoportion(arguments[0]));
-#else
                 await TaskUtilities.WaitUntil(() => HasInfoportion(arguments[0]));
-#endif
 
                 return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });
             
             ScriptEngine.AddMethod("OnHasntInfoportion", async (code, arguments) =>
             {
-#if ENABLE_UNI_TASK
-                await UniTask.WaitUntil(() => !HasInfoportion(arguments[0]));
-#else
                 await TaskUtilities.WaitUntil(() => !HasInfoportion(arguments[0]));
-#endif
 
                 return await ScriptEngine.TryExecuteMoreAsync(1, code, arguments);
             });

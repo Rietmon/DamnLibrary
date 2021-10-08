@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Rietmon.Debugging;
 using Rietmon.Extensions;
-#if ENABLE_UNI_TASK
-using Cysharp.Threading.Tasks;
-#else
 using System.Threading.Tasks;
-#endif
 using Rietmon.Other;
 
 namespace Rietmon.Management
@@ -58,11 +55,7 @@ namespace Rietmon.Management
                 callback.Second?.Invoke(signal);
         }
         
-#if ENABLE_UNI_TASK
-        public static async UniTask NotifyAsync<T>(T signal, bool waitForComplete = true) where T : Signal
-#else
         public static async Task NotifyAsync<T>(T signal, bool waitForComplete = true) where T : Signal
-#endif
         {
             var signalType = signal.GetType();
             if (!signalCallbacks.TryGetValue(signalType, out var callbacks))
@@ -71,13 +64,14 @@ namespace Rietmon.Management
             foreach (var callback in callbacks)
             {
                 var asyncResult = callback.Second?.BeginInvoke(signal, null, null);
+                if (asyncResult == null)
+                {
+                    UniversalDebugger.LogError($"[{nameof(SignalSystem)}] ({nameof(NotifyAsync)}) Unable to invoke method {callback.Second?.Method.Name}. May be it is null.");
+                    continue;
+                }
                 if (waitForComplete)
                 {
-#if ENABLE_UNI_TASK
-                await UniTask.WaitUntil(() => asyncResult.IsCompleted);
-#else
                     await TaskUtilities.WaitUntil(() => asyncResult.IsCompleted);
-#endif
                 }
             }
         }

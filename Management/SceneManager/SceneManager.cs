@@ -2,11 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Rietmon.Extensions;
-#if ENABLE_UNI_TASK
-using Cysharp.Threading.Tasks;
-#else
 using System.Threading.Tasks;
-#endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
 #pragma warning disable 4014
@@ -33,11 +29,7 @@ namespace Rietmon.Management
             };
         }
         
-#if ENABLE_UNI_TASK
-        public static async UniTask PreloadSceneAsync(string name, bool enableActivation = false)
-#else
         public static async Task PreloadSceneAsync(string name, bool enableActivation = false)
-#endif
         {
             var isPreloaded = false;
             void Callback() => isPreloaded = true;
@@ -46,11 +38,7 @@ namespace Rietmon.Management
 
             if (enableActivation)
             {
-#if ENABLE_UNI_TASK
-                await UniTask.WaitUntil(() => isPreloaded);
-#else
                 await TaskUtilities.WaitUntil(() => isPreloaded);
-#endif
             }
         }
         public static bool IsScenePreloaded(string name) =>
@@ -62,19 +50,11 @@ namespace Rietmon.Management
     
         public static void EnablePreloadedScene(string name) => scenesInPreloading[name].allowSceneActivation = true;
         
-#if ENABLE_UNI_TASK
-        public static async UniTask UnloadSceneAsync(string name)
-#else
         public static async Task UnloadSceneAsync(string name)
-#endif
         {
             if (IsScenePreloading(name))
             {
-#if ENABLE_UNI_TASK
-                await UniTask.WaitUntil(() => IsScenePreloaded(name));
-#else
                 await TaskUtilities.WaitUntil(() => IsScenePreloaded(name));
-#endif
                 EnablePreloadedScene(name);
             }
             UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(name);
@@ -82,11 +62,7 @@ namespace Rietmon.Management
             scenesInPreloading.Remove(name);
         }
         
-#if ENABLE_UNI_TASK
-        public static async UniTask ChangeSceneAsync(string name)
-#else
         public static async Task ChangeSceneAsync(string name)
-#endif
         {
             UnloadSceneAsync(ActiveScene.name);
             

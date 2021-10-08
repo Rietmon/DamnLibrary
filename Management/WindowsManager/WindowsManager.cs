@@ -1,10 +1,6 @@
 #if UNITY_5_3_OR_NEWER 
 using System.Collections.Generic;
-#if ENABLE_UNI_TASK
-using Cysharp.Threading.Tasks;
-#else
 using System.Threading.Tasks;
-#endif
 using Rietmon.Extensions;
 using Rietmon.Behaviours;
 using Rietmon.Game;
@@ -21,13 +17,8 @@ namespace Rietmon.Management
 
         private static readonly List<WindowBehaviour> openedWindows = new List<WindowBehaviour>();
 
-#if ENABLE_UNI_TASK
-        public static async UniTask<T> OpenAsync<T>(string windowName, params object[] arguments) =>
-            (await OpenAsync(windowName, arguments)).GetComponent<T>();
-#else
         public static async Task<T> OpenAsync<T>(string windowName, params object[] arguments) =>
             (await OpenAsync(windowName, arguments)).GetComponent<T>();
-#endif
 
         public static T Open<T>(string windowName, params object[] arguments) =>
             Open(windowName, arguments).GetComponent<T>();
@@ -35,11 +26,7 @@ namespace Rietmon.Management
         public static T OpenWithoutAwaiting<T>(string windowName, params object[] arguments) =>
             OpenWithoutAwaiting(windowName, arguments).GetComponent<T>();
 
-#if ENABLE_UNI_TASK
-        public static async UniTask<WindowBehaviour> OpenAsync(string windowName, params object[] arguments)
-#else
         public static async Task<WindowBehaviour> OpenAsync(string windowName, params object[] arguments)
-#endif
         {
             if (!Instance)
             {
@@ -111,29 +98,14 @@ namespace Rietmon.Management
             return window;
         }
 
-#if ENABLE_UNI_TASK
-        public static async UniTask WaitForClose(WindowBehaviour window) =>
-            await UniTask.WaitUntil(() => !openedWindows.Contains(window));
-#else
         public static async Task WaitForClose(WindowBehaviour window) =>
             await TaskUtilities.WaitUntil(() => !openedWindows.Contains(window));
-#endif
 
-#if ENABLE_UNI_TASK
-        public static async UniTask OpenAsyncAndWaitForClose(string windowName, params object[] arguments) =>
-            await WaitForClose(await OpenAsync(windowName, arguments));
-#else
         public static async Task OpenAsyncAndWaitForClose(string windowName, params object[] arguments) =>
             await WaitForClose(await OpenAsync(windowName, arguments));
-#endif
 
-#if ENABLE_UNI_TASK
-        public static async UniTask CloseAsync(string windowName) =>
-            await CloseAsync(GetOpenedWindowByName(windowName));
-#else
         public static async Task CloseAsync(string windowName) =>
             await CloseAsync(GetOpenedWindowByName(windowName));
-#endif
 
         public static void Close(string windowName) => 
             Close(GetOpenedWindowByName(windowName));
@@ -141,11 +113,7 @@ namespace Rietmon.Management
         public static void CloseWithoutAwaiting(string windowName) =>
             CloseWithoutAwaiting(GetOpenedWindowByName(windowName));
 
-#if ENABLE_UNI_TASK
-        public static async UniTask CloseAsync(WindowBehaviour window)
-#else
         public static async Task CloseAsync(WindowBehaviour window)
-#endif
         {
             if (window == null)
                 return;
@@ -206,11 +174,7 @@ namespace Rietmon.Management
             return null;
         }
         
-#if ENABLE_UNI_TASK
-        private static async UniTask<Prefab<WindowBehaviour>> GetPrefabAsync(string windowName)
-#else
         private static async Task<Prefab<WindowBehaviour>> GetPrefabAsync(string windowName)
-#endif
         {
             switch (DataProviderType)
             {

@@ -5,7 +5,7 @@ namespace Rietmon.Debugging
 {
     public class DebugStopwatch
     {
-        private Stopwatch stopwatch = new Stopwatch();
+        private readonly Stopwatch stopwatch = new Stopwatch();
         
         public void Start()
         {
