@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_MEMORY_UTILITIES
+using System;
 
 namespace Rietmon.Extensions
 {
@@ -103,3 +104,4 @@ namespace Rietmon.Extensions
         }
     }
 }
+#endif
