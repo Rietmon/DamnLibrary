@@ -12,6 +12,11 @@ namespace Rietmon.Debugging
             stopwatch.Start();
         }
 
+        /// <summary>
+        /// Will be stopped stopwatch and will write in console string.
+        /// Message example: "[DebugStopwatch]: Task has invoked in 40ms."
+        /// </summary>
+        /// <param name="messageFormat">Message format example: "Task has invoked in {0}ms."</param>
         public void Stop(string messageFormat)
         {
             stopwatch.Stop();
@@ -20,6 +25,9 @@ namespace Rietmon.Debugging
             UniversalDebugger.Log($"[{nameof(DebugStopwatch)}]: {messageFormat.Format(elapsedMilliseconds)}");
         }
 
+        /// <summary>
+        /// Will be stopped stopwatch and return elapsed time in ms.
+        /// </summary>
         public long Stop()
         {
             stopwatch.Stop();

@@ -7,8 +7,6 @@ namespace Rietmon.Behaviours
 {
     public abstract class UnityBehaviour : MonoBehaviour
     {
-        public static List<UnityBehaviour> Behaviours => new List<UnityBehaviour>(FindObjectsOfType<UnityBehaviour>());
-        
         public new Transform transform
         {
             get
@@ -19,24 +17,10 @@ namespace Rietmon.Behaviours
                 return _transform;
             }
         }
-
-        private readonly Dictionary<Type, Component> pullComponents = new Dictionary<Type, Component>();
-
+        
         private Transform _transform;
 
         public T AddComponent<T>() where T : Component => gameObject.AddComponent<T>();
-
-        public T GetComponentFromPull<T>() where T : Component
-        {
-            var type = typeof(T);
-            if (pullComponents.TryGetValue(type, out var pullResult))
-                return (T)pullResult;
-
-            var result = GetComponent<T>();
-            pullComponents.Add(type, result);
-
-            return result;
-        }
 
         public void RemoveComponent<T>() where T : Component => Destroy(GetComponent<T>());
 

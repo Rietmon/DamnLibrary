@@ -8,8 +8,6 @@ namespace Rietmon.Behaviours
 {
     public abstract class UIUnityBehaviour : UIBehaviour
     {
-        public static List<UIUnityBehaviour> Behaviours => new List<UIUnityBehaviour>(FindObjectsOfType<UIUnityBehaviour>());
-        
         public new Transform transform
         {
             get
@@ -32,30 +30,10 @@ namespace Rietmon.Behaviours
             }
         }
         
-        public bool WasAllDeserialized { get; set; }
-
-        private readonly Dictionary<Type, Component> pullComponents = new Dictionary<Type, Component>();
-
         private Transform _transform;
         private RectTransform _rectTransform;
 
-        public virtual void OnAfterAllSerialize() { }
-        
-        public virtual void OnAfterAllDeserialize() { }
-
         public T AddComponent<T>() where T : Component => gameObject.AddComponent<T>();
-
-        public T GetComponentFromPull<T>() where T : Component
-        {
-            var type = typeof(T);
-            if (pullComponents.TryGetValue(type, out var pullResult))
-                return (T)pullResult;
-
-            var result = GetComponent<T>();
-            pullComponents.Add(type, result);
-
-            return result;
-        }
 
         public void RemoveComponent<T>() where T : Component => Destroy(GetComponent<T>());
 
@@ -63,10 +41,16 @@ namespace Rietmon.Behaviours
 
         public void RemoveComponent() => RemoveComponent(this);
 
+        /// <summary>
+        /// Will destroy object-parent of this component
+        /// </summary>
         public void DestroyObject() => Destroy(gameObject);
 
-        public void DestroyObject(MonoBehaviour monoBehaviour) => Destroy(monoBehaviour.gameObject);
+        public void DestroyObject(Component component) => Destroy(component.gameObject);
 
+        /// <summary>
+        /// Set GameObject active state
+        /// </summary>
         public void SetObjectActive(bool state) => gameObject.SetActive(state);
     }
 }

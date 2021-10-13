@@ -11,10 +11,13 @@ namespace Rietmon.FileSystem
 {
     public static class FileSystemUtilities
     {
-        public static void CheckOrCreateDirectory(string directory)
+        /// <summary>
+        /// Will check existing of path and creating directories if needed
+        /// </summary>
+        public static void CheckOrCreateDirectory(string path)
         {
-            if (Path.HasExtension(directory))
-                directory = Path.GetDirectoryName(directory);
+            if (Path.HasExtension(path))
+                path = Path.GetDirectoryName(path);
             
             void CheckDirectory(string p)
             {
@@ -24,7 +27,7 @@ namespace Rietmon.FileSystem
                 Directory.CreateDirectory(p);
             }
 
-            CheckDirectory(directory);
+            CheckDirectory(path);
         }
 
         public static async Task WriteAllBytesAsync(string path, byte[] bytes)

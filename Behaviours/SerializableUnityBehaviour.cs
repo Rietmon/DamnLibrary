@@ -11,8 +11,14 @@ namespace Rietmon.Serialization
 {
     public abstract class SerializableUnityBehaviour : UnityBehaviour
     {
+        /// <summary>
+        /// Unique Id for serialization
+        /// </summary>
         public short SerializableId => serializableId;
 
+        /// <summary>
+        /// Is object has been deserialized
+        /// </summary>
         public bool WasDeserialized { get; private set; }
 
         [SerializeField, ReadOnly] private short serializableId;
@@ -22,13 +28,13 @@ namespace Rietmon.Serialization
             OnSerialize(stream);
         }
 
-        protected virtual void OnSerialize(SerializationStream stream) { }
-
         internal void Deserialize(SerializationStream stream)
         {
             OnDeserialize(stream);
             WasDeserialized = true;
         }
+
+        protected virtual void OnSerialize(SerializationStream stream) { }
 
         protected virtual void OnDeserialize(SerializationStream stream) { }
 

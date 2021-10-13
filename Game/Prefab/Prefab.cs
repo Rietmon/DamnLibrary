@@ -28,37 +28,73 @@ namespace Rietmon.Game
             prefabObject = component;
         }
 
+        /// <summary>
+        /// Simple instantiate for non GameObject or Component types
+        /// </summary>
         public T SimpleInstantiate() => Object.Instantiate(prefabObject, DefaultParent);
 
+        /// <summary>
+        /// Simple instantiate for non GameObject or Component types
+        /// </summary>
         public T SimpleInstantiate(Transform transform) => Object.Instantiate(prefabObject, transform);
 
+        /// <summary>
+        /// Full instantiate for GameObject or Component types
+        /// </summary>
         public T FullInstantiate() =>
             FullInstantiate(PrefabTransform.position, PrefabTransform.rotation, PrefabTransform.localScale, DefaultParent);
-
+        
+        /// <summary>
+        /// Full instantiate for GameObject or Component types
+        /// </summary>
         public T FullInstantiate(Vector3 position) =>
             FullInstantiate(position, PrefabTransform.rotation, PrefabTransform.localScale, DefaultParent);
 
+        /// <summary>
+        /// Full instantiate for GameObject or Component types
+        /// </summary>
         public T FullInstantiate(Quaternion rotation) =>
             FullInstantiate(PrefabTransform.position, rotation, PrefabTransform.localScale, DefaultParent);
 
+        /// <summary>
+        /// Full instantiate for GameObject or Component types
+        /// </summary>
         public T FullInstantiate(Transform parent) =>
             FullInstantiate(PrefabTransform.position, PrefabTransform.rotation, PrefabTransform.localScale, parent);
 
+        /// <summary>
+        /// Full instantiate for GameObject or Component types
+        /// </summary>
         public T FullInstantiate(Transform parent, Vector3 position) =>
             FullInstantiate(position, PrefabTransform.rotation, PrefabTransform.localScale, parent);
 
+        /// <summary>
+        /// Full instantiate for GameObject or Component types
+        /// </summary>
         public T FullInstantiate(Vector3 position, Quaternion rotation) =>
             FullInstantiate(position, rotation, PrefabTransform.localScale, DefaultParent);
 
+        /// <summary>
+        /// Full instantiate for GameObject or Component types
+        /// </summary>
         public T FullInstantiate(Vector3 position, Vector3 scale) =>
             FullInstantiate(position, PrefabTransform.rotation, scale, DefaultParent);
 
+        /// <summary>
+        /// Full instantiate for GameObject or Component types
+        /// </summary>
         public T FullInstantiate(Quaternion rotation, Vector3 scale) =>
             FullInstantiate(PrefabTransform.position, rotation, scale, DefaultParent);
 
+        /// <summary>
+        /// Full instantiate for GameObject or Component types
+        /// </summary>
         public T FullInstantiate(Vector3 position, Quaternion rotation, Vector3 scale) =>
             FullInstantiate(position, rotation, scale, DefaultParent);
 
+        /// <summary>
+        /// Full instantiate for GameObject or Component types
+        /// </summary>
         public T FullInstantiate(Vector3 position, Quaternion rotation, Vector3 scale, Transform parent)
         {
             var result = Object.Instantiate(prefabObject);

@@ -10,10 +10,17 @@ namespace Rietmon.Behaviours
     public abstract class WindowBehaviour : UnityBehaviour
     {
         public string WindowName { get; set; }
+        
         public object[] Arguments { get; set; }
 
+        /// <summary>
+        /// Will be called after creating object
+        /// </summary>
         public virtual async Task OnOpenAsync() { }
 
+        /// <summary>
+        /// Will be called before destroying object
+        /// </summary>
         public virtual async Task OnCloseAsync() { }
 
         public async void CloseAsync() => await WindowsManager.CloseAsync(this);

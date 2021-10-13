@@ -10,8 +10,12 @@ namespace Rietmon.Extensions
         public static bool RandomBool => RandomByte % 2 == 0;
         
         public static byte RandomByte => (byte)Range(byte.MinValue, byte.MaxValue);
+        
+        public static sbyte RandomSByte => (sbyte)Range(sbyte.MinValue, sbyte.MaxValue);
 
         public static short RandomShort => (short)Range(short.MinValue, short.MaxValue);
+        
+        public static ushort RandomUShort => (ushort)Range(ushort.MinValue, ushort.MaxValue);
 
         public static int RandomInt => Range(int.MinValue, int.MaxValue);
 
