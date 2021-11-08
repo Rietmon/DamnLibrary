@@ -2,7 +2,6 @@
 #if ENABLE_DAMN_SCRIPT
 using Rietmon.DamnScript;
 #endif
-using Rietmon.Extensions;
 #if UNITY_5_3_OR_NEWER
 using UnityEngine;
 #endif
