@@ -5,6 +5,20 @@ namespace Rietmon.Extensions
 {
     public static class ArrayExtensions
     {
+        public static void GetGreaterArray(out int greaterCount, out int greaterArrayIndex, params Array[] arrays)
+        {
+            greaterCount = 0;
+            greaterArrayIndex = 0;
+            for (var i = 0; i < arrays.Length; i++)
+            {
+                if (arrays[i].Length > greaterCount)
+                {
+                    greaterCount = arrays[i].Length;
+                    greaterArrayIndex = i;
+                }
+            }
+        }
+        
         public static bool TryGetValue<T>(this T[] array, int index, out T value)
         {
             if (index < array.Length && index >= 0)
