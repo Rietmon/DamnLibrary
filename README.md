@@ -1,5 +1,5 @@
 # DamnLibrary
-Game core library for .NET/Unity. There are different features for Unity and .NET. It will not throw an error, but some API will be not available. For example, in .NET will not compiling any components and extensions for it. Be careful!
+Game core library for .NET/Unity. There are different features for Unity and .NET. It will not throw an error, but some API will be not available. For example, in .NET will not compiling any components and extensions for Unity. Be careful!
 ## API
 After installing will be available only basic methods. For some special features you would to define Preprocessor defines in your project.
 
