@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using Rietmon.Extensions;
+using DamnLibrary.Extensions;
 
-namespace Rietmon.Debugging
+namespace DamnLibrary.Debugging
 {
     public class DebugStopwatch
     {

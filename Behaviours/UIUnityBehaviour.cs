@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Rietmon.Behaviours
+namespace DamnLibrary.Behaviours
 {
     public abstract class UIUnityBehaviour : UIBehaviour
     {

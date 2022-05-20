@@ -1,4 +1,4 @@
-﻿namespace Rietmon.Management
+﻿namespace DamnLibrary.Management
 {
     public enum WindowsDataProviderType : byte
     {

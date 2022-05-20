@@ -1,7 +1,7 @@
 #if ENABLE_DAMN_SCRIPT
 using System;
 
-namespace Rietmon.DamnScript
+namespace DamnLibrary.DamnScript
 {
     public class DamnScriptableAttribute : Attribute { }
 }

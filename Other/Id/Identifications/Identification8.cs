@@ -1,4 +1,4 @@
-﻿namespace Rietmon.Other
+﻿namespace DamnLibrary.Other
 {
     internal class Identification8 : Identification
     {

@@ -1,7 +1,7 @@
 ﻿#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class Vector2Extensions
     {

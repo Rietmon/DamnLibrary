@@ -1,11 +1,11 @@
 #if UNITY_5_3_OR_NEWER 
 using System;
 using System.Threading.Tasks;
-using Rietmon.Behaviours;
-using Rietmon.Extensions;
+using DamnLibrary.Behaviours;
+using DamnLibrary.Extensions;
 using UnityEngine;
 
-namespace Rietmon.Management
+namespace DamnLibrary.Management
 {
     public class AudioManager : SingletonBehaviour<AudioManager>
     {

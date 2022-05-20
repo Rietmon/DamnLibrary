@@ -1,5 +1,5 @@
 ﻿#if ENABLE_SERIALIZATION
-namespace Rietmon.Serialization
+namespace DamnLibrary.Serialization
 {
     public interface ISerializable
     {

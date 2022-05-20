@@ -1,7 +1,7 @@
-﻿using Rietmon.Management;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DamnLibrary.Management;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class SignalExtensions
     {

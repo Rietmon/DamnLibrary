@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class ListExtensions
     {

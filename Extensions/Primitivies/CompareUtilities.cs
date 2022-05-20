@@ -1,4 +1,4 @@
-﻿namespace Rietmon.Extensions
+﻿namespace DamnLibrary.Extensions
 {
     public static class CompareUtilities
     {

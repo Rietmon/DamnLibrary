@@ -1,10 +1,10 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_DAMN_SCRIPT
 using System.IO;
-using Rietmon.DamnScript.Data;
-using Rietmon.Debugging;
-using Rietmon.Serialization;
+using DamnLibrary.DamnScript.Data;
+using DamnLibrary.Debugging;
+using DamnLibrary.Serialization;
 
-namespace Rietmon.DamnScript.Compiling
+namespace DamnLibrary.DamnScript.Compiling
 {
     public static class ScriptCompiler
     {

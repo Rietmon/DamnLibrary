@@ -2,15 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Rietmon.DamnScript.Executing;
+using DamnLibrary.DamnScript.Executing;
 using System.Threading.Tasks;
 #if ENABLE_SERIALIZATION
-using Rietmon.DamnScript.Compiling;
+using DamnLibrary.DamnScript.Compiling;
 #endif
-using Rietmon.DamnScript.Data;
-using Rietmon.Extensions;
+using DamnLibrary.DamnScript.Data;
+using DamnLibrary.Extensions;
 
-namespace Rietmon.DamnScript
+namespace DamnLibrary.DamnScript
 {
     [DamnScriptable]
     public static class ScriptEngine

@@ -1,12 +1,12 @@
 ﻿#if ENABLE_DAMN_SCRIPT
 using System.Collections.Generic;
-using Rietmon.DamnScript.Data;
-using Rietmon.Debugging;
+using DamnLibrary.DamnScript.Data;
+using DamnLibrary.Debugging;
 #if ENABLE_SERIALIZATION
-using Rietmon.Serialization;
+using DamnLibrary.Serialization;
 #endif
 
-namespace Rietmon.DamnScript.Executing
+namespace DamnLibrary.DamnScript.Executing
 {
 #if ENABLE_SERIALIZATION
     [DontCreateInstanceAtDeserialization]

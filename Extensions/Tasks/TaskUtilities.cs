@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class TaskUtilities
     {

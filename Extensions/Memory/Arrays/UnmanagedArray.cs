@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public unsafe struct UnmanagedBytesArray<T> : IUnsafeArray<T, byte> where T : struct
     {

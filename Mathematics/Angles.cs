@@ -3,7 +3,7 @@
 using UnityEngine;
 #endif
 
-namespace Rietmon.Mathematics
+namespace DamnLibrary.Mathematics
 {
     public static class Angles
     {

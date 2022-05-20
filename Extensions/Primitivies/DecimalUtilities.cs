@@ -1,4 +1,4 @@
-﻿namespace Rietmon.Extensions
+﻿namespace DamnLibrary.Extensions
 {
     // Copied from https://stackoverflow.com/questions/3467893/how-do-i-convert-byte-values-into-decimals
     public static class DecimalUtilities

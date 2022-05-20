@@ -1,10 +1,10 @@
 #if UNITY_5_3_OR_NEWER 
 using System;
-using Rietmon.Extensions;
+using DamnLibrary.Extensions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Rietmon.Other
+namespace DamnLibrary.Other
 {
     [Serializable]
     public struct Vector3IntRange : IRanged<Vector3Int>

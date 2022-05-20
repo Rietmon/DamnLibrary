@@ -1,4 +1,4 @@
-﻿namespace Rietmon.Behaviours
+﻿namespace DamnLibrary.Behaviours
 {
     public class Singleton<T> where T : class
     {

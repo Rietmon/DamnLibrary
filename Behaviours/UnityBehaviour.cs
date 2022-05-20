@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Rietmon.Behaviours
+namespace DamnLibrary.Behaviours
 {
     public abstract class UnityBehaviour : MonoBehaviour
     {

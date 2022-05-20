@@ -1,11 +1,11 @@
 ﻿#if UNITY_5_3_OR_NEWER 
 using System.Collections.Generic;
-using Rietmon.Attributes;
-using Rietmon.Behaviours;
-using Rietmon.Extensions;
+using DamnLibrary.Attributes;
+using DamnLibrary.Behaviours;
+using DamnLibrary.Extensions;
 using UnityEngine;
 
-namespace Rietmon.Game
+namespace DamnLibrary.Game
 {
     public class DontDestroy : UnityBehaviour
     {

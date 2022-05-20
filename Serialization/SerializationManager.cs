@@ -1,17 +1,17 @@
 ﻿#if ENABLE_SERIALIZATION
 using System;
 using System.Collections.Generic;
-using Rietmon.Extensions;
+using DamnLibrary.Extensions;
 #if UNITY_5_3_OR_NEWER 
-using Rietmon.Behaviours;
-using Rietmon.Management;
+using DamnLibrary.Behaviours;
+using DamnLibrary.Management;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
 #endif
 
-namespace Rietmon.Serialization
+namespace DamnLibrary.Serialization
 {
 #if UNITY_5_3_OR_NEWER 
     public class SerializationManager : SingletonBehaviour<SerializationManager>

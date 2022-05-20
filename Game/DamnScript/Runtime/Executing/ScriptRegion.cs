@@ -1,12 +1,12 @@
 ﻿#if ENABLE_DAMN_SCRIPT
 using System.Threading.Tasks;
-using Rietmon.DamnScript.Data;
-using Rietmon.Extensions;
+using DamnLibrary.DamnScript.Data;
+using DamnLibrary.Extensions;
 #if ENABLE_SERIALIZATION
-using Rietmon.Serialization;
+using DamnLibrary.Serialization;
 #endif
 
-namespace Rietmon.DamnScript.Executing
+namespace DamnLibrary.DamnScript.Executing
 {
     [DamnScriptable
 #if ENABLE_SERIALIZATION

@@ -6,13 +6,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Rietmon.Debugging;
-using Rietmon.Extensions;
+using DamnLibrary.Debugging;
+using DamnLibrary.Extensions;
 #if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
-namespace Rietmon.Serialization
+namespace DamnLibrary.Serialization
 {
     public class SerializationStream
     {

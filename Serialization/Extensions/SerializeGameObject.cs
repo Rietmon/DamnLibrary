@@ -1,7 +1,7 @@
 ﻿#if ENABLE_SERIALIZATION && UNITY_5_3_OR_NEWER 
 using System;
-using Rietmon.Extensions;
-using Rietmon.Serialization;
+using DamnLibrary.Extensions;
+using DamnLibrary.Serialization;
 using UnityEngine;
 
 [RequireComponent(typeof(SerializableObject))]

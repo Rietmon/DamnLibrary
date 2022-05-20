@@ -3,7 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static unsafe class MemoryUtilities
     {

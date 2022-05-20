@@ -1,13 +1,14 @@
-﻿#if UNITY_5_3_OR_NEWER 
+﻿#if UNITY_5_3_OR_NEWER
+using System;
 using System.Threading.Tasks;
-using Rietmon.Behaviours;
-using Rietmon.Extensions;
-using Rietmon.Game;
+using DamnLibrary.Behaviours;
+using DamnLibrary.Extensions;
+using DamnLibrary.Game;
 using UnityEngine;
 using UnityEngine.U2D;
 using Object = UnityEngine.Object;
 
-namespace Rietmon.Management
+namespace DamnLibrary.Management
 {
     public static class ResourcesManager
     {
@@ -18,34 +19,34 @@ namespace Rietmon.Management
         private const string PathToResourcesAudio = "Audio/{0}";
         
         public static async Task<Prefab<WindowBehaviour>> GetWindowPrefabAsync(string windowName) =>
-            await GetAssetAsync<WindowBehaviour>(PathToResourcesWindows.Format(windowName));
+            await GetAssetAsync<WindowBehaviour>(String.Format(windowName));
         public static Prefab<WindowBehaviour> GetWindowPrefab(string windowName) => 
-            GetAsset<WindowBehaviour>(PathToResourcesWindows.Format(windowName));
+            GetAsset<WindowBehaviour>(String.Format(windowName));
 
         public static async Task<SpriteAtlas> GetSpriteAtlasAsync(string atlasPath) =>
-            await GetAssetAsync<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
+            await GetAssetAsync<SpriteAtlas>(String.Format(atlasPath));
         public static SpriteAtlas GetSpriteAtlas(string atlasPath) =>
-            GetAsset<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
+            GetAsset<SpriteAtlas>(String.Format(atlasPath));
         
         public static async Task<Sprite> GetSpriteAsync(string spriteName) =>
-            await GetAssetAsync<Sprite>(PathToResourcesTextures.Format(spriteName));
+            await GetAssetAsync<Sprite>(String.Format(spriteName));
         public static Sprite GetSprite(string spriteName) =>
-            GetAsset<Sprite>(PathToResourcesTextures.Format(spriteName));
+            GetAsset<Sprite>(String.Format(spriteName));
         
         public static async Task<Texture2D> GetTextureAsync(string textureName) =>
-            await GetAssetAsync<Texture2D>(PathToResourcesTextures.Format(textureName));
+            await GetAssetAsync<Texture2D>(String.Format(textureName));
         public static Texture2D GetTexture(string textureName) =>
-            GetAsset<Texture2D>(PathToResourcesTextures.Format(textureName));
+            GetAsset<Texture2D>(String.Format(textureName));
         
         public static async Task<Prefab<T>> GetPrefabAsync<T>(string prefabName) where T : Object =>
-            await GetAssetAsync<T>(PathToResourcesPrefabs.Format(prefabName));
+            await GetAssetAsync<T>(String.Format(prefabName));
         public static Prefab<T> GetPrefab<T>(string prefabName) where T : Object =>
-            GetAsset<T>(PathToResourcesPrefabs.Format(prefabName));
+            GetAsset<T>(String.Format(prefabName));
         
         public static async Task<AudioClip> GetAudioAsync(string audioName) =>
-            await GetAssetAsync<AudioClip>(PathToResourcesAudio.Format(audioName));
+            await GetAssetAsync<AudioClip>(String.Format(audioName));
         public static AudioClip GetAudio(string audioName) =>
-            GetAsset<AudioClip>(PathToResourcesAudio.Format(audioName));
+            GetAsset<AudioClip>(String.Format(audioName));
 
         public static async Task<T> GetAssetAsync<T>(string assetPath) where T : Object
         {

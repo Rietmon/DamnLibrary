@@ -1,13 +1,13 @@
 #if ENABLE_ADDRESSABLE && UNITY_5_3_OR_NEWER 
 using System.Threading.Tasks;
-using Rietmon.Behaviours;
-using Rietmon.Game;
+using DamnLibrary.Behaviours;
+using DamnLibrary.Game;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using Rietmon.Extensions;
+using DamnLibrary.Extensions;
 using UnityEngine.U2D;
 
-namespace Rietmon.Management
+namespace DamnLibrary.Management
 {
     public static class AddressableManager
     {

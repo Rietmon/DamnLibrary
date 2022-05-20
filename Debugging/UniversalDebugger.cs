@@ -1,12 +1,12 @@
 ﻿using System;
 #if ENABLE_DAMN_SCRIPT
-using Rietmon.DamnScript;
+using DamnLibrary.DamnScript;
 #endif
 #if UNITY_5_3_OR_NEWER
 using UnityEngine;
 #endif
 
-namespace Rietmon.Debugging
+namespace DamnLibrary.Debugging
 {
 #if ENABLE_DAMN_SCRIPT
     [DamnScriptable]

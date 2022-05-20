@@ -1,13 +1,13 @@
 #if UNITY_5_3_OR_NEWER 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Rietmon.Extensions;
-using Rietmon.Behaviours;
-using Rietmon.Game;
+using DamnLibrary.Behaviours;
+using DamnLibrary.Extensions;
+using DamnLibrary.Game;
 using UnityEngine;
 #pragma warning disable 4014
 
-namespace Rietmon.Management
+namespace DamnLibrary.Management
 {
     public class WindowsManager : ProtectedSingletonBehaviour<WindowsManager>
     {

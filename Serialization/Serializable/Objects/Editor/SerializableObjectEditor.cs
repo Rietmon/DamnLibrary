@@ -2,11 +2,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Rietmon.Serialization;
+using DamnLibrary.Serialization;
 using UnityEditor;
 using UnityEngine;
 
-namespace Rietmon.Serialization
+namespace DamnLibrary.Serialization
 {
     [CustomEditor(typeof(SerializableObject)), CanEditMultipleObjects]
     public class SerializableObjectEditor : Editor

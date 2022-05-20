@@ -1,11 +1,11 @@
 #if UNITY_EDITOR && ENABLE_DAMN_SCRIPT
 using System.IO;
-using Rietmon.IO;
+using DamnLibrary.IO;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEngine;
 
-namespace Rietmon.DamnScript
+namespace DamnLibrary.DamnScript
 {
     [ScriptedImporter(1, "ds")]
     public class DamnScriptImporter : ScriptedImporter

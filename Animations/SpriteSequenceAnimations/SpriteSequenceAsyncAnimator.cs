@@ -1,10 +1,11 @@
 #if UNITY_5_3_OR_NEWER 
 using System.Threading.Tasks;
+using DamnLibrary.Extensions;
 using UnityEngine;
-using Rietmon.Extensions;
+
 #pragma warning disable 4014
 
-namespace Rietmon.Animations
+namespace DamnLibrary.Animations
 {
     public class SpriteSequenceAsyncAnimator : ISpriteSequenceAnimator
     {

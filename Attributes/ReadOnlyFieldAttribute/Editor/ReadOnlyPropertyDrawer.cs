@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Rietmon.Attributes
+namespace DamnLibrary.Attributes
 {
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyPropertyDrawer : PropertyDrawer

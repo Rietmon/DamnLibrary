@@ -1,10 +1,10 @@
 ﻿#if UNITY_5_3_OR_NEWER 
 using System;
-using Rietmon.Extensions;
+using DamnLibrary.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Rietmon.Game
+namespace DamnLibrary.Game
 {
     [Serializable]
     public class Prefab<T> where T : Object

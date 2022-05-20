@@ -2,14 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Rietmon.Behaviours;
+using DamnLibrary.Behaviours;
 #if ENABLE_DAMN_SCRIPT
-using Rietmon.DamnScript;
+using DamnLibrary.DamnScript;
 #endif
-using Rietmon.Extensions;
+using DamnLibrary.Extensions;
 using UnityEngine;
 
-namespace Rietmon.Management
+namespace DamnLibrary.Management
 {
 #if ENABLE_DAMN_SCRIPT
     [DamnScriptable]

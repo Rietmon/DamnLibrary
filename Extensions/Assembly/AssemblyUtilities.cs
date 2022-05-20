@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class AssemblyUtilities
     {

@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 #endif
 
-namespace Rietmon.FileSystem
+namespace DamnLibrary.FileSystem
 {
     public static class FileSystemUtilities
     {

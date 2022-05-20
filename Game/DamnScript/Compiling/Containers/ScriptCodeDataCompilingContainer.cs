@@ -1,8 +1,8 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_DAMN_SCRIPT
-using Rietmon.DamnScript.Data;
-using Rietmon.Serialization;
+using DamnLibrary.DamnScript.Data;
+using DamnLibrary.Serialization;
 
-namespace Rietmon.DamnScript.Compiling
+namespace DamnLibrary.DamnScript.Compiling
 {
     public class ScriptCodeDataCompilingContainer : ISerializable
     {

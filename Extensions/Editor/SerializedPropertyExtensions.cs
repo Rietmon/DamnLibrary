@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class SerializedPropertyExtensions
     {

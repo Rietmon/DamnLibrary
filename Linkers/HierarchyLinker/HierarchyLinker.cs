@@ -3,7 +3,7 @@
 using UnityEngine;
 #endif
 
-namespace Rietmon.Linkers
+namespace DamnLibrary.Linkers
 {
     [Serializable]
     public class HierarchyLinker<T>

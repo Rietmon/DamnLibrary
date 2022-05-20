@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Rietmon.Debugging;
+using DamnLibrary.Debugging;
 
 namespace Tiny
 {

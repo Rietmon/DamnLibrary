@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
-using Rietmon.Debugging;
+using DamnLibrary.Debugging;
 
 namespace Tiny
 {

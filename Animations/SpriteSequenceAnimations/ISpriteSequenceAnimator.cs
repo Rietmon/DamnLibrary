@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace Rietmon.Animations
+namespace DamnLibrary.Animations
 {
     public interface ISpriteSequenceAnimator : IDisposable
     {

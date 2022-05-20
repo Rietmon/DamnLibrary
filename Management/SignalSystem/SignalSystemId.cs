@@ -1,8 +1,8 @@
 using System;
-using Rietmon.Extensions;
+using DamnLibrary.Extensions;
 #pragma warning disable 660,661
 
-namespace Rietmon.Management
+namespace DamnLibrary.Management
 {
     internal readonly struct SignalSystemId
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Rietmon.Serialization
+namespace DamnLibrary.Serialization
 {
     [AddComponentMenu("Serialization/SerializableObject")]
     public class SerializableObject : SerializableUnityBehaviour

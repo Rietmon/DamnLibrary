@@ -5,7 +5,7 @@ using System.Linq;
 using Object = UnityEngine.Object;
 #endif
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class EnumerableExtensions
     {

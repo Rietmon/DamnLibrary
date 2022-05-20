@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 #if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
-using Rietmon.DamnScript;
+using DamnLibrary.DamnScript;
 #endif
 #if ENABLE_SERIALIZATION
 #endif
 
-namespace Rietmon.Game
+namespace DamnLibrary.Game
 {
 #if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
     [DamnScriptable]

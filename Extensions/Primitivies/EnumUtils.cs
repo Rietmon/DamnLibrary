@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class EnumUtils
     {

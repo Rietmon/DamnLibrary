@@ -1,7 +1,7 @@
 ﻿#if ENABLE_DAMN_SCRIPT
 using System.Collections.Generic;
 
-namespace Rietmon.DamnScript
+namespace DamnLibrary.DamnScript
 {
     internal static class NativeMethodsManager
     {

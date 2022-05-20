@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Rietmon.Game
+namespace DamnLibrary.Game
 {
     [CustomPropertyDrawer(typeof(Prefab<>))]
     public class PrefabPropertyDrawer : PropertyDrawer

@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEngine;
 #endif
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class TypeExtensions
     {

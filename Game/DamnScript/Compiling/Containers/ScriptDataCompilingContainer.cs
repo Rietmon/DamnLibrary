@@ -1,9 +1,9 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_DAMN_SCRIPT
-using Rietmon.DamnScript.Data;
-using Rietmon.Extensions;
-using Rietmon.Serialization;
+using DamnLibrary.DamnScript.Data;
+using DamnLibrary.Extensions;
+using DamnLibrary.Serialization;
 
-namespace Rietmon.DamnScript.Compiling
+namespace DamnLibrary.DamnScript.Compiling
 {
     internal class ScriptDataCompilingContainer : ISerializable
     {

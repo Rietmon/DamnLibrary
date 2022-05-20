@@ -1,5 +1,5 @@
 #if UNITY_5_3_OR_NEWER 
-namespace Rietmon.Behaviours
+namespace DamnLibrary.Behaviours
 {
     public class SingletonBehaviour<T> : UnityBehaviour where T : class
     {

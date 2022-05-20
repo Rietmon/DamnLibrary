@@ -3,7 +3,7 @@ using System;
 using Random = UnityEngine.Random;
 #endif
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class RandomUtilities
     {

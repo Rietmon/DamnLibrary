@@ -1,11 +1,11 @@
 using System;
-using Rietmon.Extensions;
+using DamnLibrary.Extensions;
 #if ENABLE_SERIALIZATION
-using Rietmon.Serialization;
+using DamnLibrary.Serialization;
 #endif
 #pragma warning disable 660,661
 
-namespace Rietmon.Other
+namespace DamnLibrary.Other
 {
     [Serializable]
     public struct Id 

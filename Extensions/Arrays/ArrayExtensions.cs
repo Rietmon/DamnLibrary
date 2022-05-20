@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class ArrayExtensions
     {

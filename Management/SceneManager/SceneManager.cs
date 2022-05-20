@@ -1,13 +1,13 @@
 ﻿#if UNITY_5_3_OR_NEWER 
 using System;
 using System.Collections.Generic;
-using Rietmon.Extensions;
 using System.Threading.Tasks;
+using DamnLibrary.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 #pragma warning disable 4014
 
-namespace Rietmon.Management
+namespace DamnLibrary.Management
 {
     public static class SceneManager
     {

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Rietmon.Debugging;
-using Rietmon.Extensions;
 using System.Threading.Tasks;
-using Rietmon.Other;
+using DamnLibrary.Debugging;
+using DamnLibrary.Extensions;
+using DamnLibrary.Other;
 
-namespace Rietmon.Management
+namespace DamnLibrary.Management
 {
     public static class SignalSystem
     {

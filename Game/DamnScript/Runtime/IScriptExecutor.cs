@@ -1,7 +1,7 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using Rietmon.DamnScript.Executing;
+using DamnLibrary.DamnScript.Executing;
 
-namespace Rietmon.DamnScript
+namespace DamnLibrary.DamnScript
 {
     public interface IScriptExecutor
     { 

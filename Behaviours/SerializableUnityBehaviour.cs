@@ -1,13 +1,13 @@
 #if ENABLE_SERIALIZATION && UNITY_5_3_OR_NEWER 
-using Rietmon.Attributes;
-using Rietmon.Behaviours;
-using Rietmon.Extensions;
+using DamnLibrary.Attributes;
+using DamnLibrary.Behaviours;
+using DamnLibrary.Extensions;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
 
-namespace Rietmon.Serialization
+namespace DamnLibrary.Serialization
 {
     public abstract class SerializableUnityBehaviour : UnityBehaviour
     {

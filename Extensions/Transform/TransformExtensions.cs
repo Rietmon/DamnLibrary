@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class TransformExtensions
     {

@@ -1,10 +1,10 @@
 using System;
-using Rietmon.Extensions;
+using DamnLibrary.Extensions;
 #if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
-namespace Rietmon.Other
+namespace DamnLibrary.Other
 {
     [Serializable]
     public struct IntRange : IRanged<int>

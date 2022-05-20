@@ -1,5 +1,5 @@
 #if UNITY_5_3_OR_NEWER 
-namespace Rietmon.Animations
+namespace DamnLibrary.Animations
 {
     public enum SpriteSequenceAnimationType : byte
     {

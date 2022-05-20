@@ -1,4 +1,4 @@
-namespace Rietmon.Other
+namespace DamnLibrary.Other
 {
     public interface IRanged<T>
     {

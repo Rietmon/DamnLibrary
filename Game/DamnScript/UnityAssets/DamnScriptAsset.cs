@@ -1,7 +1,7 @@
 #if UNITY_5_3_OR_NEWER && ENABLE_DAMN_SCRIPT
 using UnityEngine;
 
-namespace Rietmon.DamnScript
+namespace DamnLibrary.DamnScript
 {
     public class DamnScriptAsset : ScriptableObject
     {

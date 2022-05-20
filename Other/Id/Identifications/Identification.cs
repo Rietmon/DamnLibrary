@@ -1,7 +1,8 @@
-﻿using Rietmon.Extensions;
+﻿using DamnLibrary.Extensions;
+
 #pragma warning disable 660,661
 
-namespace Rietmon.Other
+namespace DamnLibrary.Other
 {
     internal abstract class Identification
     {

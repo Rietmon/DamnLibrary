@@ -1,9 +1,9 @@
 ﻿#if ENABLE_DAMN_SCRIPT
 using System.Collections.Generic;
-using Rietmon.DamnScript.Parsers;
-using Rietmon.Debugging;
+using DamnLibrary.DamnScript.Parsers;
+using DamnLibrary.Debugging;
 
-namespace Rietmon.DamnScript.Data
+namespace DamnLibrary.DamnScript.Data
 {
     public static class ScriptDatasManager
     {

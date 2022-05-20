@@ -1,9 +1,9 @@
 ﻿#if ENABLE_DAMN_SCRIPT
 using System;
 using System.Threading.Tasks;
-using Rietmon.DamnScript.Executing;
+using DamnLibrary.DamnScript.Executing;
 
-namespace Rietmon.DamnScript
+namespace DamnLibrary.DamnScript
 {
     public class NativeMethod
     {

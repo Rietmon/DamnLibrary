@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Rietmon.Extensions;
-using Rietmon.Game;
+using DamnLibrary.Extensions;
+using DamnLibrary.Game;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Rietmon.Management
+namespace DamnLibrary.Management
 {
     public class PullManager<T> : IDisposable where T : Object
     {

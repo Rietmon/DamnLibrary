@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public unsafe interface IUnsafeArray<out TArrayType, TSaveType> : IDisposable 
         where TArrayType : struct where TSaveType : unmanaged

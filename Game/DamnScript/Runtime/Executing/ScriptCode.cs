@@ -1,8 +1,8 @@
 ﻿#if ENABLE_DAMN_SCRIPT
 using System.Threading.Tasks;
-using Rietmon.DamnScript.Data;
+using DamnLibrary.DamnScript.Data;
 
-namespace Rietmon.DamnScript.Executing
+namespace DamnLibrary.DamnScript.Executing
 {
     public class ScriptCode
     {

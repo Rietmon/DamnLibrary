@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Rietmon.Other;
+using DamnLibrary.Other;
 
 public static class DictionaryExtensions
 {

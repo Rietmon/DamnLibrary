@@ -1,7 +1,7 @@
 #if ENABLE_SERIALIZATION
 using System;
 
-namespace Rietmon.Serialization
+namespace DamnLibrary.Serialization
 {
     /// <summary>
     /// Marked class as static serializable.

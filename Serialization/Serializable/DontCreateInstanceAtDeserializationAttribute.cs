@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rietmon.Serialization
+namespace DamnLibrary.Serialization
 {
     public class DontCreateInstanceAtDeserializationAttribute : Attribute { }
 }

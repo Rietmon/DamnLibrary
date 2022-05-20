@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Rietmon.Other
+namespace DamnLibrary.Other
 {
     [CustomPropertyDrawer(typeof(IRanged<>), true)]
     public class EditorRanged : PropertyDrawer

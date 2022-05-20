@@ -4,7 +4,7 @@ using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using TMPro;
 
-namespace Rietmon.Extensions
+namespace DamnLibrary.Extensions
 {
     public static class DOTweenTextAnimations
     {

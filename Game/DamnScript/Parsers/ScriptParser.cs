@@ -1,9 +1,9 @@
 ﻿#if ENABLE_DAMN_SCRIPT
 using System.Collections.Generic;
 using System.Linq;
-using Rietmon.Other;
+using DamnLibrary.Other;
 
-namespace Rietmon.DamnScript.Parsers
+namespace DamnLibrary.DamnScript.Parsers
 {
     public static class ScriptParser
     {

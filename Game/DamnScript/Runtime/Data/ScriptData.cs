@@ -1,7 +1,7 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using Rietmon.Extensions;
+using DamnLibrary.Extensions;
 
-namespace Rietmon.DamnScript.Data
+namespace DamnLibrary.DamnScript.Data
 {
     public class ScriptData
     {

@@ -1,11 +1,11 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using Rietmon.DamnScript.Executing;
-using Rietmon.Extensions;
+using DamnLibrary.DamnScript.Executing;
+using DamnLibrary.Extensions;
 #if ENABLE_SERIALIZATION
-using Rietmon.Serialization;
+using DamnLibrary.Serialization;
 #endif
 
-namespace Rietmon.DamnScript
+namespace DamnLibrary.DamnScript
 {
     [DamnScriptable
 #if ENABLE_SERIALIZATION

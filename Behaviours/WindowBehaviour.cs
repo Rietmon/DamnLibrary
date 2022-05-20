@@ -1,11 +1,11 @@
 #if UNITY_5_3_OR_NEWER 
 using System.Threading.Tasks;
-using Rietmon.Behaviours;
-using Rietmon.Management;
+using DamnLibrary.Management;
+using DamnLibrary.Behaviours;
 using UnityEngine;
 #pragma warning disable 1998
 
-namespace Rietmon.Behaviours
+namespace DamnLibrary.Behaviours
 {
     public abstract class WindowBehaviour : UnityBehaviour
     {
