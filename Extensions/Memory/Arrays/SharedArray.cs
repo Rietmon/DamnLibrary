@@ -1,11 +1,12 @@
-﻿using System;
+﻿#if ENABLE_MEMORY_UTILITIES
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace DamnLibrary.Extensions
 {
-    public unsafe struct UnmanagedBytesArray<T> : IUnsafeArray<T, byte> where T : struct
+    public unsafe struct SharedBytesArray<T> : IUnsafeArray<T, byte> where T : struct
     {
         public int Length
         {
@@ -30,14 +31,14 @@ namespace DamnLibrary.Extensions
         private int length;
         private byte* arrayPointer;
 
-        public UnmanagedBytesArray(int length)
+        public SharedBytesArray(int length)
         {
             structSize = (ushort)MemoryUtilities.SizeOf<T>();
             this.length = length;
             arrayPointer = (byte*)MemoryUtilities.Allocate(structSize * length);
         }
         
-        public UnmanagedBytesArray(T[] array)
+        public SharedBytesArray(T[] array)
         {
             structSize = (ushort)MemoryUtilities.SizeOf<T>(); 
             length = array.Length;
@@ -64,10 +65,10 @@ namespace DamnLibrary.Extensions
 
         public T[] ToArray() => MemoryUtilities.FromPointerToStructureArray<T>(arrayPointer, Length);
 
-        public static implicit operator UnmanagedBytesArray<T>(T[] array) => new(array);
+        public static implicit operator SharedBytesArray<T>(T[] array) => new(array);
     }
     
-    public unsafe struct UnmanagedArray<T> : IUnsafeArray<T, T> where T : unmanaged
+    public unsafe struct SharedArray<T> : IUnsafeArray<T, T> where T : unmanaged
     {
         public int Length
         {
@@ -92,14 +93,14 @@ namespace DamnLibrary.Extensions
         private int length;
         private T* arrayPointer;
 
-        public UnmanagedArray(int length)
+        public SharedArray(int length)
         {
             structSize = (ushort)MemoryUtilities.SizeOf<T>();
             this.length = length;
             arrayPointer = (T*)MemoryUtilities.Allocate(structSize * length);
         }
 
-        public UnmanagedArray(T[] array)
+        public SharedArray(T[] array)
         {
             structSize = (ushort)MemoryUtilities.SizeOf<T>(); 
             length = array.Length;
@@ -114,6 +115,7 @@ namespace DamnLibrary.Extensions
 
         public T[] ToArray() => MemoryUtilities.FromPointerToArray<T>(arrayPointer, Length);
 
-        public static implicit operator UnmanagedArray<T>(T[] array) => new(array);
+        public static implicit operator SharedArray<T>(T[] array) => new(array);
     }
 }
+#endif

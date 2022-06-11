@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_MEMORY_UTILITIES
+using System;
 
 namespace DamnLibrary.Extensions
 {
@@ -27,3 +28,4 @@ namespace DamnLibrary.Extensions
         }
     }
 }
+#endif
