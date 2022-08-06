@@ -53,6 +53,15 @@ public static class DictionaryExtensions
         dictionary.Add(key, value);
         return value;
     }
+    
+    public static TValue GetOrAddDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
+    {
+        if (dictionary.TryGetValue(key, out var result))
+            return result;
+        
+        dictionary.Add(key, default);
+        return default;
+    }
 
     public static bool ChangeIfExist<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
     {
