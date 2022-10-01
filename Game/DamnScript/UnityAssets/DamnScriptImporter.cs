@@ -1,6 +1,6 @@
 #if UNITY_EDITOR && ENABLE_DAMN_SCRIPT
 using System.IO;
-using DamnLibrary.IO;
+using DamnLibrary.FileSystem;
 using UnityEditor;
 using UnityEditor.AssetImporters;
 using UnityEngine;
@@ -21,7 +21,7 @@ namespace DamnLibrary.DamnScript
         [MenuItem("Assets/Create/Damn Script", false, 10)]
         private static void CreateDamnScriptAsset(MenuCommand menuCommand)
         {
-            File.Create($"{IOManager.Editor_GetSelectedFolder()}/NewDamnScript.ds").Dispose();
+            File.Create($"{FileSystemUtilities.Editor_GetSelectedFolder()}/NewDamnScript.ds").Dispose();
         
             AssetDatabase.Refresh();
         }
