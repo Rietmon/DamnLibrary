@@ -16,13 +16,11 @@ namespace DamnLibrary.Serialization
 {
     public class SerializationStream
     {
-        private static readonly Dictionary<Type, Func<object, byte[]>> customSerialization =
-            new Dictionary<Type, Func<object, byte[]>>();
+        private static readonly Dictionary<Type, Func<object, byte[]>> customSerialization = new();
 
-        private static readonly Dictionary<Type, Func<SerializationStream, object>> customDeserialization =
-            new Dictionary<Type, Func<SerializationStream, object>>();
+        private static readonly Dictionary<Type, Func<SerializationStream, object>> customDeserialization = new();
 
-        private static readonly List<Type> dynamicTypes = new List<Type>();
+        private static readonly List<Type> dynamicTypes = new();
         
         public bool IsReading { get; }
 
@@ -92,10 +90,8 @@ namespace DamnLibrary.Serialization
             var targetSerializationType = obj.GetType();
             if (customSerialization.TryGetValue(targetSerializationType, out var method))
                 WriteToStream(method.Invoke(obj));
-#if UNITY_5_3_OR_NEWER 
             else
-                Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}");
-#endif
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}");
         }
 
         private void WriteToStream(params byte[] bytes)
@@ -297,9 +293,7 @@ namespace DamnLibrary.Serialization
 
             if (customDeserialization.TryGetValue(type, out var method)) return method.Invoke(this);
 
-#if UNITY_5_3_OR_NEWER 
-            Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {type}");
-#endif
+            UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unsupported type {type}");
             return default;
         }
 
@@ -509,13 +503,13 @@ namespace DamnLibrary.Serialization
         public byte[] ToArray() => stream.ToArray();
 
         public SerializationStream CreateSerializationSubStream() =>
-            new SerializationStream
+            new()
             {
                 Version = Version
             };
 
         public SerializationStream CreateDeserializationSubStream(byte[] bytes) =>
-            new SerializationStream(bytes)
+            new(bytes)
             {
                 Version = Version
             };

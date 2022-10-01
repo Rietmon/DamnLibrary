@@ -26,7 +26,7 @@ namespace Tiny
         private StringReader json;
 
         // Temporary allocated
-        private StringBuilder sb = new StringBuilder();
+        private StringBuilder sb = new();
 
         public static object ParseValue(string jsonString)
         {

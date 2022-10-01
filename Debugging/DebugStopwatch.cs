@@ -5,7 +5,7 @@ namespace DamnLibrary.Debugging
 {
     public class DebugStopwatch
     {
-        private readonly Stopwatch stopwatch = new Stopwatch();
+        private readonly Stopwatch stopwatch = new();
         
         public void Start()
         {

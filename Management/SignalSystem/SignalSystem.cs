@@ -9,8 +9,7 @@ namespace DamnLibrary.Management
 {
     public static class SignalSystem
     {
-        private static readonly Dictionary<Type, List<Pair<SignalSystemId, Action<Signal>>>> signalCallbacks =
-            new Dictionary<Type, List<Pair<SignalSystemId, Action<Signal>>>>();
+        private static readonly Dictionary<Type, List<Pair<SignalSystemId, Action<Signal>>>> signalCallbacks = new();
 
         public static void Subscribe<T>(Action<T> callback) where T : Signal
         {

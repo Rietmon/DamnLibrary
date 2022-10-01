@@ -19,7 +19,7 @@ namespace DamnLibrary.DamnScript.Executing
         public string Name => scriptData.name;
         public IScriptExecutor Parent { get; }
 
-        private List<ScriptRegion> ExecutingRegions { get; } = new List<ScriptRegion>();
+        private List<ScriptRegion> ExecutingRegions { get; } = new();
 
         public bool IsExecuting => ExecutingRegions.Count > 0;
         

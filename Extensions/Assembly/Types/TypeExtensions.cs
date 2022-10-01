@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using DamnLibrary.Debugging;
 #if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
@@ -15,7 +16,7 @@ namespace DamnLibrary.Extensions
             if (methodInfo == null)
             {
 #if UNITY_5_3_OR_NEWER 
-                Debug.LogWarning(
+                UniversalDebugger.LogWarning(
                     $"[{nameof(TypeExtensions)}] ({nameof(SafeInvokeStaticMethod)}) Unable to find static method \"{methodName}\" in type {type.FullName}!");
 #endif
                 return;
@@ -31,7 +32,7 @@ namespace DamnLibrary.Extensions
             if (methodInfo == null)
             {
 #if UNITY_5_3_OR_NEWER 
-                Debug.LogWarning(
+                UniversalDebugger.LogWarning(
                     $"[{nameof(TypeExtensions)}] ({nameof(SafeInvokeMethod)}) Unable to find method \"{methodName}\" in type {type.FullName}!");
 #endif
                 return;

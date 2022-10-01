@@ -9,7 +9,7 @@ namespace DamnLibrary.Game
 {
     public class DontDestroy : UnityBehaviour
     {
-        private static readonly List<short> ids = new List<short>();
+        private static readonly List<short> ids = new();
 
         [SerializeField, ReadOnly] private short id;
 

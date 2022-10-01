@@ -17,7 +17,7 @@ namespace DamnLibrary.DamnScript
             await asyncFunction.Invoke(code, arguments);
 
         public static implicit operator NativeMethod(Func<ScriptCode, string[], Task<bool>> function) => 
-            new NativeMethod(function);
+            new(function);
     } 
 }
 #endif

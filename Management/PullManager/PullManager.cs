@@ -26,9 +26,9 @@ namespace DamnLibrary.Management
 
         private readonly Func<T, T> instantiateMethod;
 
-        private readonly List<T> objectsPull = new List<T>();
+        private readonly List<T> objectsPull = new();
 
-        private readonly List<T> objectPullExecuting = new List<T>();
+        private readonly List<T> objectPullExecuting = new();
 
         public PullManager(int capacity, T example, Func<T, T> instantiateMethod = null)
         {

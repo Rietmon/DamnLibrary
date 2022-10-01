@@ -14,10 +14,10 @@ namespace DamnLibrary.Management
         }
 
         public static implicit operator SignalSystemId(IntPtr originalMethodPointer) =>
-            new SignalSystemId(originalMethodPointer);
+            new(originalMethodPointer);
         
         public static implicit operator SignalSystemId(RuntimeMethodHandle handler) =>
-            new SignalSystemId(handler.Value);
+            new(handler.Value);
 
         public static bool operator ==(SignalSystemId left, SignalSystemId right)
         {

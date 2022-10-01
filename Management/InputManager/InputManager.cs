@@ -16,20 +16,17 @@ namespace DamnLibrary.Management
 #endif
     public class InputManager : UnityBehaviour
     {
-        private static readonly Dictionary<KeyCode, List<Action<KeyCode>>> onKeyDownCallbacks =
-            new Dictionary<KeyCode, List<Action<KeyCode>>>();
+        private static readonly Dictionary<KeyCode, List<Action<KeyCode>>> onKeyDownCallbacks = new();
 
-        private static readonly Dictionary<KeyCode, List<Action<KeyCode>>> onKeyPressCallbacks =
-            new Dictionary<KeyCode, List<Action<KeyCode>>>();
+        private static readonly Dictionary<KeyCode, List<Action<KeyCode>>> onKeyPressCallbacks = new();
 
-        private static readonly Dictionary<KeyCode, List<Action<KeyCode>>> onKeyUpCallbacks =
-            new Dictionary<KeyCode, List<Action<KeyCode>>>();
+        private static readonly Dictionary<KeyCode, List<Action<KeyCode>>> onKeyUpCallbacks = new();
 
-        private static readonly List<KeyCode> keysDown = new List<KeyCode>();
+        private static readonly List<KeyCode> keysDown = new();
 
-        private static readonly List<KeyCode> keysPress = new List<KeyCode>();
+        private static readonly List<KeyCode> keysPress = new();
 
-        private static readonly List<KeyCode> keysUp = new List<KeyCode>();
+        private static readonly List<KeyCode> keysUp = new();
 
         private void Update()
         {

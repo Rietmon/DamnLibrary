@@ -7,7 +7,7 @@ namespace DamnLibrary.DamnScript.Data
 {
     public static class ScriptDatasManager
     {
-        private static readonly Dictionary<string, ScriptData> scriptsData = new Dictionary<string, ScriptData>();
+        private static readonly Dictionary<string, ScriptData> scriptsData = new();
 
         public static ScriptData Get(string name) =>
             scriptsData.TryGetValue(name, out var scriptData) ? scriptData : null;

@@ -7,7 +7,7 @@ namespace Tiny
 {
     public class JsonBuilder
     {
-        private readonly StringBuilder builder = new StringBuilder();
+        private readonly StringBuilder builder = new();
         private readonly bool pretty;
         private int level;
 

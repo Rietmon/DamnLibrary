@@ -12,7 +12,7 @@ namespace DamnLibrary.DamnScript.Compiling
         private ScriptCodeDataCompilingContainer[] codesDataContainer;
 
         public ScriptRegionData ToData() =>
-            new ScriptRegionData(name, codesDataContainer.SmartCast((codeDataContainer) => codeDataContainer.ToData()));
+            new(name, codesDataContainer.SmartCast((codeDataContainer) => codeDataContainer.ToData()));
 
         void ISerializable.Serialize(SerializationStream stream)
         {

@@ -4,6 +4,7 @@ using DamnLibrary.Behaviours;
 using DamnLibrary.Game;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using UnityEngine.U2D;
 
@@ -54,13 +55,13 @@ namespace DamnLibrary.Management
 
             if (locations == null || locations.Count == 0)
             {
-                Debug.LogError(
+                UniversalDebugger.LogError(
                     $"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) Unable to find the location with the name {assetName}");
                 return null;
             }
 
             var result = await Addressables.LoadAssetAsync<T>(locations[0]).Task;
-            Debug.Log(
+            UniversalDebugger.Log(
                 $"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) Asset with the name {assetName} was loaded in {Time.frameCount - startLoadingFrame} frames.");
             return VerifyAsset(result, assetName);
         }
@@ -70,13 +71,13 @@ namespace DamnLibrary.Management
 
             if (locations == null || locations.Count == 0)
             {
-                Debug.LogError(
+                UniversalDebugger.LogError(
                     $"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) Unable to find the location with the name {assetName}");
                 return null;
             }
 
             var result = Addressables.LoadAssetAsync<T>(locations[0]).WaitForCompletion();
-            Debug.Log($"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) Asset with the name {assetName} was loaded.");
+            UniversalDebugger.Log($"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) Asset with the name {assetName} was loaded.");
             return VerifyAsset(result, assetName);
         }
 
@@ -100,7 +101,7 @@ namespace DamnLibrary.Management
             if (asset)
                 return asset;
 
-            Debug.LogError(
+            UniversalDebugger.LogError(
                 $"[{nameof(AddressableManager)}] ({nameof(VerifyAsset)}) Error at loading asset with the name {assetName}. Result equal a null.");
             return default;
         }

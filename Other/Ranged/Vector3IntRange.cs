@@ -21,7 +21,7 @@ namespace DamnLibrary.Other
             set => maximalValue = value;
         }
 
-        public Vector3Int RandomValue => new Vector3Int(RandomUtilities.Range(MinimalValue.x, MaximalValue.x),
+        public Vector3Int RandomValue => new(RandomUtilities.Range(MinimalValue.x, MaximalValue.x),
             RandomUtilities.Range(MinimalValue.y, MaximalValue.y), RandomUtilities.Range(MinimalValue.z, MaximalValue.z));
 
         [SerializeField] private Vector3Int minimalValue;

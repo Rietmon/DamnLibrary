@@ -1,6 +1,7 @@
 ﻿#if ENABLE_SERIALIZATION
 using System;
 using System.Collections.Generic;
+using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 #if UNITY_5_3_OR_NEWER 
 using DamnLibrary.Behaviours;
@@ -21,7 +22,7 @@ namespace DamnLibrary.Serialization
     {
         public static short Version { get; set; } = 1;
 
-        private static readonly Dictionary<short, Type> serializableStaticTypes = new Dictionary<short, Type>();
+        private static readonly Dictionary<short, Type> serializableStaticTypes = new();
     
 #if UNITY_5_3_OR_NEWER 
         [SerializeField] private SerializableObject[] serializableObjects;
@@ -57,7 +58,7 @@ namespace DamnLibrary.Serialization
         {
             if (Instance == null)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize at the {SceneManager.ActiveScene.name} scene, because there is no serialization component!");
+                UniversalDebugger.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize at the {SceneManager.ActiveScene.name} scene, because there is no serialization component!");
                 return Array.Empty<byte>();
             }
             
@@ -67,7 +68,7 @@ namespace DamnLibrary.Serialization
 
             if (objects == null || objects.Length == 0)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize at the {SceneManager.ActiveScene.name} scene, because there is no serializable objects!");
+                UniversalDebugger.LogError($"[{nameof(Serialization)}] ({nameof(SerializeComponents)}) Unable to serialize at the {SceneManager.ActiveScene.name} scene, because there is no serializable objects!");
                 return Array.Empty<byte>();
             }
 
@@ -92,13 +93,13 @@ namespace DamnLibrary.Serialization
         {
             if (Instance == null)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because there is no serialization component!");
+                UniversalDebugger.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because there is no serialization component!");
                 return;
             }
 
             if (bytes == null || bytes.Length == 0)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because byte is null or length is equal 0!");
+                UniversalDebugger.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because byte is null or length is equal 0!");
                 return;
             }
             
@@ -108,7 +109,7 @@ namespace DamnLibrary.Serialization
 
             if (objects == null || objects.Length == 0)
             {
-                Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because there is no serializable objects!");
+                UniversalDebugger.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to deserialize at the {SceneManager.ActiveScene.name} scene, because there is no serializable objects!");
                 return;
             }
 
@@ -119,7 +120,7 @@ namespace DamnLibrary.Serialization
                 var component = Instance.serializableObjects.Find((c) => c.SerializableId == id);
                 if (!component)
                 {
-                    Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to find component with id {id} at the {SceneManager.ActiveScene.name} scene");
+                    UniversalDebugger.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to find component with id {id} at the {SceneManager.ActiveScene.name} scene");
                     continue;
                 }
 
@@ -148,9 +149,7 @@ namespace DamnLibrary.Serialization
                 var serializedBytes = stream.Read<byte[]>();
                 if (!serializableStaticTypes.TryGetValue(id, out var targetType))
                 {
-#if UNITY_5_3_OR_NEWER 
-                    Debug.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to find component with id {id}");
-#endif
+                    UniversalDebugger.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to find component with id {id}");
                     continue;
                 }
 
@@ -168,7 +167,7 @@ namespace DamnLibrary.Serialization
             serializableObjects = FindObjectsOfType<SerializableObject>();
 
             EditorUtility.SetDirty(this);
-            Debug.Log($"[{nameof(Serialization)}] ({nameof(FindSerializableComponents)}) Found {serializableObjects.Length} components");
+            UniversalDebugger.Log($"[{nameof(Serialization)}] ({nameof(FindSerializableComponents)}) Found {serializableObjects.Length} components");
         }
 
 #endif

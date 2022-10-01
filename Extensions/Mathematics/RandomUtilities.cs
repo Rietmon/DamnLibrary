@@ -32,8 +32,7 @@ namespace DamnLibrary.Extensions
             }
         }
 
-        public static decimal RandomDecimal =>
-            new decimal(RandomInt, RandomInt, RandomInt, RandomBool, (byte)Range(0, 28));
+        public static decimal RandomDecimal => new(RandomInt, RandomInt, RandomInt, RandomBool, (byte)Range(0, 28));
 
         public static int Range(int min, int max)
         {

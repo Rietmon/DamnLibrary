@@ -5,8 +5,7 @@ namespace DamnLibrary.DamnScript
 {
     internal static class NativeMethodsManager
     {
-        private static readonly Dictionary<string, NativeMethod> methods =
-            new Dictionary<string, NativeMethod>();
+        private static readonly Dictionary<string, NativeMethod> methods = new();
 
         public static void Add(string name, NativeMethod method) => methods.Add(name, method);
 

@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
+using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using DamnLibrary.Game;
 using UnityEngine;
@@ -53,21 +54,21 @@ namespace DamnLibrary.Management
             var startLoadingFrame = Time.frameCount;
             var loadOperation = Resources.LoadAsync<T>(assetPath);
             await TaskUtilities.WaitUntil(() => loadOperation.isDone);
-            Debug.Log($"[{nameof(ResourcesManager)}] ({nameof(GetAssetAsync)}) Asset on the path {assetPath} was loaded in {Time.frameCount - startLoadingFrame} frames.");
+            UniversalDebugger.Log($"[{nameof(ResourcesManager)}] ({nameof(GetAssetAsync)}) Asset on the path {assetPath} was loaded in {Time.frameCount - startLoadingFrame} frames.");
             return VerifyAsset((T)loadOperation.asset, assetPath);
         }
         
         public static T GetAsset<T>(string assetPath) where T : Object
         {
             var asset = Resources.Load<T>(assetPath);
-            Debug.Log($"[{nameof(ResourcesManager)}] ({nameof(GetAssetAsync)}) Asset on the path {assetPath} was loaded.");
+            UniversalDebugger.Log($"[{nameof(ResourcesManager)}] ({nameof(GetAssetAsync)}) Asset on the path {assetPath} was loaded.");
             return VerifyAsset(asset, assetPath);
         }
 
         public static T[] GetAllAssets<T>(string path) where T : Object
         {
             var assets = Resources.LoadAll<T>(path);
-            Debug.Log($"[{nameof(ResourcesManager)}] ({nameof(GetAllAssets)}) Assets on the path {path} was loaded.");
+            UniversalDebugger.Log($"[{nameof(ResourcesManager)}] ({nameof(GetAllAssets)}) Assets on the path {path} was loaded.");
             return assets;
         }
         
@@ -76,7 +77,7 @@ namespace DamnLibrary.Management
             if (asset) 
                 return asset;
         
-            Debug.LogError($"[{nameof(ResourcesManager)}] ({nameof(VerifyAsset)}) Error at loading asset on the path {assetPath}. Result equal a null.");
+            UniversalDebugger.LogError($"[{nameof(ResourcesManager)}] ({nameof(VerifyAsset)}) Error at loading asset on the path {assetPath}. Result equal a null.");
             return default;
         }
     }

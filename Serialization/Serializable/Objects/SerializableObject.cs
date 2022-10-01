@@ -1,5 +1,6 @@
 ﻿#if ENABLE_SERIALIZATION && UNITY_5_3_OR_NEWER 
 using System.Collections.Generic;
+using DamnLibrary.Debugging;
 using UnityEngine;
 
 namespace DamnLibrary.Serialization
@@ -48,7 +49,7 @@ namespace DamnLibrary.Serialization
                 var component = SerializableComponents.Find((c) => c.SerializableId == id);
                 if (!component)
                 {
-                    Debug.LogError($"[{nameof(SerializableObject)}] ({nameof(OnDeserialize)}) Unable to find component with id {id}");
+                    UniversalDebugger.LogError($"[{nameof(SerializableObject)}] ({nameof(OnDeserialize)}) Unable to find component with id {id}");
                     continue;
                 }
                 component.Deserialize(stream.CreateDeserializationSubStream(bytes));

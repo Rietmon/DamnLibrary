@@ -28,7 +28,7 @@ namespace DamnLibrary.Linkers
 #if UNITY_5_3_OR_NEWER 
         [SerializeField] 
 #endif
-        private List<HierarchyLinkerContainer<T>> childes = new List<HierarchyLinkerContainer<T>>();
+        private List<HierarchyLinkerContainer<T>> childes = new();
 
         public HierarchyLinkerContainer(T value)
         {

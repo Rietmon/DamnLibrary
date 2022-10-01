@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
+using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace DamnLibrary.Management
         {
             if (Instance == null)
             {
-                Debug.LogWarning($"[{nameof(AudioManager)}] ({nameof(Initialize)}) Creating instance automatically!");
+                UniversalDebugger.LogWarning($"[{nameof(AudioManager)}] ({nameof(Initialize)}) Creating instance automatically!");
                 var audioManager = new GameObject("AudioManager").AddComponent<AudioManager>();
                 DontDestroyOnLoad(audioManager);
             }
@@ -60,7 +61,7 @@ namespace DamnLibrary.Management
         }
 
         private static AudioExecutor CreateExecutor(AudioSource audioSource, Action stopCallback) =>
-            new AudioExecutor(
+            new(
                 () => audioSource.isPlaying,
                 stopCallback,
                 (volume) => audioSource.volume = volume,

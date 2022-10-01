@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DamnLibrary.Management;
 using DamnLibrary.Behaviours;
+using DamnLibrary.Debugging;
 using UnityEngine;
 #pragma warning disable 1998
 
@@ -33,7 +34,7 @@ namespace DamnLibrary.Behaviours
             if (Arguments[index] is T result)
                 return result;
 
-            Debug.LogError(
+            UniversalDebugger.LogError(
                 $"[{nameof(WindowBehaviour)}] ({nameof(GetArgument)}) Unable to cast argument with index {index} to {typeof(T).Name}");
             return defaultValue;
         }

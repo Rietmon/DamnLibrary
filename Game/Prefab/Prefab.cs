@@ -108,7 +108,7 @@ namespace DamnLibrary.Game
             return result;
         }
 
-        public static implicit operator Prefab<T>(T component) => new Prefab<T>(component);
+        public static implicit operator Prefab<T>(T component) => new(component);
 
         public static implicit operator bool(Prefab<T> prefab) => prefab != null;
 

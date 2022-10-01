@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
+using DamnLibrary.Debugging;
 
 namespace DamnLibrary.Management
 {

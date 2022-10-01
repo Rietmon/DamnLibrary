@@ -13,7 +13,7 @@ namespace DamnLibrary.Management
     {
         public static Scene ActiveScene => UnityEngine.SceneManagement.SceneManager.GetActiveScene();
         
-        private static readonly Dictionary<string, AsyncOperation> scenesInPreloading = new Dictionary<string, AsyncOperation>();
+        private static readonly Dictionary<string, AsyncOperation> scenesInPreloading = new();
     
         public static void PreloadScene(string name, bool enableActivation = false, Action preloadCallback = null)
         {

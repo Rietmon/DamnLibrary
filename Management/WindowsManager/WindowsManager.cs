@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
+using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using DamnLibrary.Game;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace DamnLibrary.Management
         
         public static int OpenedWindowsCount => openedWindows.Count;
 
-        private static readonly List<WindowBehaviour> openedWindows = new List<WindowBehaviour>();
+        private static readonly List<WindowBehaviour> openedWindows = new();
 
         public static async Task<T> OpenAsync<T>(string windowName, params object[] arguments) =>
             (await OpenAsync(windowName, arguments)).GetComponent<T>();
@@ -30,7 +31,7 @@ namespace DamnLibrary.Management
         {
             if (!Instance)
             {
-                Debug.LogError(
+                UniversalDebugger.LogError(
                     $"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Unable to instantiate window because there is no instance of {nameof(WindowsManager)}!");
                 return null;
             }
@@ -38,7 +39,7 @@ namespace DamnLibrary.Management
             var windowPrefab = await GetPrefabAsync(windowName);
             if (!windowPrefab)
             {
-                Debug.LogError(
+                UniversalDebugger.LogError(
                     $"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Unable to open window, because prefab is equal null!");
                 return null;
             }
@@ -54,7 +55,7 @@ namespace DamnLibrary.Management
         {
             if (!Instance)
             {
-                Debug.LogError(
+                UniversalDebugger.LogError(
                     $"[{nameof(WindowsManager)}] ({nameof(Open)}) Unable to instantiate window because there is no instance of {nameof(WindowsManager)}!");
                 return null;
             }
@@ -62,7 +63,7 @@ namespace DamnLibrary.Management
             var windowPrefab = GetPrefab(windowName);
             if (!windowPrefab)
             {
-                Debug.LogError(
+                UniversalDebugger.LogError(
                     $"[{nameof(WindowsManager)}] ({nameof(Open)}) Unable to open window, because prefab is equal null!");
                 return null;
             }
@@ -78,7 +79,7 @@ namespace DamnLibrary.Management
         {
             if (!Instance)
             {
-                Debug.LogError(
+                UniversalDebugger.LogError(
                     $"[{nameof(WindowsManager)}] ({nameof(OpenWithoutAwaiting)}) Unable to instantiate window because there is no instance of {nameof(WindowsManager)}!");
                 return null;
             }
@@ -86,7 +87,7 @@ namespace DamnLibrary.Management
             var windowPrefab = GetPrefab(windowName);
             if (!windowPrefab)
             {
-                Debug.LogError(
+                UniversalDebugger.LogError(
                     $"[{nameof(WindowsManager)}] ({nameof(Open)}) Unable to open window, because prefab is equal null!");
                 return null;
             }

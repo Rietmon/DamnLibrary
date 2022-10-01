@@ -38,9 +38,9 @@ namespace DamnLibrary.Other
         }
 
         public static implicit operator KeyValuePair<T1, T2>(Pair<T1, T2> pair) =>
-            new KeyValuePair<T1, T2>(pair.First, pair.Second);
+            new(pair.First, pair.Second);
         
         public static implicit operator Pair<T1, T2>(KeyValuePair<T1, T2> pair) =>
-            new Pair<T1, T2>(pair.Key, pair.Value);
+            new(pair.Key, pair.Value);
     }
 }

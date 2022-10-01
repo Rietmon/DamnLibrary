@@ -8,8 +8,7 @@ namespace DamnLibrary.DamnScript.Compiling
     {
         private string[] codes;
 
-        public ScriptCodeData ToData() => 
-            new ScriptCodeData(codes);
+        public ScriptCodeData ToData() => new(codes);
 
         void ISerializable.Serialize(SerializationStream stream)
         {

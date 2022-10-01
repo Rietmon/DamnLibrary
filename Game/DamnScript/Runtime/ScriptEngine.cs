@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DamnLibrary.DamnScript.Compiling;
 #endif
 using DamnLibrary.DamnScript.Data;
+using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 
 namespace DamnLibrary.DamnScript
@@ -28,7 +29,10 @@ namespace DamnLibrary.DamnScript
         public static async Task<bool> InvokeAsync(ScriptCode owner, string[] codes)
         {
             if (!PrepareToInvoke(codes, out var method, out var arguments))
+            {
+                UniversalDebugger.LogError($"[{nameof(ScriptEngine)}] ({nameof(InvokeAsync)}) Unable to find method with the name {codes[0]}");
                 return true;
+            }
 
             return await method.InvokeAsync(owner, arguments);
         }

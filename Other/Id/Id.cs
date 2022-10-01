@@ -55,18 +55,18 @@ namespace DamnLibrary.Other
             !(first == second);
 
         public static Id Create8() => Create8(RandomUtilities.RandomByte);
-        public static Id Create8(byte id) => new Id(new Identification8(id));
+        public static Id Create8(byte id) => new(new Identification8(id));
         
         public static Id Create16() => Create16(RandomUtilities.RandomShort);
-        public static Id Create16(short id) => new Id(new Identification16(id));
+        public static Id Create16(short id) => new(new Identification16(id));
         
         public static Id Create32() => Create32(RandomUtilities.RandomInt);
-        public static Id Create32(int id) => new Id(new Identification32(id));
+        public static Id Create32(int id) => new(new Identification32(id));
         
         public static Id Create64() => Create64(RandomUtilities.RandomLong);
-        public static Id Create64(long id) => new Id(new Identification64(id));
+        public static Id Create64(long id) => new(new Identification64(id));
         
         public static Id Create128() => Create128(RandomUtilities.RandomDecimal);
-        public static Id Create128(decimal id) => new Id(new Identification128(id));
+        public static Id Create128(decimal id) => new(new Identification128(id));
     }
 }
