@@ -1,3 +1,4 @@
+#if ENABLE_SERIALIZATION && ENABLE_DAMN_SCRIPT
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,3 +19,4 @@ public class DefaultScriptExecutor : UnityBehaviour
         Executor.StartRegion();
     }
 }
+#endif
