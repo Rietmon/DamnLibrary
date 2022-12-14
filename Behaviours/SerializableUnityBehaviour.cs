@@ -45,12 +45,14 @@ namespace DamnLibrary.Serialization
             serializableId = RandomUtilities.RandomShort;
             EditorUtility.SetDirty(this);
         }
+#endif
 
         protected virtual void Reset()
         {
+#if UNITY_EDITOR
             Editor_GenerateSerializableId();
-        }
 #endif
+        }
     }
 }
 #endif
