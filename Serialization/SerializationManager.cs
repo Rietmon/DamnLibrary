@@ -20,11 +20,17 @@ namespace DamnLibrary.Serialization
     public static class SerializationManager
 #endif
     {
+#if UNITY_5_3_OR_NEWER 
+        public static short Version { get => Instance.version; set => Instance.version = value; }
+#else
         public static short Version { get; set; } = 1;
+#endif
 
         private static readonly Dictionary<short, Type> serializableStaticTypes = new();
-    
+
 #if UNITY_5_3_OR_NEWER 
+        [SerializeField] private short version = 1;
+    
         [SerializeField] private SerializableObject[] serializableObjects;
 #endif
 

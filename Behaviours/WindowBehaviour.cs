@@ -12,8 +12,8 @@ namespace DamnLibrary.Behaviours
     {
         public string WindowName { get; set; }
         
-        public object[] Arguments { get; set; }
-
+        public WindowContext BaseWindowContext { get; set; }
+        
         /// <summary>
         /// Will be called after creating object
         /// </summary>
@@ -25,19 +25,13 @@ namespace DamnLibrary.Behaviours
         public virtual async Task OnCloseAsync() { }
 
         public async void CloseAsync() => await WindowsManager.CloseAsync(this);
+    }
+    
+    public abstract class WindowBehaviour<TContext> : WindowBehaviour where TContext : WindowContext
+    {
+        public TContext WindowContext => windowContext ??= BaseWindowContext.To<TContext>();
 
-        protected T GetArgument<T>(int index, T defaultValue = default)
-        {
-            if (Arguments.Length <= index)
-                return defaultValue;
-
-            if (Arguments[index] is T result)
-                return result;
-
-            UniversalDebugger.LogError(
-                $"[{nameof(WindowBehaviour)}] ({nameof(GetArgument)}) Unable to cast argument with index {index} to {typeof(T).Name}");
-            return defaultValue;
-        }
+        private TContext windowContext;
     }
 }
 #endif

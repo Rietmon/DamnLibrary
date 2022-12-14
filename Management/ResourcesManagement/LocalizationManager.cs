@@ -1,4 +1,4 @@
-﻿#if ENABLE_LOCALIZATION && ENABLE_ADDRESSABLE && UNITY_5_3_OR_NEWER
+﻿#if ENABLE_LOCALIZATIONS && ENABLE_ADDRESSABLE && UNITY_5_3_OR_NEWER
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Localization;

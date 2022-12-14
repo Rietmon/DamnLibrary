@@ -18,16 +18,16 @@ namespace DamnLibrary.Management
 
         private static readonly List<WindowBehaviour> openedWindows = new();
 
-        public static async Task<T> OpenAsync<T>(string windowName, params object[] arguments) =>
-            (await OpenAsync(windowName, arguments)).GetComponent<T>();
+        public static async Task<T> OpenAsync<T>(string windowName, WindowContext windowContext = null) =>
+            (await OpenAsync(windowName, windowContext)).GetComponent<T>();
 
-        public static T Open<T>(string windowName, params object[] arguments) =>
-            Open(windowName, arguments).GetComponent<T>();
+        public static T Open<T>(string windowName, WindowContext windowContext = null) =>
+            Open(windowName, windowContext).GetComponent<T>();
         
-        public static T OpenWithoutAwaiting<T>(string windowName, params object[] arguments) =>
-            OpenWithoutAwaiting(windowName, arguments).GetComponent<T>();
+        public static T OpenWithoutAwaiting<T>(string windowName, WindowContext windowContext = null) =>
+            OpenWithoutAwaiting(windowName, windowContext).GetComponent<T>();
 
-        public static async Task<WindowBehaviour> OpenAsync(string windowName, params object[] arguments)
+        public static async Task<WindowBehaviour> OpenAsync(string windowName, WindowContext windowContext = null)
         {
             if (!Instance)
             {
@@ -44,14 +44,14 @@ namespace DamnLibrary.Management
                 return null;
             }
 
-            var window = PrepareWindow(windowPrefab, windowName, arguments);
+            var window = PrepareWindow(windowPrefab, windowName, windowContext);
             
             await window.OnOpenAsync();
 
             return window;
         }
 
-        public static WindowBehaviour Open(string windowName, params object[] arguments)
+        public static WindowBehaviour Open(string windowName, WindowContext windowContext = null)
         {
             if (!Instance)
             {
@@ -68,14 +68,14 @@ namespace DamnLibrary.Management
                 return null;
             }
 
-            var window = PrepareWindow(windowPrefab, windowName, arguments);
+            var window = PrepareWindow(windowPrefab, windowName, windowContext);
             
             window.OnOpenAsync().Wait();
 
             return window;
         }
 
-        public static WindowBehaviour OpenWithoutAwaiting(string windowName, params object[] arguments)
+        public static WindowBehaviour OpenWithoutAwaiting(string windowName, WindowContext windowContext = null)
         {
             if (!Instance)
             {
@@ -92,7 +92,7 @@ namespace DamnLibrary.Management
                 return null;
             }
 
-            var window = PrepareWindow(windowPrefab, windowName, arguments);
+            var window = PrepareWindow(windowPrefab, windowName, windowContext);
             
             window.OnOpenAsync();
 
@@ -102,8 +102,8 @@ namespace DamnLibrary.Management
         public static async Task WaitForClose(WindowBehaviour window) =>
             await TaskUtilities.WaitUntil(() => !openedWindows.Contains(window));
 
-        public static async Task OpenAsyncAndWaitForClose(string windowName, params object[] arguments) =>
-            await WaitForClose(await OpenAsync(windowName, arguments));
+        public static async Task OpenAsyncAndWaitForClose(string windowName, WindowContext windowContext = null) =>
+            await WaitForClose(await OpenAsync(windowName, windowContext));
 
         public static async Task CloseAsync(string windowName) =>
             await CloseAsync(GetOpenedWindowByName(windowName));
@@ -194,13 +194,13 @@ namespace DamnLibrary.Management
             return null;
         }
 
-        private static WindowBehaviour PrepareWindow(Prefab<WindowBehaviour> windowPrefab, string windowName, object[] arguments)
+        private static WindowBehaviour PrepareWindow(Prefab<WindowBehaviour> windowPrefab, string windowName, WindowContext windowContext)
         {
             var window = windowPrefab.SimpleInstantiate(Instance.transform);
             openedWindows.Add(window);
 
             window.WindowName = windowName;
-            window.Arguments = arguments;
+            window.BaseWindowContext = windowContext;
 
             return window;
         }

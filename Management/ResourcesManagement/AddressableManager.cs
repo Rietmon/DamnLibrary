@@ -10,7 +10,7 @@ using UnityEngine.U2D;
 
 namespace DamnLibrary.Management
 {
-    public static class AddressableManager
+    public static partial class AddressableManager
     {
         private const string PathToDataWindows = "Assets/Data/Runtime/Prefabs/Windows/{0}.prefab";
         private const string PathToSpritesAtlases = "Assets/Data/Runtime/Atlases/{0}.spriteatlas";
