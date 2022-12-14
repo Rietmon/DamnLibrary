@@ -53,6 +53,12 @@ namespace DamnLibrary.Serialization
             if (!IsWriting)
                 return;
 
+            if (obj == null)
+            {
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Object cannot be null");
+                return;
+            }
+
             if (realType != null && IsDynamicType(realType) ||
                 realType == null && IsDynamicType(typeof(T)))
                 WriteValueType(obj.GetType());
@@ -85,6 +91,7 @@ namespace DamnLibrary.Serialization
                 case Array a: WriteArray(a); return;
                 case IList l: WriteList(l); return;
                 case IDictionary d: WriteDictionary(d); return;
+                case Enum e: WriteEnum(e); return;
             }
 
             var targetSerializationType = obj.GetType();
@@ -252,6 +259,10 @@ namespace DamnLibrary.Serialization
                 
                 Write(dictionaryEntry.Value, genericTypes[1]);
             }
+        }
+        
+        private void WriteEnum(Enum value)
+        {
         }
 
         public T Read<T>() => (T)Read(typeof(T));
