@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace DamnLibrary.Serialization
 {
-    public class SerializationStream
+    public class SerializationStream : IDisposable
     {
         private static readonly Dictionary<Type, Func<object, byte[]>> customSerialization = new();
 
@@ -514,9 +514,23 @@ namespace DamnLibrary.Serialization
                 Version = Version
             };
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                stream?.Dispose();
+            }
+        }
+
         ~SerializationStream()
         {
-            stream.Dispose();
+            Dispose(false);
         }
 
         public static void AddCustomSerialization(Type type, Func<object, byte[]> serializationMethod, 
