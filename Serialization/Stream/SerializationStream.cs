@@ -86,7 +86,7 @@ namespace DamnLibrary.Serialization
             
             switch (obj)
             {
-                case bool b: WriteByte(b ? (byte)1 : (byte)0); return;
+                case bool b: WriteBool(b); return;
                 case byte b: WriteByte(b); return;
                 case sbyte b: WriteSByte(b); return;
                 case short s: WriteShort(s); return;
@@ -130,6 +130,11 @@ namespace DamnLibrary.Serialization
         private void WriteValueType(Type type)
         {
             Write(type.FullName);
+        }
+
+        private void WriteBool(bool value)
+        {
+            WriteToStream(value ? (byte)1 : (byte)0);
         }
 
         private void WriteByte(byte value)
@@ -296,7 +301,7 @@ namespace DamnLibrary.Serialization
             if (IsDynamicType(type))
                 type = ReadType();
             
-            if (type == typeof(bool)) return ReadByte() == 1;
+            if (type == typeof(bool)) return ReadBool();
             if (type == typeof(byte)) return ReadByte();
             if (type == typeof(sbyte)) return ReadSByte();
             if (type == typeof(short)) return ReadShort();
@@ -340,6 +345,11 @@ namespace DamnLibrary.Serialization
         {
             var typeName = ReadString();
             return Type.GetType(typeName);
+        }
+
+        private bool ReadBool()
+        {
+            return ReadFromStream(1).First() == 1;
         }
 
         private byte ReadByte()
