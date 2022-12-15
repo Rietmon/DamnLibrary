@@ -60,6 +60,7 @@ namespace DamnLibrary.Serialization
         {
             var lastPosition = Position;
             Position = position;
+            
             Write(obj, realType);
             Position = lastPosition;
         }
