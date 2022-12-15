@@ -56,15 +56,19 @@ namespace DamnLibrary.Serialization
             stream = new MemoryStream(data);
         }
 
-        public void Write<T>(long position, T obj, Type realType = null)
+        public void WriteFromAndReturn<T>(long position, T obj, Type realType = null)
         {
             var lastPosition = Position;
-            Position = position;
-            
-            Write(obj, realType);
+            WriteFromAndStay(position, obj, realType);
             Position = lastPosition;
         }
 
+        public void WriteFromAndStay<T>(long position, T obj, Type realType = null)
+        {
+            Position = position;
+            Write(obj, realType);
+        }
+        
         public void Write<T>(T obj, Type realType = null)
         {
             if (!IsWriting)
@@ -72,7 +76,7 @@ namespace DamnLibrary.Serialization
 
             if (obj == null)
             {
-                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Object cannot be null");
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(WriteFromAndStay)}) Object cannot be null");
                 return;
             }
 
@@ -115,7 +119,7 @@ namespace DamnLibrary.Serialization
             if (customSerialization.TryGetValue(targetSerializationType, out var method))
                 WriteToStream(method.Invoke(obj));
             else
-                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}");
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(WriteFromAndStay)}) Unsupported type {typeof(T)}");
         }
 
         private void WriteToStream(params byte[] bytes)
