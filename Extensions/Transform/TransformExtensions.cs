@@ -6,6 +6,20 @@ namespace DamnLibrary.Extensions
 {
     public static class TransformExtensions
     {
+        public static T GetComponentInParents<T>(this Transform transform)
+        {
+            var currentParent = transform.parent;
+            while (currentParent != null)
+            {
+                if (currentParent.TryGetComponent<T>(out var component))
+                    return component;
+
+                currentParent = currentParent.parent;
+            }
+
+            return default;
+        }
+        
         public static List<Transform> GetChildes(this Transform transform)
         {
             var result = new List<Transform>();
