@@ -31,6 +31,14 @@ namespace DamnLibrary.Serialization
         public bool HasBytesToRead => stream.Position < stream.Length;
 
         public bool IsEmpty => stream.Length == 0;
+        
+        public long Length => stream.Length;
+
+        public long Position
+        {
+            get => stream.Position;
+            set => stream.Position = value;
+        }
 
         private readonly MemoryStream stream;
 
@@ -46,6 +54,14 @@ namespace DamnLibrary.Serialization
             IsReading = true;
 
             stream = new MemoryStream(data);
+        }
+
+        public void Write<T>(long position, T obj, Type realType = null)
+        {
+            var lastPosition = Position;
+            Position = position;
+            Write(obj, realType);
+            Position = lastPosition;
         }
 
         public void Write<T>(T obj, Type realType = null)
