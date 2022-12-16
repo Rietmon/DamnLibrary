@@ -10,7 +10,11 @@ namespace DamnLibrary.Extensions
         /// <summary>
         /// Task.Yield implementation as Task result
         /// </summary>
-        public static async Task Yield() => await Task.Yield();
+        public static async Task Yield(int framesCount = 1)
+        {
+            for (var i = 0; i < framesCount; i++)
+                await Task.Yield();
+        }
         
         /// <summary>
         /// Waiting while condition is true
