@@ -16,6 +16,8 @@ namespace DamnLibrary.Management
 #endif
     public class InputManager : UnityBehaviour
     {
+        public static bool IsPaused { get; set; }
+        
         private static readonly Dictionary<KeyCode, List<Action<KeyCode>>> onKeyDownCallbacks = new();
 
         private static readonly Dictionary<KeyCode, List<Action<KeyCode>>> onKeyPressCallbacks = new();
@@ -40,10 +42,10 @@ namespace DamnLibrary.Management
         }
 
         private static void UpdateKeysArray(List<KeyCode> array, Dictionary<KeyCode, List<Action<KeyCode>>> callbacks,
-            Func<KeyCode, bool> func)
+            Func<KeyCode, bool, bool> func)
         {
             array.Clear();
-            array.AddRange(callbacks.Where(callback => func.Invoke(callback.Key))
+            array.AddRange(callbacks.Where(callback => func.Invoke(callback.Key, true))
                 .Select(callback => callback.Key));
         }
 
@@ -115,11 +117,11 @@ namespace DamnLibrary.Management
                 keyCallbacks.Remove(keyCode);
         }
 
-        public static bool GetKeyDown(KeyCode code) => Input.GetKeyDown(code);
+        public static bool GetKeyDown(KeyCode code, bool ignorePause = false) => (!IsPaused || ignorePause) && Input.GetKeyDown(code);
 
-        public static bool GetKey(KeyCode code) => Input.GetKey(code);
+        public static bool GetKey(KeyCode code, bool ignorePause = false) => (!IsPaused || ignorePause) && Input.GetKey(code);
 
-        public static bool GetKeyUp(KeyCode code) => Input.GetKeyUp(code);
+        public static bool GetKeyUp(KeyCode code, bool ignorePause = false) => (!IsPaused || ignorePause) && Input.GetKeyUp(code);
 
         
 #if ENABLE_DAMN_SCRIPT
