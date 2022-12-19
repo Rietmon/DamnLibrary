@@ -5,6 +5,7 @@ using DamnLibrary.Debugging;
 using DamnLibrary.Networking.Client;
 using DamnLibrary.Networking.Protocols;
 using DamnLibrary.Networking.Protocols.TCP;
+using ProtocolType = DamnLibrary.Networking.Protocols.ProtocolType;
 
 namespace DamnLibrary.Networking
 {
@@ -15,7 +16,7 @@ namespace DamnLibrary.Networking
         
         private IServerProtocol Server { get; set; }
 
-        public void Start(DamnProtocolType damnProtocolType, string address, int port)
+        public void Start(ProtocolType protocolType, string address, int port)
         {
             if (Server != null)
             {
@@ -23,10 +24,10 @@ namespace DamnLibrary.Networking
                 return;
             }
             
-            switch (damnProtocolType)
+            switch (protocolType)
             {
-                case DamnProtocolType.TCP: Server = new TCPServer(new TcpListener(IPAddress.Parse(address), port)); break;
-                default: UniversalDebugger.LogError($"[{nameof(DamnServer)}] ({nameof(Start)}) Unknown protocol type, type = {damnProtocolType}"); return;
+                case ProtocolType.TCP: Server = new TCPServer(new TcpListener(IPAddress.Parse(address), port)); break;
+                default: UniversalDebugger.LogError($"[{nameof(DamnServer)}] ({nameof(Start)}) Unknown protocol type, type = {protocolType}"); return;
             }
             
             Server.Handle();
