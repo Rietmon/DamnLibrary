@@ -3,7 +3,7 @@ Game core library for .NET/Unity. There are different features for Unity and .NE
 ## API
 After installing will be available only basic methods. For some special features you would to define Preprocessor defines in your project.
 
-`ENABLE_DAMN_SCRIPT` -- Enable DamnScript API
+`ENABLE_DAMN_SCRIPT` -- Enable DamnScript API  
 `ENABLE_DOTWEEN` -- Enable DOTween extensions  
 `ENABLE_SERIALIZATION` -- Enable bytes serialization  
 `ENABLE_ADDRESSABLE` -- Enable features for Unity Addressable  
