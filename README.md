@@ -13,7 +13,6 @@ After installing will be available only basic methods. For some special features
 `ENABLE_NETWORKING` -- Enable features for networking. For now only for TCP (work only with `ENABLE_SERIALIZATIONS`). Documentation will be soon... :)  
 
 `DEBUG_ENABLE_WATCHING_MEMORY_ALLOCATING` -- Enable collecting debug information of `MemoryUtilities.Allocate(...)`  
-`DEBUG_ENABLE_LOGS_NETWORKING` -- Enable logs of networking, include size, type of sent and received packets, connection status and more  
 
 ## Special thanks
 - TinyJSON
