@@ -1,4 +1,6 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System;
+
 namespace DamnLibrary.Networking.Attributes
 {
     public sealed class PacketHandlerAttribute : Attribute
