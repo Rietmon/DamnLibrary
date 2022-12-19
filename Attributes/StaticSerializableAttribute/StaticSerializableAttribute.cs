@@ -1,4 +1,6 @@
 #if ENABLE_SERIALIZATION
+using System;
+
 namespace DamnLibrary.Serialization
 {
     /// <summary>

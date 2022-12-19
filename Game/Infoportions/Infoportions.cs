@@ -1,4 +1,6 @@
-﻿#if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
+﻿using System.Collections.Generic;
+using DamnLibrary.Extensions;
+#if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
 using DamnLibrary.DamnScript;
 #endif
 #if ENABLE_SERIALIZATION

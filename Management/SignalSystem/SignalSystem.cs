@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using DamnLibrary.Other;

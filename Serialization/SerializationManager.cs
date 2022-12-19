@@ -1,4 +1,6 @@
 ﻿#if ENABLE_SERIALIZATION
+using System;
+using System.Collections.Generic;
 using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 #if UNITY_5_3_OR_NEWER 

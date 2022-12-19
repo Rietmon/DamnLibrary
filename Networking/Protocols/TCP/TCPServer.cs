@@ -1,5 +1,8 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 using DamnLibrary.Networking.Handlers;
 
 namespace DamnLibrary.Networking.Protocols.TCP

@@ -1,4 +1,6 @@
-﻿namespace Tiny
+﻿using System;
+
+namespace Tiny
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class JsonPropertyAttribute : Attribute

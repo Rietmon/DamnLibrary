@@ -1,4 +1,8 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System;
+using DamnLibrary.Networking.Handlers;
+using DamnLibrary.Networking.Packets;
+
 namespace DamnLibrary.Networking
 {
     public static class DamnNetworking
