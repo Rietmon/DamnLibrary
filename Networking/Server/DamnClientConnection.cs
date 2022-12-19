@@ -5,18 +5,23 @@ using DamnLibrary.Networking.Protocols;
 using DamnLibrary.Other;
 using DamnLibrary.Serialization;
 
-namespace DamnLibrary.Networking
+namespace DamnLibrary.Networking.Server
 {
-    public class DamnServerClientConnection
+    public class DamnClientConnection
     {
+        private static uint LastClientConnectionId { get; set; }
+        
+        public uint Id { get; }
+        
         public bool IsConnected => ConnectedClient.IsConnected;
         
         public bool IsAvailable => ConnectedClient.IsAvailable;
         
         private DamnClient ConnectedClient { get; }
 
-        public DamnServerClientConnection(IClientProtocol connectedClientProtocol)
+        public DamnClientConnection(IClientProtocol connectedClientProtocol)
         {
+            Id = LastClientConnectionId++;
             ConnectedClient = new DamnClient(connectedClientProtocol);
         }
         

@@ -19,7 +19,7 @@ namespace DamnLibrary.Networking.Packets
 
         public void Dispose()
         {
-            DeserializationStream?.Dispose();
+            DeserializationStream.Dispose();
         }
     }
 }

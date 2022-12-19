@@ -12,9 +12,7 @@ namespace DamnLibrary.Networking.Protocols
         public Action<NetworkPacket> OnPacketReceived { get; set; }
 
         void Handle();
-
         Task WriteAsync(byte[] messageToSend, CancellationToken cancellationToken);
-
         void Disconnect();
     }
 }

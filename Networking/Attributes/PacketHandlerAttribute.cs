@@ -1,7 +1,7 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
 namespace DamnLibrary.Networking.Attributes
 {
-    public class PacketHandlerAttribute : Attribute
+    public sealed class PacketHandlerAttribute : Attribute
     {
         public IConvertible Type { get; }
 

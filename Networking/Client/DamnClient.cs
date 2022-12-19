@@ -12,7 +12,7 @@ using ProtocolType = DamnLibrary.Networking.Protocols.ProtocolType;
 
 namespace DamnLibrary.Networking.Client
 {
-    public class DamnClient
+    public sealed class DamnClient
     {
         public bool IsConnected => Client.IsConnected;
         public bool IsAvailable => Client.IsAvailable;
@@ -52,20 +52,20 @@ namespace DamnLibrary.Networking.Client
             Client.Handle();
         }
 
-        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ISerializable sendPacket, IConvertible paketType, params byte[] additionalData)
+        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new()
         {
             var sendPacketHeader = new PacketHeader
             {
                 Id = LastSentPacketId++,
                 IsResponse = false,
-                Type = paketType,
+                Type = packetType,
                 AdditionData = additionalData
             };
 
             var messageToSend = CreateMessage(sendPacketHeader, sendPacket);
             
-            UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendAsync)}) Sending {paketType}, size = {messageToSend.Length}b");
+            UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendAsync)}) Sending {packetType}, size = {messageToSend.Length}b");
 
             await Client.WriteAsync(messageToSend, CancellationTokenSource.Token);
 
