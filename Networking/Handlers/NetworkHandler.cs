@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System.Threading.Tasks;
 using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using DamnLibrary.Networking.Client;
@@ -70,3 +71,4 @@ namespace DamnLibrary.Networking.Handlers
         }
     }
 }
+#endif

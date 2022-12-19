@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System;
 using DamnLibrary.Serialization;
 
 namespace DamnLibrary.Networking.Packets
@@ -30,3 +31,4 @@ namespace DamnLibrary.Networking.Packets
         }
     }
 }
+#endif

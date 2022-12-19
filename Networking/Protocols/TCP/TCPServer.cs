@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,3 +45,4 @@ namespace DamnLibrary.Networking.Protocols.TCP
         }
     }
 }
+#endif

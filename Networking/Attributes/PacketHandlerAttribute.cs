@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine.UIElements;
-
+﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
 namespace DamnLibrary.Networking.Attributes
 {
     public class PacketHandlerAttribute : Attribute
@@ -17,3 +15,4 @@ namespace DamnLibrary.Networking.Attributes
         public PacketHandlerAttribute(ulong type) => Type = type;
     }
 }
+#endif

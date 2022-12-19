@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +7,6 @@ using DamnLibrary.Extensions;
 using DamnLibrary.Networking.Handlers;
 using DamnLibrary.Networking.Packets;
 using DamnLibrary.Serialization;
-using UnityEngine;
 
 namespace DamnLibrary.Networking.Protocols.TCP
 {
@@ -88,3 +88,4 @@ namespace DamnLibrary.Networking.Protocols.TCP
         }
     }
 }
+#endif

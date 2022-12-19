@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System;
 using System.Threading.Tasks;
 using DamnLibrary.Networking.Client;
 using DamnLibrary.Networking.Packets;
@@ -32,3 +33,4 @@ namespace DamnLibrary.Networking
         public void Disconnect() => ConnectedClient.Disconnect();
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +11,6 @@ using DamnLibrary.Networking.Protocols;
 using DamnLibrary.Networking.Protocols.TCP;
 using DamnLibrary.Other;
 using DamnLibrary.Serialization;
-using ProtocolType = DamnLibrary.Networking.Protocols.ProtocolType;
 
 namespace DamnLibrary.Networking.Client
 {
@@ -32,7 +32,7 @@ namespace DamnLibrary.Networking.Client
             Client.Handle();
         }
 
-        public async Task Connect(ProtocolType protocolType, string address, int port)
+        public async Task Connect(DamnProtocolType damnProtocolType, string address, int port)
         {
             if (Client != null)
             {
@@ -40,10 +40,10 @@ namespace DamnLibrary.Networking.Client
                 return;
             }
             
-            switch (protocolType)
+            switch (damnProtocolType)
             {
-                case ProtocolType.TCP: Client = new TCPClient(new TcpClient(address, port)); break;
-                default: UniversalDebugger.LogError($"[{nameof(DamnClient)}] ({nameof(Connect)}) Unknown protocol type, type = {protocolType}"); return;
+                case DamnProtocolType.TCP: Client = new TCPClient(new TcpClient(address, port)); break;
+                default: UniversalDebugger.LogError($"[{nameof(DamnClient)}] ({nameof(Connect)}) Unknown protocol type, type = {damnProtocolType}"); return;
             }
 
             await TaskUtilities.WaitUntil(() => IsAvailable);
@@ -139,3 +139,4 @@ namespace DamnLibrary.Networking.Client
         }
     }
 }
+#endif

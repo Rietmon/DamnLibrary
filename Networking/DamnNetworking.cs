@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System;
 using DamnLibrary.Networking.Handlers;
 using DamnLibrary.Networking.Packets;
 
@@ -13,3 +14,4 @@ namespace DamnLibrary.Networking
         public static ushort MaxPacketLength { get; set; } = 256;
     }
 }
+#endif

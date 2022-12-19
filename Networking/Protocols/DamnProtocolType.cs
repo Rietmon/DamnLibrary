@@ -1,6 +1,6 @@
 ﻿namespace DamnLibrary.Networking.Protocols
 {
-    public enum ProtocolType : byte
+    public enum DamnProtocolType : byte
     {
         TCP    
     }

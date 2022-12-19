@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DamnLibrary.Debugging;
+#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
+#endif
 
 namespace DamnLibrary.Extensions
 {

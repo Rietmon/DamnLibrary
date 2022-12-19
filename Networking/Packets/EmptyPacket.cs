@@ -1,4 +1,5 @@
-﻿using DamnLibrary.Serialization;
+﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using DamnLibrary.Serialization;
 
 namespace DamnLibrary.Networking.Packets
 {
@@ -9,3 +10,4 @@ namespace DamnLibrary.Networking.Packets
         public void Deserialize(SerializationStream stream) { }
     }
 }
+#endif

@@ -1,11 +1,11 @@
-﻿using System;
+﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DamnLibrary.Extensions;
 using DamnLibrary.Networking.Attributes;
 using DamnLibrary.Serialization;
-using UnityEngine;
 
 namespace DamnLibrary.Networking.Handlers
 {
@@ -43,3 +43,4 @@ namespace DamnLibrary.Networking.Handlers
         }
     }
 }
+#endif
