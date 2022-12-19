@@ -6,6 +6,8 @@ namespace DamnLibrary.Networking.Packets
 {
     public struct PacketHeader : ISerializable
     {
+        public static Type PacketTypeSerializationType { get; set; }
+        
         public uint Id { get; set; }
         
         public bool IsResponse { get; set; }
@@ -26,7 +28,7 @@ namespace DamnLibrary.Networking.Packets
         {
             Id = stream.Read<uint>();
             IsResponse = stream.Read<bool>();
-            Type = stream.Read<IConvertible>();
+            Type = (IConvertible)stream.Read(PacketTypeSerializationType);
             AdditionData = stream.Read<byte[]>();
         }
     }
