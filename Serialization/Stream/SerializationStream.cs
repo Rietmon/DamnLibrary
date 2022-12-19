@@ -72,11 +72,14 @@ namespace DamnLibrary.Serialization
         public void Write<T>(T obj, Type realType = null)
         {
             if (!IsWriting)
+            {
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unable to write in DeserializationStream");
                 return;
+            }
 
             if (obj == null)
             {
-                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(WriteFromAndStay)}) Object cannot be null");
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Object cannot be null");
                 return;
             }
 
@@ -112,14 +115,14 @@ namespace DamnLibrary.Serialization
                 case Array a: WriteArray(a); return;
                 case IList l: WriteList(l); return;
                 case IDictionary d: WriteDictionary(d); return;
-                case Enum e: WriteEnum(e); return;
+                case IConvertible e: WriteConvertible(e); return;
             }
 
             var targetSerializationType = obj.GetType();
             if (customSerialization.TryGetValue(targetSerializationType, out var method))
                 WriteToStream(method.Invoke(obj));
             else
-                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(WriteFromAndStay)}) Unsupported type {typeof(T)}");
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unsupported type {typeof(T)}");
         }
 
         private void WriteToStream(params byte[] bytes)
@@ -287,8 +290,10 @@ namespace DamnLibrary.Serialization
             }
         }
         
-        private void WriteEnum(Enum value)
+        private void WriteConvertible(IConvertible value)
         {
+            var valueTypeCode = value.GetTypeCode();
+            Write(Convert.ChangeType(value, valueTypeCode), value.GetType());
         }
 
         public T Read<T>() => (T)Read(typeof(T));
@@ -296,7 +301,10 @@ namespace DamnLibrary.Serialization
         public object Read(Type type)
         {
             if (!IsReading)
+            {
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Read)}) Unable to read from SerializationStream");
                 return null;
+            }
             
             if (IsDynamicType(type))
                 type = ReadType();
@@ -327,6 +335,7 @@ namespace DamnLibrary.Serialization
             if (type.IsArray) return ReadArray(type);
             if (typeof(IList).IsAssignableFrom(type)) return ReadList(type);
             if (typeof(IDictionary).IsAssignableFrom(type)) return ReadDictionary(type);
+            if (typeof(IConvertible).IsAssignableFrom(type)) return ReadConvertible(type);
 
             if (customDeserialization.TryGetValue(type, out var method)) return method.Invoke(this);
 
@@ -402,7 +411,7 @@ namespace DamnLibrary.Serialization
             return BitConverter.ToUInt64(ReadFromStream(8), 0);
         }
 
-        private object ReadDecimal()
+        private decimal ReadDecimal()
         {
             return DecimalUtilities.FromBytes(ReadFromStream(16));
         }
@@ -413,7 +422,7 @@ namespace DamnLibrary.Serialization
             return Encoding.UTF8.GetString(ReadFromStream(length));
         }
 
-        private ISerializable ReadSerializable(Type type)
+        private object ReadSerializable(Type type)
         {
             if (type.GetCustomAttribute<DontCreateInstanceAtDeserializationAttribute>() != null)
             {
@@ -497,7 +506,7 @@ namespace DamnLibrary.Serialization
         }
 #endif
 
-        private Array ReadArray(Type type)
+        private object ReadArray(Type type)
         {
             var length = ReadUShort();
             var elementType = type.GetElementType();
@@ -511,7 +520,7 @@ namespace DamnLibrary.Serialization
             return array;
         }
 
-        private IList ReadList(Type type)
+        private object ReadList(Type type)
         {
             var length = ReadUShort();
             var elementType = type.GetGenericArguments().First();
@@ -525,7 +534,7 @@ namespace DamnLibrary.Serialization
             return list;
         }
         
-        private IDictionary ReadDictionary(Type type)
+        private object ReadDictionary(Type type)
         {
             var length = ReadUShort();
             var keyType = type.GetGenericArguments()[0];
@@ -540,6 +549,12 @@ namespace DamnLibrary.Serialization
                 dictionary.Add(key, value);
             }
             return dictionary;
+        }
+
+        private object ReadConvertible(Type type)
+        {
+            var valueType = Enum.GetUnderlyingType(type);
+            return Read(valueType);
         }
 
         public byte[] ToArray() => stream.ToArray();

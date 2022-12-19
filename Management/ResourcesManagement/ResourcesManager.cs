@@ -20,34 +20,34 @@ namespace DamnLibrary.Management
         private const string PathToResourcesAudio = "Audio/{0}";
         
         public static async Task<Prefab<WindowBehaviour>> GetWindowPrefabAsync(string windowName) =>
-            await GetAssetAsync<WindowBehaviour>(String.Format(windowName));
+            await GetAssetAsync<WindowBehaviour>(PathToResourcesWindows.Format(windowName));
         public static Prefab<WindowBehaviour> GetWindowPrefab(string windowName) => 
-            GetAsset<WindowBehaviour>(String.Format(windowName));
+            GetAsset<WindowBehaviour>(PathToResourcesWindows.Format(windowName));
 
         public static async Task<SpriteAtlas> GetSpriteAtlasAsync(string atlasPath) =>
-            await GetAssetAsync<SpriteAtlas>(String.Format(atlasPath));
+            await GetAssetAsync<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
         public static SpriteAtlas GetSpriteAtlas(string atlasPath) =>
-            GetAsset<SpriteAtlas>(String.Format(atlasPath));
+            GetAsset<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
         
         public static async Task<Sprite> GetSpriteAsync(string spriteName) =>
-            await GetAssetAsync<Sprite>(String.Format(spriteName));
+            await GetAssetAsync<Sprite>(PathToResourcesTextures.Format(spriteName));
         public static Sprite GetSprite(string spriteName) =>
-            GetAsset<Sprite>(String.Format(spriteName));
+            GetAsset<Sprite>(PathToResourcesTextures.Format(spriteName));
         
         public static async Task<Texture2D> GetTextureAsync(string textureName) =>
-            await GetAssetAsync<Texture2D>(String.Format(textureName));
+            await GetAssetAsync<Texture2D>(PathToResourcesTextures.Format(textureName));
         public static Texture2D GetTexture(string textureName) =>
-            GetAsset<Texture2D>(String.Format(textureName));
+            GetAsset<Texture2D>(PathToResourcesTextures.Format(textureName));
         
         public static async Task<Prefab<T>> GetPrefabAsync<T>(string prefabName) where T : Object =>
-            await GetAssetAsync<T>(String.Format(prefabName));
+            await GetAssetAsync<T>(PathToResourcesPrefabs.Format(prefabName));
         public static Prefab<T> GetPrefab<T>(string prefabName) where T : Object =>
-            GetAsset<T>(String.Format(prefabName));
+            GetAsset<T>(PathToResourcesPrefabs.Format(prefabName));
         
         public static async Task<AudioClip> GetAudioAsync(string audioName) =>
-            await GetAssetAsync<AudioClip>(String.Format(audioName));
+            await GetAssetAsync<AudioClip>(PathToResourcesAudio.Format(audioName));
         public static AudioClip GetAudio(string audioName) =>
-            GetAsset<AudioClip>(String.Format(audioName));
+            GetAsset<AudioClip>(PathToResourcesAudio.Format(audioName));
 
         public static async Task<T> GetAssetAsync<T>(string assetPath) where T : Object
         {

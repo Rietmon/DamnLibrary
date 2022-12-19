@@ -52,9 +52,10 @@ namespace DamnLibrary.Extensions
 #else
             async Task Handler()
             {
+                var framesDelay = (frequency / Time.deltaTime).RoundToIntByMath();
                 while (!condition())
                 {
-                    for (var i = 0; i < 5; i++)
+                    for (var i = 0; i < framesDelay; i++)
                         await Yield();
                 }
             }
