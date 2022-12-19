@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DamnLibrary.Extensions
+﻿namespace DamnLibrary.Extensions
 {
     public static class ActionUtilities
     {

@@ -1,6 +1,4 @@
-﻿using System;
-using DamnLibrary.Extensions;
-#if ENABLE_DAMN_SCRIPT
+﻿#if ENABLE_DAMN_SCRIPT
 using DamnLibrary.DamnScript;
 #endif
 #if UNITY_5_3_OR_NEWER

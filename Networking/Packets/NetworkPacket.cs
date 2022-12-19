@@ -1,5 +1,4 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
-using System;
 using DamnLibrary.Serialization;
 
 namespace DamnLibrary.Networking.Packets

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using DamnLibrary.Management;
+﻿using DamnLibrary.Management;
 
 namespace DamnLibrary.Extensions
 {

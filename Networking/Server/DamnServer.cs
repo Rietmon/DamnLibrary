@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Sockets;
 using DamnLibrary.Debugging;
-using DamnLibrary.Networking.Client;
 using DamnLibrary.Networking.Protocols;
 using DamnLibrary.Networking.Protocols.TCP;
 using ProtocolType = DamnLibrary.Networking.Protocols.ProtocolType;

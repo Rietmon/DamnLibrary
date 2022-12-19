@@ -1,4 +1,3 @@
-using System;
 using DamnLibrary.Extensions;
 #if ENABLE_SERIALIZATION
 using DamnLibrary.Serialization;

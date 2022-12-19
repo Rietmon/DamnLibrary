@@ -1,12 +1,11 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
-using System;
 using DamnLibrary.Serialization;
 
 namespace DamnLibrary.Networking.Packets
 {
     public struct PacketHeader : ISerializable
     {
-        public static Type PacketTypeSerializationType { get; set; }
+        public static Type PacketTypeSerializationType { get; set; } = typeof(byte);
         
         public uint Id { get; set; }
         

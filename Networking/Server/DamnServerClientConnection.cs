@@ -1,10 +1,7 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
-using System;
-using System.Threading.Tasks;
 using DamnLibrary.Networking.Client;
 using DamnLibrary.Networking.Packets;
 using DamnLibrary.Networking.Protocols;
-using DamnLibrary.Networking.Protocols.TCP;
 using DamnLibrary.Other;
 using DamnLibrary.Serialization;
 

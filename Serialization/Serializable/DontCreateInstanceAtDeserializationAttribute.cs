@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DamnLibrary.Serialization
+﻿namespace DamnLibrary.Serialization
 {
     public class DontCreateInstanceAtDeserializationAttribute : Attribute { }
 }
