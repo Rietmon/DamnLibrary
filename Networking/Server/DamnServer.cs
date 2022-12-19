@@ -32,6 +32,8 @@ namespace DamnLibrary.Networking
             
             Server.Handle();
         }
+
+        public void Stop() => Server.Stop();
     }
 }
 #endif

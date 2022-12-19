@@ -22,8 +22,8 @@ namespace DamnLibrary.Networking.Protocols.TCP
         private TcpClient Client { get; }
         
         private NetworkStream Stream { get; set; }
-        
-        private byte[] Buffer { get; set; }
+
+        private byte[] Buffer { get; set; } = new byte[DamnNetworking.MaxPacketLength];
 
         private CancellationTokenSource CancellationTokenSource { get; set; } = new();
         
@@ -32,7 +32,11 @@ namespace DamnLibrary.Networking.Protocols.TCP
             Client = tcpClient;
 
             if (!waitForConnect)
+            {
+                IsAvailable = true;
+                Stream = Client.GetStream();
                 return;
+            }
             
             async void WaitForConnect()
             {
