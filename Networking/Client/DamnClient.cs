@@ -139,6 +139,7 @@ namespace DamnLibrary.Networking.Client
             
             var sendPacket = PacketHandler.Handle(networkPacket.Header.Type, networkPacket.DeserializationStream);
             SendResponseAsync(networkPacket.Header, sendPacket).Forget();
+            networkPacket.IsHandled = true;
         }
     }
 }
