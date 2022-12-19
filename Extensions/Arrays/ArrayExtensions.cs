@@ -1,4 +1,7 @@
-﻿namespace DamnLibrary.Extensions
+﻿using System;
+using System.Collections.Generic;
+
+namespace DamnLibrary.Extensions
 {
     public static class ArrayExtensions
     {

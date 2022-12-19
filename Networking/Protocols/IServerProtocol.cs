@@ -1,4 +1,6 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System;
+using System.Threading;
 using DamnLibrary.Networking.Packets;
 using DamnLibrary.Networking.Server;
 using DamnLibrary.Other;
@@ -9,9 +11,11 @@ namespace DamnLibrary.Networking.Protocols
     public interface IServerProtocol
     {
         public bool IsWorking { get; }
+        
         public bool IsPaused { get; }
 
         void Handle();
+        
         public DamnClientConnection GetClientConnection(uint id);
 
         public Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int clientConnectionId, ISerializable sendPacket,

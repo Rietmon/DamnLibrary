@@ -1,4 +1,7 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;

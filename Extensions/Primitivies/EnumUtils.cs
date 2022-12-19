@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+
 namespace DamnLibrary.Extensions
 {
     public static class EnumUtils
