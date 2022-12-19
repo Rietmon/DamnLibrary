@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using DamnLibrary.Networking.Attributes;
 using DamnLibrary.Serialization;
@@ -31,15 +32,19 @@ namespace DamnLibrary.Networking.Handlers
             }
         }
     
+#pragma warning disable CS8603
         public static ISerializable Handle(IConvertible type, SerializationStream deserializationStream)
         {
             if (!Handlers.TryGetValue(type, out var handler))
             {
-                Debug.LogError($"{nameof(PacketHandler)} ({nameof(Handle)}) Unable to find handler for type {type}!");
+                UniversalDebugger.LogError($"{nameof(PacketHandler)} ({nameof(Handle)}) Unable to find handler for type {type}!");
                 return null;
             }
 
+#pragma warning disable CS8600
             return (ISerializable)handler.Invoke(null, new object[] { deserializationStream });
+#pragma warning restore CS8600
+#pragma warning restore CS8603
         }
     }
 }

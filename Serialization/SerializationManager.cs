@@ -155,7 +155,7 @@ namespace DamnLibrary.Serialization
                 var serializedBytes = stream.Read<byte[]>();
                 if (!serializableStaticTypes.TryGetValue(id, out var targetType))
                 {
-                    UniversalDebugger.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to find component with id {id}");
+                    UniversalDebugger.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeStaticTypes)}) Unable to find static type with id {id}");
                     continue;
                 }
 

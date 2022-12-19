@@ -3,6 +3,7 @@ using System;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using DamnLibrary.Networking.Handlers;
 using DamnLibrary.Networking.Packets;
@@ -66,7 +67,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             var packetSize = deserializationStream.Read<ushort>();
             if (packetSize > DamnNetworking.MaxPacketLength)
             {
-                Debug.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) packetSize is larger than MaxPacketLength. {packetSize} > {DamnNetworking.MaxPacketLength}");
+                UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) packetSize is larger than MaxPacketLength. {packetSize} > {DamnNetworking.MaxPacketLength}");
                 Disconnect();
                 return;
             }
@@ -83,7 +84,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             OnPacketReceived.Invoke(networkPacket);
 
             if (!networkPacket.IsHandled)
-                Debug.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) NetworkPacket didnt handled. Id = {networkPacket.Header.Id}, Type = {networkPacket.Header.Type}");
+                UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) NetworkPacket didnt handled. Id = {networkPacket.Header.Id}, Type = {networkPacket.Header.Type}");
 
         }
     }
