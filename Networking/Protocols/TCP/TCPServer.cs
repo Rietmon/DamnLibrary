@@ -14,7 +14,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
 {
     public class TCPServer : ServerNetworkHandler, IServerProtocol
     {
-        public Action<ServerConnection>  OnAcceptConnection { get; set; }
+        public Action<ServerConnection> OnAcceptConnection { get; set; }
         public Action<ServerConnection> OnRejectingConnection { get; set; }
         public Action OnRejectConnection { get; set; }
         
@@ -80,6 +80,16 @@ namespace DamnLibrary.Networking.Protocols.TCP
             return responses;
         }
 
+        public void RejectConnection(ServerConnection serverConnection)
+        {
+            OnRejectingConnection?.Invoke(serverConnection);
+                
+            serverConnection.Disconnect();
+            ServerConnections.Remove(serverConnection);
+                
+            OnRejectConnection?.Invoke();
+        }
+
         public void Stop()
         {
             IsWorking = false;
@@ -87,14 +97,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
             while (ServerConnections.Count > 0)
             {
-                var serverConnections = ServerConnections[0];
-                
-                OnRejectingConnection?.Invoke(serverConnections);
-                
-                ServerConnections[0].Disconnect();
-                ServerConnections.RemoveAt(0);
-                
-                OnRejectConnection?.Invoke();
+                RejectConnection(ServerConnections[0]);
             }
         }
 
@@ -102,6 +105,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
         {
             var connection = await Server.AcceptTcpClientAsync();
             var serverConnection = new ServerConnection(new TCPClient(connection));
+            serverConnection.OnDisconnect += () => RejectConnection(serverConnection);
             ServerConnections.Add(serverConnection);
             OnAcceptConnection?.Invoke(serverConnection);
         }

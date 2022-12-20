@@ -18,7 +18,6 @@ namespace DamnLibrary.Networking.Protocols.TCP
         public Action OnDisconnect { get; set; }
 
         public override bool IsConnected => Client.Connected;
-
         public override bool IsPaused { get; set; }
 
         private TcpClient Client { get; set; }

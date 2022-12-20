@@ -16,6 +16,12 @@ namespace DamnLibrary.Networking.Server
         
         public uint Id { get; }
         
+        public Action OnConnect { get => ConnectedClient.OnConnect; set => ConnectedClient.OnConnect = value; }
+        
+        public Action<NetworkPacket> OnPacketReceive { get => ConnectedClient.OnPacketReceive; set => ConnectedClient.OnPacketReceive = value; }
+
+        public Action OnDisconnect { get => ConnectedClient.OnDisconnect; set => ConnectedClient.OnDisconnect = value; }
+        
         public bool IsConnected => ConnectedClient.IsConnected;
         
         private DamnClient ConnectedClient { get; }
