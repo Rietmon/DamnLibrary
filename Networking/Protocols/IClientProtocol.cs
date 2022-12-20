@@ -10,12 +10,12 @@ namespace DamnLibrary.Networking.Protocols
     {
         public bool IsConnected { get; }
         public bool IsPaused { get; set; }
-        public bool IsAvailable { get; }
         
         public Action<NetworkPacket> OnPacketReceived { get; set; }
 
+        Task ConnectAsync(string address, int port);
         void Handle();
-        Task WriteAsync(byte[] messageToSend, CancellationToken cancellationToken);
+        Task WriteAsync(byte[] messageToSend);
         void Disconnect();
     }
 }

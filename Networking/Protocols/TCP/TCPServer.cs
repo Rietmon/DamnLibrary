@@ -90,7 +90,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
         protected override async Task OnHandleAsync()
         {
             var connection = await Server.AcceptTcpClientAsync();
-            var clientConnection = new DamnClientConnection(new TCPClient(connection, false));
+            var clientConnection = new DamnClientConnection(new TCPClient(connection));
             ClientConnections.Add(clientConnection);
         }
     }

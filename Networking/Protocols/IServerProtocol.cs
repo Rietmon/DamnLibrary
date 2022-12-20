@@ -16,20 +16,20 @@ namespace DamnLibrary.Networking.Protocols
 
         void Handle();
         
-        public DamnClientConnection GetClientConnection(uint id);
+        DamnClientConnection GetClientConnection(uint id);
 
-        public Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int clientConnectionId, ISerializable sendPacket,
+        Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int clientConnectionId, ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new();
-        public Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(DamnClientConnection clientConnection,
+        Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(DamnClientConnection clientConnection,
             ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new();
-        public Task<Pair<PacketHeader, TReceive>[]> SendToSelectedAsync<TReceive>(
+        Task<Pair<PacketHeader, TReceive>[]> SendToSelectedAsync<TReceive>(
             Func<DamnClientConnection, bool> predicate,
             ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new();
-        public Task<Pair<PacketHeader, TReceive>[]> SendToEachAsync<TReceive>(ISerializable sendPacket,
+        Task<Pair<PacketHeader, TReceive>[]> SendToEachAsync<TReceive>(ISerializable sendPacket,
             IConvertible packetType,
             params byte[] additionalData)
             where TReceive : ISerializable, new();

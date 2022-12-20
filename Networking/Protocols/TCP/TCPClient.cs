@@ -19,77 +19,118 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
         public override bool IsPaused { get; set; }
 
-        private TcpClient Client { get; }
+        private TcpClient Client { get; set; }
         
         private NetworkStream Stream { get; set; }
 
-        private byte[] Buffer { get; set; } = new byte[DamnNetworking.MaxPacketLength];
+        private byte[] Buffer { get; } = new byte[DamnNetworking.MaxPacketLength];
 
-        private CancellationTokenSource CancellationTokenSource { get; set; } = new();
-        
-        public TCPClient(TcpClient tcpClient, bool waitForConnect = true)
+        internal TCPClient(TcpClient client)
         {
-            Client = tcpClient;
+            Client = client;
 
-            if (!waitForConnect)
+            if (client.Connected)
             {
-                IsAvailable = true;
-                Stream = Client.GetStream();
-                return;
-            }
-            
-            async void WaitForConnect()
-            {
-                await TaskUtilities.WaitUntil(() => Client.Connected);
-                IsAvailable = true;
                 Stream = Client.GetStream();
             }
-            
-            WaitForConnect();
         }
-        
-        public async Task WriteAsync(byte[] messageToSend, CancellationToken cancellationToken)
+
+        public async Task ConnectAsync(string address, int port)
         {
-            await Stream.WriteAsync(messageToSend, 0, messageToSend.Length, cancellationToken);
+            try
+            {
+                if (!Client.Connected)
+                {
+                    await Client.ConnectAsync(address, port);
+                }
+
+                Stream = Client.GetStream();
+            }
+            catch (SocketException socketException)
+            {
+                switch (socketException.SocketErrorCode)
+                {
+                    case SocketError.ConnectionRefused:
+                    {
+                        UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(ConnectAsync)}) Unable connect to {address}:{port}. Target machine is probably not active");
+                        break;
+                    }
+                }
+            }
+        }
+
+        public async Task WriteAsync(byte[] messageToSend)
+        {
+            await Stream.WriteAsync(messageToSend, 0, messageToSend.Length);
         }
 
         public void Disconnect()
         {
-            CancellationTokenSource.Cancel();
+            if (!IsConnected)
+                return;
+            
             Client.Close();
             Stream.Dispose();
         }
 
         protected override async Task OnHandleAsync()
         {
-            var bytesRead = await Stream.ReadAsync(Buffer, 0, 2, CancellationTokenSource.Token);
-            if (!ValidateReadPacket(bytesRead))
-                return;
-
-            var deserializationStream = new SerializationStream(Buffer);
-            
-            var packetSize = deserializationStream.Read<ushort>();
-            if (packetSize > DamnNetworking.MaxPacketLength)
+            try
             {
-                UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) packetSize is larger than MaxPacketLength. {packetSize} > {DamnNetworking.MaxPacketLength}");
-                Disconnect();
-                return;
+                var bytesRead = await Stream.ReadAsync(Buffer, 0, 2);
+                if (!ValidateReadPacket(bytesRead))
+                    return;
+
+                var deserializationStream = new SerializationStream(Buffer);
+
+                var packetSize = deserializationStream.Read<ushort>();
+                if (packetSize > DamnNetworking.MaxPacketLength)
+                {
+                    UniversalDebugger.LogError(
+                        $"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) packetSize is larger than MaxPacketLength: {packetSize} > {DamnNetworking.MaxPacketLength}. Disconnecting...");
+                    Disconnect();
+                    return;
+                }
+
+                bytesRead = await Stream.ReadAsync(Buffer, 0, packetSize);
+                if (!ValidateReadPacket(bytesRead))
+                    return;
+
+                deserializationStream.Position = 0;
+
+                var inPacketHeader = deserializationStream.Read<PacketHeader>();
+                var networkPacket = new NetworkPacket(inPacketHeader, deserializationStream);
+
+                OnPacketReceived.Invoke(networkPacket);
+
+                if (!networkPacket.IsHandled)
+                    UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) NetworkPacket didnt handled. Id = {networkPacket.Header.Id}, Type = {networkPacket.Header.Type}");
             }
+            catch (IOException ioException)
+            {
+                if (ioException.InnerException is SocketException socketException)
+                {
+                    switch (socketException.SocketErrorCode)
+                    {
+                        case SocketError.OperationAborted:
+                        {
+                            UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) Operation aborted. Probably connection was closed. Disconnecting...");
+                            Disconnect();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool ValidateReadPacket(int bytesRead)
+        {
+            if (bytesRead > 0)
+                return true;
             
-            bytesRead = await Stream.ReadAsync(Buffer, 0, packetSize, CancellationTokenSource.Token);
-            if (!ValidateReadPacket(bytesRead))
-                return;
-
-            deserializationStream.Position = 0;
-            
-            var inPacketHeader = deserializationStream.Read<PacketHeader>();
-            var networkPacket = new NetworkPacket(inPacketHeader, deserializationStream);
-
-            OnPacketReceived.Invoke(networkPacket);
-
-            if (!networkPacket.IsHandled)
-                UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) NetworkPacket didnt handled. Id = {networkPacket.Header.Id}, Type = {networkPacket.Header.Type}");
-
+            UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(ValidateReadPacket)}) Read empty response. Disconnecting...");
+            Disconnect();
+            return false;
         }
     }
 }

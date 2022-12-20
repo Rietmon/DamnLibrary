@@ -18,8 +18,6 @@ namespace DamnLibrary.Networking.Server
         
         public bool IsConnected => ConnectedClient.IsConnected;
         
-        public bool IsAvailable => ConnectedClient.IsAvailable;
-        
         private DamnClient ConnectedClient { get; }
 
         public DamnClientConnection(IClientProtocol connectedClientProtocol)

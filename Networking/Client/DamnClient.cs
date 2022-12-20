@@ -18,8 +18,6 @@ namespace DamnLibrary.Networking.Client
     public sealed class DamnClient
     {
         public bool IsConnected => Client.IsConnected;
-        public bool IsAvailable => Client.IsAvailable;
-
         public bool IsPaused { get => Client.IsPaused; set => Client.IsPaused = value; }
 
         private uint LastSentPacketId { get; set; }
@@ -35,21 +33,24 @@ namespace DamnLibrary.Networking.Client
             Client.Handle();
         }
 
-        public async Task Connect(ProtocolType protocolType, string address, int port)
+        public async Task ConnectAsync(ProtocolType protocolType, string address, int port)
         {
-            if (Client != null)
+            if (Client != null && Client.IsConnected)
             {
-                UniversalDebugger.LogError($"[{nameof(DamnClient)}] ({nameof(Connect)}) Client is already connected");
+                UniversalDebugger.LogError($"[{nameof(DamnClient)}] ({nameof(ConnectAsync)}) Client is already connected");
                 return;
             }
             
             switch (protocolType)
             {
-                case ProtocolType.TCP: Client = new TCPClient(new TcpClient(address, port)); break;
-                default: UniversalDebugger.LogError($"[{nameof(DamnClient)}] ({nameof(Connect)}) Unknown protocol type, type = {protocolType}"); return;
+                case ProtocolType.TCP: Client = new TCPClient(new TcpClient()); break;
+                default: UniversalDebugger.LogError($"[{nameof(DamnClient)}] ({nameof(ConnectAsync)}) Unknown protocol type, type = {protocolType}"); return;
             }
 
-            await TaskUtilities.WaitUntil(() => IsAvailable);
+            await Client.ConnectAsync(address, port);
+
+            if (!Client.IsConnected)
+                return;
 
             Client.OnPacketReceived += OnPacketReceived;
             Client.Handle();
@@ -58,6 +59,12 @@ namespace DamnLibrary.Networking.Client
         public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new()
         {
+            if (!IsConnected)
+            {
+                UniversalDebugger.LogError($"[{nameof(DamnClient)}] ({nameof(SendAsync)}) Trying to send from a non-connected client");
+                return default;
+            }
+            
             var sendPacketHeader = new PacketHeader
             {
                 Id = LastSentPacketId++,
@@ -70,7 +77,7 @@ namespace DamnLibrary.Networking.Client
             
             UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendAsync)}) Sending {packetType}, size = {messageToSend.Length}b");
 
-            await Client.WriteAsync(messageToSend, CancellationTokenSource.Token);
+            await Client.WriteAsync(messageToSend);
 
             var responseNetworkPacket = await WaitForNetworkPacket(sendPacketHeader.Id);
             
@@ -91,26 +98,15 @@ namespace DamnLibrary.Networking.Client
             
             UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendResponseAsync)}) Sending {receivedPacketHeader.Type}, size = {messageToSend.Length}b");
 
-            await Client.WriteAsync(messageToSend, CancellationTokenSource.Token);
+            await Client.WriteAsync(messageToSend);
         }
 
         public void Disconnect()
         {
-            CancellationTokenSource.Cancel();
-            Client.Disconnect();
-        }
-
-        private byte[] CreateMessage(PacketHeader packetHeader, ISerializable packet)
-        {
-            var serializationStream = new SerializationStream();
-            serializationStream.WriteFromAndReturn(2, packetHeader);
-            serializationStream.WriteFromAndReturn(serializationStream.Length, packet);
-            serializationStream.WriteFromAndReturn(0, (ushort)(serializationStream.Length - 2));
-
-            var messageToSend = serializationStream.ToArray();
-            serializationStream.Dispose();
+            if (!IsConnected)
+                return;
             
-            return messageToSend;
+            Client.Disconnect();
         }
         
         private async Task<NetworkPacket> WaitForNetworkPacket(uint packetId)
@@ -140,6 +136,19 @@ namespace DamnLibrary.Networking.Client
             var sendPacket = PacketHandler.Handle(networkPacket.Header.Type, networkPacket.DeserializationStream);
             SendResponseAsync(networkPacket.Header, sendPacket).Forget();
             networkPacket.IsHandled = true;
+        }
+
+        private static byte[] CreateMessage(PacketHeader packetHeader, ISerializable packet)
+        {
+            var serializationStream = new SerializationStream();
+            serializationStream.WriteFromAndReturn(2, packetHeader);
+            serializationStream.WriteFromAndReturn(serializationStream.Length, packet);
+            serializationStream.WriteFromAndReturn(0, (ushort)(serializationStream.Length - 2));
+
+            var messageToSend = serializationStream.ToArray();
+            serializationStream.Dispose();
+            
+            return messageToSend;
         }
     }
 }

@@ -8,27 +8,9 @@ namespace DamnLibrary.Networking.Handlers
 {
     public abstract class BaseNetworkHandler
     {
-        public bool IsAvailable { get; protected set; }
-        
-        public bool IsReconnecting { get; protected set; }
-
         public abstract void Handle();
 
         protected abstract Task OnHandleAsync();
-
-        protected bool ValidateReadPacket(int bytesRead)
-        {
-            if (bytesRead != 0) 
-                return true;
-
-            if (IsAvailable && !IsReconnecting)
-            {
-                IsAvailable = false;
-                IsReconnecting = true;
-                UniversalDebugger.LogError($"[{nameof(ClientNetworkHandler)}] ({nameof(ValidateReadPacket)}) Read empty response. Trying reconnecting...");
-            }
-            return false;
-        }
     } 
     
     public abstract class ClientNetworkHandler : BaseNetworkHandler
