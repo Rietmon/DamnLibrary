@@ -19,6 +19,8 @@ namespace DamnLibrary.Networking.Protocols
         public bool IsPaused { get; }
 
         void Handle();
+
+        int GetClientConnectionsCount();
         
         DamnClientConnection GetClientConnection(uint id);
 

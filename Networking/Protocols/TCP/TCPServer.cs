@@ -33,6 +33,8 @@ namespace DamnLibrary.Networking.Protocols.TCP
             IsWorking = true;
         }
 
+        public int GetClientConnectionsCount() => ClientConnections.Count;
+
         public DamnClientConnection GetClientConnection(uint id) =>
             ClientConnections.FirstOrDefault((connection) => connection.Id == id);
 

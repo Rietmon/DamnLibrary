@@ -42,6 +42,8 @@ namespace DamnLibrary.Networking.Server
             Server.Handle();
         }
 
+        public int GetClientConnectionsCount() => Server.GetClientConnectionsCount();
+
         public DamnClientConnection GetClientConnection(uint id) => Server.GetClientConnection(id);
         
         public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int clientConnectionId, ISerializable sendPacket,
