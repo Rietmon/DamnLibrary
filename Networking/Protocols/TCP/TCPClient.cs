@@ -73,8 +73,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
                 return;
             
             OnDisconnect?.Invoke();
-            Client.Close();
-            Stream.Dispose();
+            Client.Dispose();
         }
 
         protected override async Task OnHandleAsync()
