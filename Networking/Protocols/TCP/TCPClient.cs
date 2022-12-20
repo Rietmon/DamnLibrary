@@ -74,6 +74,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             
             OnDisconnect?.Invoke();
             Client.Dispose();
+            UniversalDebugger.Log($"[{nameof(TCPClient)}] ({nameof(Disconnect)}) Disconnected");
         }
 
         protected override async Task OnHandleAsync()
