@@ -10,9 +10,9 @@ using DamnLibrary.Serialization;
 
 namespace DamnLibrary.Networking.Server
 {
-    public class DamnClientConnection
+    public class ServerConnection
     {
-        private static uint LastClientConnectionId { get; set; }
+        private static uint LastServerConnectionId { get; set; }
         
         public uint Id { get; }
         
@@ -20,9 +20,9 @@ namespace DamnLibrary.Networking.Server
         
         private DamnClient ConnectedClient { get; }
 
-        public DamnClientConnection(IClientProtocol connectedClientProtocol)
+        public ServerConnection(IClientProtocol connectedClientProtocol)
         {
-            Id = LastClientConnectionId++;
+            Id = LastServerConnectionId++;
             ConnectedClient = new DamnClient(connectedClientProtocol);
         }
         

@@ -15,8 +15,8 @@ namespace DamnLibrary.Networking.Server
 {
     public class DamnServer
     {
-        public Action<DamnClientConnection>  OnAcceptConnection { get => Server.OnAcceptConnection; set => Server.OnAcceptConnection = value; }
-        public Action<DamnClientConnection> OnRejectingConnection { get => Server.OnRejectingConnection; set => Server.OnRejectingConnection = value; }
+        public Action<ServerConnection>  OnAcceptConnection { get => Server.OnAcceptConnection; set => Server.OnAcceptConnection = value; }
+        public Action<ServerConnection> OnRejectingConnection { get => Server.OnRejectingConnection; set => Server.OnRejectingConnection = value; }
         public Action OnRejectConnection { get => Server.OnRejectConnection; set => Server.OnRejectConnection = value; }
         
         public bool IsWorking => Server.IsWorking;
@@ -42,23 +42,23 @@ namespace DamnLibrary.Networking.Server
             Server.Handle();
         }
 
-        public int GetClientConnectionsCount() => Server.GetClientConnectionsCount();
+        public int GetClientConnectionsCount() => Server.GetServerConnectionsCount();
 
-        public DamnClientConnection GetClientConnection(uint id) => Server.GetClientConnection(id);
+        public ServerConnection GetClientConnection(uint id) => Server.GetServerConnection(id);
         
         public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int clientConnectionId, ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new() => 
             await Server.SendAsync<TReceive>(clientConnectionId, sendPacket, packetType, additionalData);
 
-        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(DamnClientConnection clientConnection,
+        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ServerConnection clientConnection,
             ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new() =>
             await Server.SendAsync<TReceive>(clientConnection, sendPacket, packetType, additionalData);
 
         public async Task<Pair<PacketHeader, TReceive>[]> SendToSelectedAsync<TReceive>(
-            Func<DamnClientConnection, bool> predicate,
+            Func<ServerConnection, bool> predicate,
             ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new() =>
             await Server.SendToSelectedAsync<TReceive>(predicate, sendPacket, packetType, additionalData);

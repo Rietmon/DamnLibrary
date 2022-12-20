@@ -14,16 +14,16 @@ namespace DamnLibrary.Networking.Protocols.TCP
 {
     public class TCPServer : ServerNetworkHandler, IServerProtocol
     {
-        public Action<DamnClientConnection>  OnAcceptConnection { get; set; }
-        public Action<DamnClientConnection> OnRejectingConnection { get; set; }
+        public Action<ServerConnection>  OnAcceptConnection { get; set; }
+        public Action<ServerConnection> OnRejectingConnection { get; set; }
         public Action OnRejectConnection { get; set; }
+        
         public sealed override bool IsWorking { get; set; }
-
         public override bool IsPaused { get; set; }
 
         private TcpListener Server { get; set; }
 
-        private List<DamnClientConnection> ClientConnections { get; } = new();
+        private List<ServerConnection> ServerConnections { get; } = new();
 
         public TCPServer(TcpListener server)
         {
@@ -33,29 +33,29 @@ namespace DamnLibrary.Networking.Protocols.TCP
             IsWorking = true;
         }
 
-        public int GetClientConnectionsCount() => ClientConnections.Count;
+        public int GetServerConnectionsCount() => ServerConnections.Count;
 
-        public DamnClientConnection GetClientConnection(uint id) =>
-            ClientConnections.FirstOrDefault((connection) => connection.Id == id);
+        public ServerConnection GetServerConnection(uint id) =>
+            ServerConnections.FirstOrDefault((connection) => connection.Id == id);
 
-        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int clientConnectionId,
+        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int serverConnectionId,
             ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new()
-            => await ClientConnections[clientConnectionId].SendAsync<TReceive>(sendPacket, packetType, additionalData);
+            => await ServerConnections[serverConnectionId].SendAsync<TReceive>(sendPacket, packetType, additionalData);
 
-        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(DamnClientConnection clientConnection,
+        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ServerConnection serverConnection,
             ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new()
-            => await clientConnection.SendAsync<TReceive>(sendPacket, packetType, additionalData);
+            => await serverConnection.SendAsync<TReceive>(sendPacket, packetType, additionalData);
 
         public async Task<Pair<PacketHeader, TReceive>[]> SendToSelectedAsync<TReceive>(
-            Func<DamnClientConnection, bool> predicate,
+            Func<ServerConnection, bool> predicate,
             ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new()
         {
-            var connectionsToSend = ClientConnections.Where(predicate).ToArray();
+            var connectionsToSend = ServerConnections.Where(predicate).ToArray();
             var responses = new Pair<PacketHeader, TReceive>[connectionsToSend.Length];
             
             for (var i = 0; i < connectionsToSend.Length; i++)
@@ -71,10 +71,10 @@ namespace DamnLibrary.Networking.Protocols.TCP
             params byte[] additionalData)
             where TReceive : ISerializable, new()
         {
-            var responses = new Pair<PacketHeader, TReceive>[ClientConnections.Count];
-            for (var i = 0; i < ClientConnections.Count; i++)
+            var responses = new Pair<PacketHeader, TReceive>[ServerConnections.Count];
+            for (var i = 0; i < ServerConnections.Count; i++)
             {
-                responses[i] = await ClientConnections[i].SendAsync<TReceive>(sendPacket, packetType, additionalData);
+                responses[i] = await ServerConnections[i].SendAsync<TReceive>(sendPacket, packetType, additionalData);
             }
 
             return responses;
@@ -85,14 +85,14 @@ namespace DamnLibrary.Networking.Protocols.TCP
             IsWorking = false;
             Server.Stop();
 
-            while (ClientConnections.Count > 0)
+            while (ServerConnections.Count > 0)
             {
-                var clientConnections = ClientConnections[0];
+                var serverConnections = ServerConnections[0];
                 
-                OnRejectingConnection?.Invoke(clientConnections);
+                OnRejectingConnection?.Invoke(serverConnections);
                 
-                ClientConnections[0].Disconnect();
-                ClientConnections.RemoveAt(0);
+                ServerConnections[0].Disconnect();
+                ServerConnections.RemoveAt(0);
                 
                 OnRejectConnection?.Invoke();
             }
@@ -101,9 +101,9 @@ namespace DamnLibrary.Networking.Protocols.TCP
         protected override async Task OnHandleAsync()
         {
             var connection = await Server.AcceptTcpClientAsync();
-            var clientConnection = new DamnClientConnection(new TCPClient(connection));
-            ClientConnections.Add(clientConnection);
-            OnAcceptConnection?.Invoke(clientConnection);
+            var serverConnection = new ServerConnection(new TCPClient(connection));
+            ServerConnections.Add(serverConnection);
+            OnAcceptConnection?.Invoke(serverConnection);
         }
     }
 }

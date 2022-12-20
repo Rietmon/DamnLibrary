@@ -10,8 +10,8 @@ namespace DamnLibrary.Networking.Protocols
 {
     public interface IServerProtocol
     {
-        public Action<DamnClientConnection>  OnAcceptConnection { get; set; }
-        public Action<DamnClientConnection> OnRejectingConnection { get; set; }
+        public Action<ServerConnection>  OnAcceptConnection { get; set; }
+        public Action<ServerConnection> OnRejectingConnection { get; set; }
         public Action OnRejectConnection { get; set; }
         
         public bool IsWorking { get; }
@@ -20,19 +20,19 @@ namespace DamnLibrary.Networking.Protocols
 
         void Handle();
 
-        int GetClientConnectionsCount();
+        int GetServerConnectionsCount();
         
-        DamnClientConnection GetClientConnection(uint id);
+        ServerConnection GetServerConnection(uint id);
 
-        Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int clientConnectionId, ISerializable sendPacket,
+        Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int serverConnectionId, ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new();
-        Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(DamnClientConnection clientConnection,
+        Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ServerConnection serverConnection,
             ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new();
         Task<Pair<PacketHeader, TReceive>[]> SendToSelectedAsync<TReceive>(
-            Func<DamnClientConnection, bool> predicate,
+            Func<ServerConnection, bool> predicate,
             ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new();
         Task<Pair<PacketHeader, TReceive>[]> SendToEachAsync<TReceive>(ISerializable sendPacket,
