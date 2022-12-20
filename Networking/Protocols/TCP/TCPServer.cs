@@ -14,6 +14,9 @@ namespace DamnLibrary.Networking.Protocols.TCP
 {
     public class TCPServer : ServerNetworkHandler, IServerProtocol
     {
+        public Action<DamnClientConnection>  OnAcceptConnection { get; set; }
+        public Action<DamnClientConnection> OnRejectingConnection { get; set; }
+        public Action OnRejectConnection { get; set; }
         public sealed override bool IsWorking { get; set; }
 
         public override bool IsPaused { get; set; }
@@ -82,8 +85,14 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
             while (ClientConnections.Count > 0)
             {
+                var clientConnections = ClientConnections[0];
+                
+                OnRejectingConnection?.Invoke(clientConnections);
+                
                 ClientConnections[0].Disconnect();
                 ClientConnections.RemoveAt(0);
+                
+                OnRejectConnection?.Invoke();
             }
         }
 
@@ -92,6 +101,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             var connection = await Server.AcceptTcpClientAsync();
             var clientConnection = new DamnClientConnection(new TCPClient(connection));
             ClientConnections.Add(clientConnection);
+            OnAcceptConnection?.Invoke(clientConnection);
         }
     }
 }

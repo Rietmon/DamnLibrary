@@ -10,6 +10,10 @@ namespace DamnLibrary.Networking.Protocols
 {
     public interface IServerProtocol
     {
+        public Action<DamnClientConnection>  OnAcceptConnection { get; set; }
+        public Action<DamnClientConnection> OnRejectingConnection { get; set; }
+        public Action OnRejectConnection { get; set; }
+        
         public bool IsWorking { get; }
         
         public bool IsPaused { get; }

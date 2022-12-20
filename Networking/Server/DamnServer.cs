@@ -15,6 +15,10 @@ namespace DamnLibrary.Networking.Server
 {
     public class DamnServer
     {
+        public Action<DamnClientConnection>  OnAcceptConnection { get => Server.OnAcceptConnection; set => Server.OnAcceptConnection = value; }
+        public Action<DamnClientConnection> OnRejectingConnection { get => Server.OnRejectingConnection; set => Server.OnRejectingConnection = value; }
+        public Action OnRejectConnection { get => Server.OnRejectConnection; set => Server.OnRejectConnection = value; }
+        
         public bool IsWorking => Server.IsWorking;
         
         public bool IsPaused => Server.IsPaused;
