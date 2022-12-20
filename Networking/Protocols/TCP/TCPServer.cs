@@ -105,9 +105,18 @@ namespace DamnLibrary.Networking.Protocols.TCP
         {
             var connection = await Server.AcceptTcpClientAsync();
             var serverConnection = new ServerConnection(new TCPClient(connection));
-            serverConnection.OnDisconnect += () => RejectConnection(serverConnection);
+            serverConnection.OnDisconnect += () => OnRejectedConnection(serverConnection);
             ServerConnections.Add(serverConnection);
             OnAcceptConnection?.Invoke(serverConnection);
+        }
+
+        private void OnRejectedConnection(ServerConnection serverConnection)
+        {
+            OnRejectingConnection?.Invoke(serverConnection);
+                
+            ServerConnections.Remove(serverConnection);
+                
+            OnRejectConnection?.Invoke();
         }
     }
 }
