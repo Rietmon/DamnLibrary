@@ -24,6 +24,8 @@ namespace DamnLibrary.Networking.Server
         
         public bool IsConnected => ConnectedClient.IsConnected;
         
+        public bool IsPaused { get => ConnectedClient.IsPaused; set => ConnectedClient.IsPaused = value; }
+        
         private DamnClient ConnectedClient { get; }
 
         public ServerConnection(IClientProtocol connectedClientProtocol)

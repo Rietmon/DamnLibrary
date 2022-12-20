@@ -108,6 +108,13 @@ namespace DamnLibrary.Networking.Protocols.TCP
             serverConnection.OnDisconnect += () => OnRejectedConnection(serverConnection);
             ServerConnections.Add(serverConnection);
             OnAcceptConnection?.Invoke(serverConnection);
+
+            for (var i = 0; i < ServerConnections.Count; i++)
+            {
+                serverConnection = ServerConnections[i];
+                if (!serverConnection.IsConnected)
+                    OnRejectedConnection(serverConnection);
+            }
         }
 
         private void OnRejectedConnection(ServerConnection serverConnection)
