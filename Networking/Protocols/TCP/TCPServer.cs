@@ -14,7 +14,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
 {
     public class TCPServer : ServerNetworkHandler, IServerProtocol
     {
-        public override bool IsWorking { get; set; }
+        public sealed override bool IsWorking { get; set; }
 
         public override bool IsPaused { get; set; }
 

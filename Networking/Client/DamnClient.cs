@@ -17,19 +17,24 @@ namespace DamnLibrary.Networking.Client
 {
     public sealed class DamnClient
     {
+        public Action OnConnect { get => Client.OnConnect; set => Client.OnConnect = value; }
+        
+        public Action<NetworkPacket> OnPacketReceive { get => Client.OnPacketReceive; set => Client.OnPacketReceive = value; }
+
+        public Action OnDisconnect { get => Client.OnDisconnect; set => Client.OnDisconnect = value; }
+        
         public bool IsConnected => Client.IsConnected;
         public bool IsPaused { get => Client.IsPaused; set => Client.IsPaused = value; }
 
         private uint LastSentPacketId { get; set; }
         private IClientProtocol Client { get; set; }
-        private CancellationTokenSource CancellationTokenSource { get; } = new();
 
         public DamnClient() { }
         
         internal DamnClient(IClientProtocol client)
         {
             Client = client;
-            Client.OnPacketReceived += OnPacketReceived;
+            OnPacketReceive += OnPacketReceived;
             Client.Handle();
         }
 
@@ -52,7 +57,7 @@ namespace DamnLibrary.Networking.Client
             if (!Client.IsConnected)
                 return;
 
-            Client.OnPacketReceived += OnPacketReceived;
+            Client.OnPacketReceive += OnPacketReceived;
             Client.Handle();
         }
 
@@ -121,9 +126,9 @@ namespace DamnLibrary.Networking.Client
                 responsePacket.IsHandled = true;
             }
             
-            Client.OnPacketReceived += OnNetworkPacketReceived;
+            Client.OnPacketReceive += OnNetworkPacketReceived;
             await TaskUtilities.WaitUntil(() => responsePacket != null);
-            Client.OnPacketReceived -= OnNetworkPacketReceived;
+            Client.OnPacketReceive -= OnNetworkPacketReceived;
             
             return responsePacket;
         }

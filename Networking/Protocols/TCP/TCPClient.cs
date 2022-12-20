@@ -13,7 +13,9 @@ namespace DamnLibrary.Networking.Protocols.TCP
 {
     public class TCPClient : ClientNetworkHandler, IClientProtocol
     {
-        public Action<NetworkPacket> OnPacketReceived { get; set; }
+        public Action OnConnect { get; set; }
+        public Action<NetworkPacket> OnPacketReceive { get; set; }
+        public Action OnDisconnect { get; set; }
 
         public override bool IsConnected => Client.Connected;
 
@@ -29,10 +31,11 @@ namespace DamnLibrary.Networking.Protocols.TCP
         {
             Client = client;
 
-            if (client.Connected)
-            {
-                Stream = Client.GetStream();
-            }
+            if (!client.Connected) 
+                return;
+            
+            OnConnect?.Invoke();
+            Stream = Client.GetStream();
         }
 
         public async Task ConnectAsync(string address, int port)
@@ -44,6 +47,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
                     await Client.ConnectAsync(address, port);
                 }
 
+                OnConnect?.Invoke();
                 Stream = Client.GetStream();
             }
             catch (SocketException socketException)
@@ -69,6 +73,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             if (!IsConnected)
                 return;
             
+            OnDisconnect?.Invoke();
             Client.Close();
             Stream.Dispose();
         }
@@ -101,7 +106,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
                 var inPacketHeader = deserializationStream.Read<PacketHeader>();
                 var networkPacket = new NetworkPacket(inPacketHeader, deserializationStream);
 
-                OnPacketReceived.Invoke(networkPacket);
+                OnPacketReceive?.Invoke(networkPacket);
 
                 if (!networkPacket.IsHandled)
                     UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) NetworkPacket didnt handled. Id = {networkPacket.Header.Id}, Type = {networkPacket.Header.Type}");
