@@ -114,7 +114,10 @@ namespace DamnLibrary.Networking.Protocols.TCP
             {
                 serverConnection = ServerConnections[i];
                 if (!serverConnection.IsConnected)
+                {
                     OnRejectedConnection(serverConnection);
+                    i--;
+                }
             }
             
             OnUpdatedConnections?.Invoke();
