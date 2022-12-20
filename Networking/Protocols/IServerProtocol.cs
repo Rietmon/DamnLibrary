@@ -13,6 +13,7 @@ namespace DamnLibrary.Networking.Protocols
         public Action<ServerConnection>  OnAcceptConnection { get; set; }
         public Action<ServerConnection> OnRejectingConnection { get; set; }
         public Action OnRejectConnection { get; set; }
+        public Action OnUpdatedConnections { get; set; }
         
         public bool IsWorking { get; }
         

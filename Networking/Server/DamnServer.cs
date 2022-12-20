@@ -18,6 +18,7 @@ namespace DamnLibrary.Networking.Server
         public Action<ServerConnection> OnAcceptConnection { get => Server.OnAcceptConnection; set => Server.OnAcceptConnection = value; }
         public Action<ServerConnection> OnRejectingConnection { get => Server.OnRejectingConnection; set => Server.OnRejectingConnection = value; }
         public Action OnRejectConnection { get => Server.OnRejectConnection; set => Server.OnRejectConnection = value; }
+        public Action OnUpdatedConnections { get => Server.OnUpdatedConnections; set => Server.OnUpdatedConnections = value; }
         
         public bool IsWorking => Server.IsWorking;
         
