@@ -17,6 +17,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
         public Action<ServerConnection> OnAcceptConnection { get; set; }
         public Action<ServerConnection> OnRejectingConnection { get; set; }
         public Action OnRejectConnection { get; set; }
+        public Action OnUpdatedConnections { get; set; }
         
         public sealed override bool IsWorking { get; set; }
         public override bool IsPaused { get; set; }
@@ -115,6 +116,8 @@ namespace DamnLibrary.Networking.Protocols.TCP
                 if (!serverConnection.IsConnected)
                     OnRejectedConnection(serverConnection);
             }
+            
+            OnUpdatedConnections?.Invoke();
         }
 
         private void OnRejectedConnection(ServerConnection serverConnection)
