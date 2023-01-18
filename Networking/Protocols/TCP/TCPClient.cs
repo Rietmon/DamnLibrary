@@ -1,10 +1,10 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
 using System;
+using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using DamnLibrary.Debugging;
-using DamnLibrary.Extensions;
 using DamnLibrary.Networking.Handlers;
 using DamnLibrary.Networking.Packets;
 using DamnLibrary.Serialization;
