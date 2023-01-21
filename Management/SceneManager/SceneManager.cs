@@ -13,19 +13,23 @@ namespace DamnLibrary.Management
     {
         public static Scene ActiveScene => UnityEngine.SceneManagement.SceneManager.GetActiveScene();
         
-        private static readonly Dictionary<string, AsyncOperation> scenesInPreloading = new();
+        private static readonly Dictionary<string, AsyncOperation> preloadingScenes = new();
+
+        private static readonly Dictionary<string, AsyncOperation> preloadedScenes = new();
     
         public static void PreloadScene(string name, bool enableActivation = false, Action preloadCallback = null)
         {
             var operation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(name);
             operation.allowSceneActivation = enableActivation;
         
-            scenesInPreloading.Add(name, operation);
+            preloadingScenes.Add(name, operation);
             
-            operation.completed += (result) =>
+            operation.completed += (_) =>
             {
                 preloadCallback?.Invoke();
-                scenesInPreloading.Remove(name);
+                preloadingScenes.Remove(name);
+                if (!operation.allowSceneActivation)
+                    preloadedScenes.Add(name, operation);
             };
         }
         
@@ -41,32 +45,44 @@ namespace DamnLibrary.Management
                 await TaskUtilities.WaitUntil(() => isPreloaded);
             }
         }
-        public static bool IsScenePreloaded(string name) =>
-            !scenesInPreloading.ContainsKey(name) || ActiveScene.name == name;
-        
-        public static bool IsScenePreloading(string name) => scenesInPreloading.ContainsKey(name);
 
-        public static float GetScenePreloadingProgress(string name) => scenesInPreloading[name].progress;
-    
-        public static void EnablePreloadedScene(string name) => scenesInPreloading[name].allowSceneActivation = true;
+        public static bool IsScenePreloaded(string name) =>
+            !preloadingScenes.ContainsKey(name) && preloadedScenes.ContainsKey(name) || ActiveScene.name == name;
+        
+        public static bool IsScenePreloading(string name) => preloadingScenes.ContainsKey(name);
+
+        public static float GetScenePreloadingProgress(string name) => preloadingScenes[name].progress;
+
+        public static void EnableScene(string name)
+        {
+            if (preloadingScenes.TryGetValue(name, out var preloadingOperation))
+            {
+                preloadingOperation.allowSceneActivation = true;
+            }
+            else if (preloadedScenes.TryGetValue(name, out var preloadedOperation))
+            {
+                preloadedOperation.allowSceneActivation = true;
+                preloadedScenes.Remove(name);
+            }
+        }
         
         public static async Task UnloadSceneAsync(string name)
         {
             if (IsScenePreloading(name))
             {
                 await TaskUtilities.WaitUntil(() => IsScenePreloaded(name));
-                EnablePreloadedScene(name);
+                EnableScene(name);
             }
             UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(name);
             
-            scenesInPreloading.Remove(name);
+            preloadingScenes.Remove(name);
         }
         
         public static async Task ChangeSceneAsync(string name)
         {
-            UnloadSceneAsync(ActiveScene.name);
-            
             await PreloadSceneAsync(name, true);
+            
+            UnloadSceneAsync(ActiveScene.name);
         }
 
         public static void LoadScene(string name)
