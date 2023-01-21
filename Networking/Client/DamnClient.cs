@@ -138,7 +138,7 @@ namespace DamnLibrary.Networking.Client
             if (networkPacket.Header.IsResponse) 
                 return;
             
-            var sendPacket = PacketHandler.Handle(networkPacket.Header.Type, networkPacket.DeserializationStream);
+            var sendPacket = PacketHandler.Handle(this, networkPacket.Header, networkPacket.DeserializationStream);
             SendResponseAsync(networkPacket.Header, sendPacket).Forget();
             networkPacket.IsHandled = true;
         }
