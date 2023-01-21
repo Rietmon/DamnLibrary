@@ -34,6 +34,7 @@ namespace DamnLibrary.Networking.Handlers
             }
         }
     
+#pragma warning disable CS8600
 #pragma warning disable CS8603
         public static ISerializable Handle(DamnClient client, PacketHeader header, SerializationStream deserializationStream)
         {
@@ -42,8 +43,8 @@ namespace DamnLibrary.Networking.Handlers
                 UniversalDebugger.LogError($"{nameof(PacketHandler)} ({nameof(Handle)}) Unable to find handler for type {header.Type}!");
                 return null;
             }
-
-#pragma warning disable CS8600
+            
+            client.LastPacketHandle = DateTime.UtcNow;
             return (ISerializable)handler.Invoke(null, new object[] { client, header, deserializationStream });
 #pragma warning restore CS8600
 #pragma warning restore CS8603

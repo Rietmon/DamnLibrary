@@ -17,6 +17,8 @@ namespace DamnLibrary.Networking.Client
 {
     public sealed class DamnClient
     {
+        public DateTime LastPacketHandle { get; internal set; }
+        
         public Action OnConnect { get => Client.OnConnect; set => Client.OnConnect = value; }
         
         public Action<NetworkPacket> OnPacketReceive { get => Client.OnPacketReceive; set => Client.OnPacketReceive = value; }
