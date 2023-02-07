@@ -17,6 +17,8 @@ namespace DamnLibrary.Networking.Client
 {
     public sealed class DamnClient
     {
+        public uint Id { get; }
+        
         public DateTime LastPacketHandle { get; internal set; }
         
         public Action OnConnect { get => Client.OnConnect; set => Client.OnConnect = value; }
@@ -33,8 +35,9 @@ namespace DamnLibrary.Networking.Client
 
         public DamnClient() { }
         
-        internal DamnClient(IClientProtocol client)
+        internal DamnClient(IClientProtocol client, uint id)
         {
+            Id = id;
             Client = client;
             OnPacketReceive += OnPacketReceived;
             Client.Handle();

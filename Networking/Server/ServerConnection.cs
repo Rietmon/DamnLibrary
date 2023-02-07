@@ -10,11 +10,11 @@ using DamnLibrary.Serialization;
 
 namespace DamnLibrary.Networking.Server
 {
-    public class ServerConnection
+    public sealed class ServerConnection
     {
         private static uint LastServerConnectionId { get; set; }
-        
-        public uint Id { get; }
+
+        public uint Id => ConnectedClient.Id;
         
         public Action OnConnect { get => ConnectedClient.OnConnect; set => ConnectedClient.OnConnect = value; }
         
@@ -30,8 +30,7 @@ namespace DamnLibrary.Networking.Server
 
         public ServerConnection(IClientProtocol connectedClientProtocol)
         {
-            Id = LastServerConnectionId++;
-            ConnectedClient = new DamnClient(connectedClientProtocol);
+            ConnectedClient = new DamnClient(connectedClientProtocol, ++LastServerConnectionId); // Rietmon: Id 0 reserved for client
         }
         
         public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ISerializable sendPacket, IConvertible paketType, params byte[] additionalData)

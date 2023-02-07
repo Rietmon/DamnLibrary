@@ -32,6 +32,8 @@ namespace DamnLibrary.Extensions
         }
         
         public static int IndexOf<T>(this T[] array, T element) => Array.IndexOf(array, element);
+        
+        public static int FindIndex<T>(this T[] array, Predicate<T> match) => Array.FindIndex(array, match);
 
         public static int[] IndicesOf<T>(this T[] array, T element)
         {
