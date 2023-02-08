@@ -9,6 +9,7 @@ using DamnLibrary.Networking.Packets;
 using DamnLibrary.Networking.Server;
 using DamnLibrary.Other;
 using DamnLibrary.Serialization;
+using UnityEngine;
 
 namespace DamnLibrary.Networking.Protocols.TCP
 {
@@ -31,6 +32,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             Server = server;
 
             Server.Start();
+            Server.BeginAcceptTcpClient(AcceptConnection, Server);
             IsWorking = true;
         }
 
@@ -81,6 +83,24 @@ namespace DamnLibrary.Networking.Protocols.TCP
             return responses;
         }
 
+        private void AcceptConnection(IAsyncResult ar)
+        {
+            Debug.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Accepting new connection...");
+            var connection = Server.EndAcceptTcpClient(ar);
+            Debug.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Found new client...");
+            
+            var serverConnection = new ServerConnection(new TCPClient(connection));
+            Debug.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Accepted new connection! Id {serverConnection.Id}");
+            
+            serverConnection.OnDisconnect += () => OnRejectedConnection(serverConnection);
+            ServerConnections.Add(serverConnection);
+            OnAcceptConnection?.Invoke(serverConnection);
+
+            Server.BeginAcceptTcpClient(AcceptConnection, Server);
+            
+            OnUpdatedConnections?.Invoke();
+        }
+
         public void RejectConnection(ServerConnection serverConnection)
         {
             OnRejectingConnection?.Invoke(serverConnection);
@@ -104,23 +124,17 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
         protected override async Task OnHandleAsync()
         {
-            var connection = await Server.AcceptTcpClientAsync();
-            var serverConnection = new ServerConnection(new TCPClient(connection));
-            serverConnection.OnDisconnect += () => OnRejectedConnection(serverConnection);
-            ServerConnections.Add(serverConnection);
-            OnAcceptConnection?.Invoke(serverConnection);
-
             for (var i = 0; i < ServerConnections.Count; i++)
             {
-                serverConnection = ServerConnections[i];
+                var serverConnection = ServerConnections[i];
                 if (!serverConnection.IsConnected)
                 {
                     OnRejectedConnection(serverConnection);
                     i--;
                 }
             }
-            
-            OnUpdatedConnections?.Invoke();
+
+            await Task.CompletedTask;
         }
 
         private void OnRejectedConnection(ServerConnection serverConnection)

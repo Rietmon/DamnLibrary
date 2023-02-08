@@ -37,8 +37,8 @@ namespace DamnLibrary.Networking.Client
         
         internal DamnClient(IClientProtocol client, uint id)
         {
-            Id = id;
             Client = client;
+            Id = id;
             OnPacketReceive += OnPacketReceived;
             Client.Handle();
         }
