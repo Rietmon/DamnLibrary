@@ -17,7 +17,7 @@ namespace DamnLibrary.Networking.Client
 {
     public sealed class DamnClient
     {
-        public uint Id { get; set; }
+        public uint Id { get => Client.Id; set => Client.Id = value; }
         
         public DateTime LastPacketHandle { get; internal set; }
         

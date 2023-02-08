@@ -13,6 +13,8 @@ namespace DamnLibrary.Networking.Protocols.TCP
 {
     public class TCPClient : ClientNetworkHandler, IClientProtocol
     {
+        public uint Id { get; set; }
+        
         public Action OnConnect { get; set; }
         public Action<NetworkPacket> OnPacketReceive { get; set; }
         public Action OnDisconnect { get; set; }
@@ -74,7 +76,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             
             OnDisconnect?.Invoke();
             Client.Dispose();
-            UniversalDebugger.Log($"[{nameof(TCPClient)}] ({nameof(Disconnect)}) Disconnected");
+            UniversalDebugger.Log($"[{nameof(TCPClient)}] ({nameof(Disconnect)}) Disconnected. Id: {Id}");
         }
 
         protected override async Task OnHandleAsync()
@@ -132,7 +134,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             if (bytesRead > 0)
                 return true;
             
-            UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(ValidateReadPacket)}) Read empty response. Disconnecting...");
+            UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(ValidateReadPacket)}) Read empty response. Id: {Id}. Disconnecting...");
             Disconnect();
             return false;
         }
