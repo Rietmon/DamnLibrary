@@ -86,6 +86,9 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
         private void AcceptConnection(IAsyncResult ar)
         {
+            if (!IsWorking)
+                return;
+            
             Debug.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Accepting new connection...");
             var connection = Server.EndAcceptTcpClient(ar);
             Debug.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Found new client...");
@@ -125,15 +128,15 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
         protected override async Task OnHandleAsync()
         {
-            for (var i = 0; i < ServerConnections.Count; i++)
-            {
-                var serverConnection = ServerConnections[i];
-                if (!serverConnection.IsConnected)
-                {
-                    OnRejectedConnection(serverConnection);
-                    i--;
-                }
-            }
+            // for (var i = 0; i < ServerConnections.Count; i++)
+            // {
+            //     var serverConnection = ServerConnections[i];
+            //     if (!serverConnection.IsConnected)
+            //     {
+            //         OnRejectedConnection(serverConnection);
+            //         i--;
+            //     }
+            // }
 
             if (OnHandle != null)
                 await OnHandle.Invoke();
