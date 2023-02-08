@@ -15,6 +15,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
 {
     public class TCPServer : ServerNetworkHandler, IServerProtocol
     {
+        public Func<Task> OnHandle { get; set; }
         public Action<ServerConnection> OnAcceptConnection { get; set; }
         public Action<ServerConnection> OnRejectingConnection { get; set; }
         public Action OnRejectConnection { get; set; }
@@ -134,7 +135,8 @@ namespace DamnLibrary.Networking.Protocols.TCP
                 }
             }
 
-            await Task.CompletedTask;
+            if (OnHandle != null)
+                await OnHandle.Invoke();
         }
 
         private void OnRejectedConnection(ServerConnection serverConnection)

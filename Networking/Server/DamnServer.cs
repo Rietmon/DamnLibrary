@@ -15,6 +15,7 @@ namespace DamnLibrary.Networking.Server
 {
     public class DamnServer
     {
+        public Func<Task> OnHandle { get => Server.OnHandle; set => Server.OnHandle = value; }
         public Action<ServerConnection> OnAcceptConnection { get => Server.OnAcceptConnection; set => Server.OnAcceptConnection = value; }
         public Action<ServerConnection> OnRejectingConnection { get => Server.OnRejectingConnection; set => Server.OnRejectingConnection = value; }
         public Action OnRejectConnection { get => Server.OnRejectConnection; set => Server.OnRejectConnection = value; }
