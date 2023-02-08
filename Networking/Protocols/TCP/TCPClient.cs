@@ -104,12 +104,12 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
                 deserializationStream.Position = 0;
 
-                var inPacketHeader = deserializationStream.Read<PacketHeader>();
-                var networkPacket = new NetworkPacket(inPacketHeader, deserializationStream);
+                var packetHeader = deserializationStream.Read<PacketHeader>();
+                var networkPacket = new NetworkPacket(packetHeader, deserializationStream);
 
                 OnPacketReceive?.Invoke(networkPacket);
 
-                if (!networkPacket.IsHandled)
+                if (!packetHeader.IsResponse && !networkPacket.IsHandled)
                     UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) NetworkPacket didnt handled. Id = {networkPacket.Header.Id}, Type = {networkPacket.Header.Type}");
             }
             catch (IOException ioException)
