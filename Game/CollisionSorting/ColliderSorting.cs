@@ -4,6 +4,7 @@ using System.Linq;
 using DamnLibrary.Behaviours;
 using UnityEngine;
 
+#if !DISABLE_PHYSICS
 [RequireComponent(typeof(Collider2D))]
 public class ColliderSorting : UnityBehaviour
 {
@@ -52,4 +53,5 @@ public class ColliderSorting : UnityBehaviour
         return collidersSorting[greaterColliderIndex].Collider;
     }
 }
+#endif
 #endif
