@@ -123,7 +123,7 @@ namespace DamnLibrary.Serialization
             {
                 var id = stream.Read<short>();
                 var componentBytes = stream.Read<byte[]>();
-                var component = Instance.serializableObjects.Find((c) => c.SerializableId == id);
+                var component = Instance.serializableObjects.FindOrDefault((c) => c.SerializableId == id);
                 if (!component)
                 {
                     UniversalDebugger.LogError($"[{nameof(Serialization)}] ({nameof(DeserializeComponents)}) Unable to find component with id {id} at the {SceneManager.ActiveScene.name} scene");

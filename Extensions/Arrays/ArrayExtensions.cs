@@ -104,7 +104,7 @@ namespace DamnLibrary.Extensions
             return result;
         }
 
-        public static T Find<T>(this T[] array, Func<T, bool> condition)
+        public static T FindOrDefault<T>(this T[] array, Func<T, bool> condition)
         {
             foreach (var element in array)
             {
