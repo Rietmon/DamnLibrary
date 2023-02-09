@@ -11,6 +11,7 @@ namespace DamnLibrary.Networking.Packets
         public uint Id { get; set; }
         
         public bool IsResponse { get; set; }
+        public bool NeedResponse { get; set; }
         
         public IConvertible Type { get; set; }
 
@@ -20,6 +21,7 @@ namespace DamnLibrary.Networking.Packets
         {
             stream.Write(Id);
             stream.Write(IsResponse);
+            stream.Write(NeedResponse);
             stream.Write(Type);
             stream.Write(AdditionData);
         }
@@ -28,6 +30,7 @@ namespace DamnLibrary.Networking.Packets
         {
             Id = stream.Read<uint>();
             IsResponse = stream.Read<bool>();
+            NeedResponse = stream.Read<bool>();
             Type = (IConvertible)stream.Read(PacketTypeSerializationType);
             AdditionData = stream.Read<byte[]>();
         }

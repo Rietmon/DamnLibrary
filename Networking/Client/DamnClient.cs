@@ -78,6 +78,7 @@ namespace DamnLibrary.Networking.Client
             {
                 Id = LastSentPacketId++,
                 IsResponse = false,
+                NeedResponse = false,
                 Type = packetType,
                 AdditionData = additionalData
             };
@@ -102,6 +103,7 @@ namespace DamnLibrary.Networking.Client
             {
                 Id = LastSentPacketId++,
                 IsResponse = false,
+                NeedResponse = true,
                 Type = packetType,
                 AdditionData = additionalData
             };
@@ -167,7 +169,10 @@ namespace DamnLibrary.Networking.Client
                 return;
             
             var sendPacket = PacketHandler.Handle(this, networkPacket.Header, networkPacket.DeserializationStream);
-            SendResponseAsync(networkPacket.Header, sendPacket).Forget();
+            
+            if (networkPacket.Header.NeedResponse)
+                SendResponseAsync(networkPacket.Header, sendPacket).Forget();
+            
             networkPacket.IsHandled = true;
         }
 

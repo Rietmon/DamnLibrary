@@ -45,7 +45,11 @@ namespace DamnLibrary.Networking.Handlers
             }
             
             client.LastPacketHandle = DateTime.UtcNow;
-            return (ISerializable)handler.Invoke(null, new object[] { client, header, deserializationStream });
+            var result = handler.Invoke(null, new object[] { client, header, deserializationStream });
+            if (header.NeedResponse)
+                return (ISerializable)result;
+
+            return null;
 #pragma warning restore CS8600
 #pragma warning restore CS8603
         }
