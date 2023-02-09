@@ -30,8 +30,11 @@ namespace DamnLibrary.Networking.Server
 
         public ServerConnection(IClientProtocol connectedClientProtocol)
         {
-            ConnectedClient = new DamnClient(connectedClientProtocol, ++LastServerConnectionId); // Rietmon: Id 0 reserved for client
+            ConnectedClient = new DamnClient(connectedClientProtocol, ++LastServerConnectionId); // Rietmon: Id 0 reserved for invalid connections
         }
+        
+        public async Task SendAsyncWithoutResponse(ISerializable sendPacket, IConvertible paketType, params byte[] additionalData) => 
+            await ConnectedClient.SendAsyncWithoutResponse(sendPacket, paketType, additionalData);
         
         public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ISerializable sendPacket, IConvertible paketType, params byte[] additionalData)
             where TReceive : ISerializable, new() => 

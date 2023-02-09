@@ -25,10 +25,7 @@ namespace DamnLibrary.Networking.Protocols
         int GetServerConnectionsCount();
         
         ServerConnection GetServerConnection(uint id);
-
-        Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int serverConnectionId, ISerializable sendPacket,
-            IConvertible packetType, params byte[] additionalData)
-            where TReceive : ISerializable, new();
+        
         Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ServerConnection serverConnection,
             ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData)
@@ -41,6 +38,18 @@ namespace DamnLibrary.Networking.Protocols
             IConvertible packetType,
             params byte[] additionalData)
             where TReceive : ISerializable, new();
+
+        public Task SendAsyncWithoutResponse(ServerConnection clientConnection,
+            ISerializable sendPacket,
+            IConvertible packetType, params byte[] additionalData);
+
+        public Task SendAsyncWithoutResponse(Func<ServerConnection, bool> predicate,
+            ISerializable sendPacket,
+            IConvertible packetType, params byte[] additionalData);
+
+        public Task SendAsyncWithoutResponse(ISerializable sendPacket,
+            IConvertible packetType,
+            params byte[] additionalData);
 
         void Stop();
     }

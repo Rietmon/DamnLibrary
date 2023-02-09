@@ -65,6 +65,29 @@ namespace DamnLibrary.Networking.Client
             Client.OnPacketReceive += OnPacketReceived;
             Client.Handle();
         }
+        
+        public async Task SendAsyncWithoutResponse(ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
+        {
+            if (!IsConnected)
+            {
+                UniversalDebugger.LogError($"[{nameof(DamnClient)}] ({nameof(SendAsync)}) Trying to send from a non-connected client");
+                return;
+            }
+            
+            var sendPacketHeader = new PacketHeader
+            {
+                Id = LastSentPacketId++,
+                IsResponse = false,
+                Type = packetType,
+                AdditionData = additionalData
+            };
+
+            var messageToSend = CreateMessage(sendPacketHeader, sendPacket);
+            
+            UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendAsync)}) Sending {packetType}, size = {messageToSend.Length}b");
+
+            await Client.WriteAsync(messageToSend);
+        }
 
         public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new()

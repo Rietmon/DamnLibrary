@@ -42,17 +42,11 @@ namespace DamnLibrary.Networking.Protocols.TCP
         public ServerConnection GetServerConnection(uint id) =>
             ServerConnections.FirstOrDefault((connection) => connection.Id == id);
 
-        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int serverConnectionId,
-            ISerializable sendPacket,
-            IConvertible packetType, params byte[] additionalData)
-            where TReceive : ISerializable, new()
-            => await ServerConnections[serverConnectionId].SendAsync<TReceive>(sendPacket, packetType, additionalData);
-
         public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ServerConnection serverConnection,
             ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new()
-            => await serverConnection.SendAsync<TReceive>(sendPacket, packetType, additionalData);
+            => await SendAsyncWithTimeout<TReceive>(serverConnection, sendPacket, packetType, additionalData);
 
         public async Task<Pair<PacketHeader, TReceive>[]> SendToSelectedAsync<TReceive>(
             Func<ServerConnection, bool> predicate,
@@ -64,24 +58,66 @@ namespace DamnLibrary.Networking.Protocols.TCP
             
             for (var i = 0; i < connectionsToSend.Length; i++)
             {
-                responses[i] = await connectionsToSend[i].SendAsync<TReceive>(sendPacket, packetType, additionalData);
+                responses[i] = await SendAsyncWithTimeout<TReceive>(connectionsToSend[i], sendPacket, packetType, additionalData);
             }
 
             return responses;
         }
 
         public async Task<Pair<PacketHeader, TReceive>[]> SendToEachAsync<TReceive>(ISerializable sendPacket,
-            IConvertible packetType,
+            IConvertible packetType, 
             params byte[] additionalData)
             where TReceive : ISerializable, new()
         {
             var responses = new Pair<PacketHeader, TReceive>[ServerConnections.Count];
             for (var i = 0; i < ServerConnections.Count; i++)
             {
-                responses[i] = await ServerConnections[i].SendAsync<TReceive>(sendPacket, packetType, additionalData);
+                responses[i] = await SendAsyncWithTimeout<TReceive>(ServerConnections[i], sendPacket, packetType, additionalData);
             }
 
             return responses;
+        }
+
+        public async Task SendAsyncWithoutResponse(ServerConnection clientConnection, ISerializable sendPacket, IConvertible packetType,
+            params byte[] additionalData) =>
+            await clientConnection.SendAsyncWithoutResponse(sendPacket, packetType, additionalData);
+        
+        public async Task SendAsyncWithoutResponse(Func<ServerConnection, bool> predicate, ISerializable sendPacket, IConvertible packetType,
+            params byte[] additionalData)
+        {
+            var connectionsToSend = ServerConnections.Where(predicate).ToArray();
+            
+            for (var i = 0; i < connectionsToSend.Length; i++)
+            {
+                await connectionsToSend[i].SendAsyncWithoutResponse(sendPacket, packetType, additionalData);
+            }
+        }
+
+        public async Task SendAsyncWithoutResponse(ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
+        {
+            for (var i = 0; i < ServerConnections.Count; i++)
+            {
+                await ServerConnections[i].SendAsyncWithoutResponse(sendPacket, packetType, additionalData);
+            }
+        }
+
+        private static async Task<Pair<PacketHeader, TReceive>> SendAsyncWithTimeout<TReceive>(ServerConnection serverConnection,
+            ISerializable sendPacket,
+            IConvertible packetType, 
+            params byte[] additionalData)
+            where TReceive : ISerializable, new()
+        {
+            var sendTask = serverConnection.SendAsync<TReceive>(sendPacket, packetType, additionalData);
+            var timeoutTask = Task.Delay(DamnNetworking.TimeoutForResponse);
+
+            await Task.WhenAny(sendTask, timeoutTask);
+            
+            if (sendTask.IsCompleted)
+                return sendTask.Result;
+
+            Debug.LogWarning(
+                $"[{nameof(TCPServer)}] ({nameof(SendAsyncWithTimeout)}) Unable to get response from client. Id: {serverConnection.Id}");
+            return default;
         }
 
         private void AcceptConnection(IAsyncResult ar)

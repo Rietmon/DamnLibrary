@@ -47,11 +47,6 @@ namespace DamnLibrary.Networking.Server
         public int GetClientConnectionsCount() => Server.GetServerConnectionsCount();
 
         public ServerConnection GetClientConnection(uint id) => Server.GetServerConnection(id);
-        
-        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(int clientConnectionId, ISerializable sendPacket,
-            IConvertible packetType, params byte[] additionalData)
-            where TReceive : ISerializable, new() => 
-            await Server.SendAsync<TReceive>(clientConnectionId, sendPacket, packetType, additionalData);
 
         public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ServerConnection clientConnection,
             ISerializable sendPacket,
@@ -59,9 +54,9 @@ namespace DamnLibrary.Networking.Server
             where TReceive : ISerializable, new() =>
             await Server.SendAsync<TReceive>(clientConnection, sendPacket, packetType, additionalData);
 
-        public async Task<Pair<PacketHeader, TReceive>[]> SendToSelectedAsync<TReceive>(
-            Func<ServerConnection, bool> predicate,
-            ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
+        public async Task<Pair<PacketHeader, TReceive>[]> SendToSelectedAsync<TReceive>(Func<ServerConnection, bool> predicate,
+            ISerializable sendPacket, 
+            IConvertible packetType, params byte[] additionalData)
             where TReceive : ISerializable, new() =>
             await Server.SendToSelectedAsync<TReceive>(predicate, sendPacket, packetType, additionalData);
 
@@ -70,6 +65,21 @@ namespace DamnLibrary.Networking.Server
             params byte[] additionalData)
             where TReceive : ISerializable, new() =>
             await Server.SendToEachAsync<TReceive>(sendPacket, packetType, additionalData);
+
+        public async Task SendAsyncWithoutResponse(ServerConnection clientConnection,
+            ISerializable sendPacket,
+            IConvertible packetType, params byte[] additionalData) =>
+            await Server.SendAsyncWithoutResponse(clientConnection, sendPacket, packetType, additionalData);
+
+        public async Task SendAsyncWithoutResponse(Func<ServerConnection, bool> predicate,
+            ISerializable sendPacket, 
+            IConvertible packetType, params byte[] additionalData) =>
+            await Server.SendAsyncWithoutResponse(predicate, sendPacket, packetType, additionalData);
+
+        public async Task SendAsyncWithoutResponse(ISerializable sendPacket,
+            IConvertible packetType,
+            params byte[] additionalData) =>
+            await Server.SendAsyncWithoutResponse(sendPacket, packetType, additionalData);
 
         public void Stop() => Server.Stop();
     }
