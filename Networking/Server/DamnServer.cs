@@ -66,20 +66,21 @@ namespace DamnLibrary.Networking.Server
             where TReceive : ISerializable, new() =>
             await Server.SendToEachAsync<TReceive>(sendPacket, packetType, additionalData);
 
-        public async Task SendAsyncWithoutResponse(ServerConnection clientConnection,
+        
+        public async Task SendWithoutResponseAsync(ServerConnection clientConnection,
             ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData) =>
-            await Server.SendAsyncWithoutResponse(clientConnection, sendPacket, packetType, additionalData);
+            await Server.SendWithoutResponseAsync(clientConnection, sendPacket, packetType, additionalData);
 
-        public async Task SendAsyncWithoutResponse(Func<ServerConnection, bool> predicate,
+        public async Task SendToSelectedWithoutResponseAsync(Func<ServerConnection, bool> predicate,
             ISerializable sendPacket, 
             IConvertible packetType, params byte[] additionalData) =>
-            await Server.SendAsyncWithoutResponse(predicate, sendPacket, packetType, additionalData);
+            await Server.SendToSelectedWithoutResponseAsync(predicate, sendPacket, packetType, additionalData);
 
-        public async Task SendAsyncWithoutResponse(ISerializable sendPacket,
+        public async Task SendToEachWithoutResponseAsync(ISerializable sendPacket,
             IConvertible packetType,
             params byte[] additionalData) =>
-            await Server.SendAsyncWithoutResponse(sendPacket, packetType, additionalData);
+            await Server.SendToEachWithoutResponseAsync(sendPacket, packetType, additionalData);
 
         public void Stop() => Server.Stop();
     }

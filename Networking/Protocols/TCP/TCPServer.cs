@@ -78,26 +78,26 @@ namespace DamnLibrary.Networking.Protocols.TCP
             return responses;
         }
 
-        public async Task SendAsyncWithoutResponse(ServerConnection clientConnection, ISerializable sendPacket, IConvertible packetType,
+        public async Task SendWithoutResponseAsync(ServerConnection clientConnection, ISerializable sendPacket, IConvertible packetType,
             params byte[] additionalData) =>
-            await clientConnection.SendAsyncWithoutResponse(sendPacket, packetType, additionalData);
+            await clientConnection.SendWithoutResponseAsync(sendPacket, packetType, additionalData);
         
-        public async Task SendAsyncWithoutResponse(Func<ServerConnection, bool> predicate, ISerializable sendPacket, IConvertible packetType,
+        public async Task SendToSelectedWithoutResponseAsync(Func<ServerConnection, bool> predicate, ISerializable sendPacket, IConvertible packetType,
             params byte[] additionalData)
         {
             var connectionsToSend = ServerConnections.Where(predicate).ToArray();
             
             for (var i = 0; i < connectionsToSend.Length; i++)
             {
-                await connectionsToSend[i].SendAsyncWithoutResponse(sendPacket, packetType, additionalData);
+                await connectionsToSend[i].SendWithoutResponseAsync(sendPacket, packetType, additionalData);
             }
         }
 
-        public async Task SendAsyncWithoutResponse(ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
+        public async Task SendToEachWithoutResponseAsync(ISerializable sendPacket, IConvertible packetType, params byte[] additionalData)
         {
             for (var i = 0; i < ServerConnections.Count; i++)
             {
-                await ServerConnections[i].SendAsyncWithoutResponse(sendPacket, packetType, additionalData);
+                await ServerConnections[i].SendWithoutResponseAsync(sendPacket, packetType, additionalData);
             }
         }
 
@@ -164,15 +164,15 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
         protected override async Task OnHandleAsync()
         {
-            // for (var i = 0; i < ServerConnections.Count; i++)
-            // {
-            //     var serverConnection = ServerConnections[i];
-            //     if (!serverConnection.IsConnected)
-            //     {
-            //         OnRejectedConnection(serverConnection);
-            //         i--;
-            //     }
-            // }
+            for (var i = 0; i < ServerConnections.Count; i++)
+            {
+                var serverConnection = ServerConnections[i];
+                if (!serverConnection.IsConnected)
+                {
+                    OnRejectedConnection(serverConnection);
+                    i--;
+                }
+            }
 
             if (OnHandle != null)
                 await OnHandle.Invoke();

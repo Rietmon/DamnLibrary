@@ -39,15 +39,15 @@ namespace DamnLibrary.Networking.Protocols
             params byte[] additionalData)
             where TReceive : ISerializable, new();
 
-        public Task SendAsyncWithoutResponse(ServerConnection clientConnection,
+        public Task SendWithoutResponseAsync(ServerConnection clientConnection,
             ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData);
 
-        public Task SendAsyncWithoutResponse(Func<ServerConnection, bool> predicate,
+        public Task SendToSelectedWithoutResponseAsync(Func<ServerConnection, bool> predicate,
             ISerializable sendPacket,
             IConvertible packetType, params byte[] additionalData);
 
-        public Task SendAsyncWithoutResponse(ISerializable sendPacket,
+        public Task SendToEachWithoutResponseAsync(ISerializable sendPacket,
             IConvertible packetType,
             params byte[] additionalData);
 
