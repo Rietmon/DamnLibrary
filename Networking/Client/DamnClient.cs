@@ -29,11 +29,15 @@ namespace DamnLibrary.Networking.Client
         
         public bool IsConnected => Client.IsConnected;
         public bool IsPaused { get => Client.IsPaused; set => Client.IsPaused = value; }
-
+        public bool IsServerConnection { get; }
         private uint LastSentPacketId { get; set; }
         private IClientProtocol Client { get; set; }
 
-        public DamnClient() { }
+        public DamnClient()
+        {
+            LastSentPacketId = uint.MaxValue;
+            IsServerConnection = true;
+        }
         
         internal DamnClient(IClientProtocol client, uint id)
         {
@@ -101,7 +105,7 @@ namespace DamnLibrary.Networking.Client
             
             var sendPacketHeader = new PacketHeader
             {
-                Id = LastSentPacketId++,
+                Id = GetNextPacketId(),
                 IsResponse = false,
                 NeedResponse = true,
                 Type = packetType,
@@ -175,6 +179,8 @@ namespace DamnLibrary.Networking.Client
             
             networkPacket.IsHandled = true;
         }
+
+        private uint GetNextPacketId() => IsServerConnection ? --LastSentPacketId : ++LastSentPacketId;
 
         private static byte[] CreateMessage(PacketHeader packetHeader, ISerializable packet)
         {
