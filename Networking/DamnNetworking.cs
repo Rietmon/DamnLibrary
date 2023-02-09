@@ -7,7 +7,8 @@ namespace DamnLibrary.Networking
 {
     public static class DamnNetworking
     {
-        public static int HandleDelay { get; set; } = 10;
+        public static int ServerHandleDelay { get; set; } = 50;
+        public static int ClientHandleDelay { get; set; } = 15;
 
         public static ushort MaxPacketLength { get; set; } = 256;
 

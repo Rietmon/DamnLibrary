@@ -28,7 +28,7 @@ namespace DamnLibrary.Networking.Handlers
                     await OnHandleAsync();
                 }
 
-                await TaskUtilities.Delay(DamnNetworking.HandleDelay);
+                await TaskUtilities.Delay(DamnNetworking.ClientHandleDelay);
             }
         }
     }
@@ -48,7 +48,7 @@ namespace DamnLibrary.Networking.Handlers
                     await OnHandleAsync();
                 }
 
-                await TaskUtilities.Delay(DamnNetworking.HandleDelay);
+                await TaskUtilities.Delay(DamnNetworking.ServerHandleDelay);
             }
         }
     }
