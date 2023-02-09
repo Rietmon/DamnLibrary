@@ -9,6 +9,7 @@ using DamnLibrary.Networking.Handlers;
 using DamnLibrary.Networking.Packets;
 using DamnLibrary.Serialization;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace DamnLibrary.Networking.Protocols.TCP
 {
@@ -89,6 +90,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
         {
             try
             {
+                Profiler.BeginSample("Read server");
                 var bytesRead = await Stream.ReadAsync(Buffer, 0, 2);
                 if (!ValidateReadPacket(bytesRead))
                     return;
@@ -114,6 +116,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
                 var networkPacket = new NetworkPacket(packetHeader, deserializationStream);
 
                 OnPacketReceive?.Invoke(networkPacket);
+                Profiler.EndSample();
 
                 if (!packetHeader.IsResponse && !networkPacket.IsHandled)
                     UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(OnHandleAsync)}) NetworkPacket didnt handled. Id = {networkPacket.Header.Id}, Type = {networkPacket.Header.Type}");

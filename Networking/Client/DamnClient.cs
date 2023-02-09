@@ -89,7 +89,7 @@ namespace DamnLibrary.Networking.Client
 
             var messageToSend = CreateMessage(sendPacketHeader, sendPacket);
             
-            UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendAsync)}) Sending {packetType}, size = {messageToSend.Length}b");
+            //UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendAsync)}) Sending {packetType}, size = {messageToSend.Length}b");
 
             await Client.WriteAsync(messageToSend);
         }
@@ -114,7 +114,7 @@ namespace DamnLibrary.Networking.Client
 
             var messageToSend = CreateMessage(sendPacketHeader, sendPacket);
             
-            UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendAsync)}) Sending {packetType}, size = {messageToSend.Length}b");
+            //UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendAsync)}) Sending {packetType}, size = {messageToSend.Length}b");
 
             await Client.WriteAsync(messageToSend);
 
@@ -135,7 +135,7 @@ namespace DamnLibrary.Networking.Client
             
             var messageToSend = CreateMessage(receivedPacketHeader, sendPacket);
             
-            UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendResponseAsync)}) Sending {receivedPacketHeader.Type}, size = {messageToSend.Length}b");
+            //UniversalDebugger.Log($"[{nameof(DamnClient)}] ({nameof(SendResponseAsync)}) Sending {receivedPacketHeader.Type}, size = {messageToSend.Length}b");
 
             await Client.WriteAsync(messageToSend);
         }
