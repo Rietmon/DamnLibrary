@@ -11,6 +11,7 @@ namespace DamnLibrary.Networking
 
         public static ushort MaxPacketLength { get; set; } = 256;
 
+        public static int TimeoutForSend { get; set; } = 50;
         public static int TimeoutForResponse { get; set; } = 1000;
     }
 }

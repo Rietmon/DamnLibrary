@@ -143,12 +143,17 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
         public void RejectConnection(ServerConnection serverConnection)
         {
+            Debug.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Rejecting connection with id {serverConnection.Id}...");
             OnRejectingConnection?.Invoke(serverConnection);
-                
+            
+            Debug.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Disconnecting id {serverConnection.Id}...");
             serverConnection.Disconnect();
+            Debug.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Id {serverConnection.Id} disconnected");
+            
             ServerConnections.Remove(serverConnection);
                 
             OnRejectConnection?.Invoke();
+            Debug.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Connection with {serverConnection.Id} rejected");
         }
 
         public void Stop()
@@ -180,11 +185,13 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
         private void OnRejectedConnection(ServerConnection serverConnection)
         {
+            Debug.Log($"[{nameof(TCPServer)}] ({nameof(OnRejectedConnection)}) Found rejected connection with id {serverConnection.Id}, removing connection...");
             OnRejectingConnection?.Invoke(serverConnection);
                 
             ServerConnections.Remove(serverConnection);
                 
             OnRejectConnection?.Invoke();
+            Debug.Log($"[{nameof(TCPServer)}] ({nameof(OnRejectedConnection)}) Connection with id {serverConnection.Id} has been removed");
         }
     }
 }

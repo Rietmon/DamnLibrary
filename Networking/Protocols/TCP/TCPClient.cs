@@ -8,6 +8,7 @@ using DamnLibrary.Debugging;
 using DamnLibrary.Networking.Handlers;
 using DamnLibrary.Networking.Packets;
 using DamnLibrary.Serialization;
+using UnityEngine;
 
 namespace DamnLibrary.Networking.Protocols.TCP
 {
@@ -66,7 +67,12 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
         public async Task WriteAsync(byte[] messageToSend)
         {
-            await Stream.WriteAsync(messageToSend, 0, messageToSend.Length);
+            var sendTask = Stream.WriteAsync(messageToSend, 0, messageToSend.Length);
+            var timeoutTask = Task.Delay(DamnNetworking.TimeoutForSend);
+            await Task.WhenAny(sendTask, timeoutTask);
+            
+            if (!sendTask.IsCompleted)
+                Debug.LogError($"[{nameof(TCPClient)}] ({nameof(WriteAsync)}) Reached timeout while sending message to id {Id}. Message might be not delivered!");
         }
 
         public void Disconnect()
