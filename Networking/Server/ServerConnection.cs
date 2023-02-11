@@ -14,7 +14,7 @@ namespace DamnLibrary.Networking.Server
     {
         private static uint LastServerConnectionId { get; set; }
 
-        public uint Id => ConnectedClient.Id;
+        public uint Id => ConnectedClient.ConnectionId;
         
         public Action OnConnect { get => ConnectedClient.OnConnect; set => ConnectedClient.OnConnect = value; }
         

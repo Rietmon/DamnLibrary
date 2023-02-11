@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using DamnLibrary.Debugging;
 using DamnLibrary.Networking.Handlers;
 using DamnLibrary.Networking.Packets;
 using DamnLibrary.Networking.Server;
@@ -115,7 +116,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             if (sendTask.IsCompleted)
                 return sendTask.Result;
 
-            Debug.LogWarning(
+            UniversalDebugger.LogWarning(
                 $"[{nameof(TCPServer)}] ({nameof(SendAsyncWithTimeout)}) Unable to get response from client. Id: {serverConnection.Id}");
             return default;
         }
@@ -125,12 +126,12 @@ namespace DamnLibrary.Networking.Protocols.TCP
             if (!IsWorking)
                 return;
             
-            Debug.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Accepting new connection...");
+            UniversalDebugger.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Accepting new connection...");
             var connection = Server.EndAcceptTcpClient(ar);
-            Debug.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Found new client...");
+            UniversalDebugger.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Found new client...");
             
             var serverConnection = new ServerConnection(new TCPClient(connection));
-            Debug.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Accepted new connection! Id {serverConnection.Id}");
+            UniversalDebugger.Log($"[{nameof(TCPServer)}] ({nameof(AcceptConnection)}) Accepted new connection! Id {serverConnection.Id}");
             
             serverConnection.OnDisconnect += () => OnRejectedConnection(serverConnection);
             ServerConnections.Add(serverConnection);
@@ -143,17 +144,17 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
         public void RejectConnection(ServerConnection serverConnection)
         {
-            Debug.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Rejecting connection with id {serverConnection.Id}...");
+            UniversalDebugger.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Rejecting connection with id {serverConnection.Id}...");
             OnRejectingConnection?.Invoke(serverConnection);
             
-            Debug.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Disconnecting id {serverConnection.Id}...");
+            UniversalDebugger.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Disconnecting id {serverConnection.Id}...");
             serverConnection.Disconnect();
-            Debug.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Id {serverConnection.Id} disconnected");
+            UniversalDebugger.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Id {serverConnection.Id} disconnected");
             
             ServerConnections.Remove(serverConnection);
                 
             OnRejectConnection?.Invoke();
-            Debug.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Connection with {serverConnection.Id} rejected");
+            UniversalDebugger.Log($"[{nameof(TCPServer)}] ({nameof(RejectConnection)}) Connection with {serverConnection.Id} rejected");
         }
 
         public void Stop()
@@ -185,13 +186,13 @@ namespace DamnLibrary.Networking.Protocols.TCP
 
         private void OnRejectedConnection(ServerConnection serverConnection)
         {
-            Debug.Log($"[{nameof(TCPServer)}] ({nameof(OnRejectedConnection)}) Found rejected connection with id {serverConnection.Id}, removing connection...");
+            UniversalDebugger.Log($"[{nameof(TCPServer)}] ({nameof(OnRejectedConnection)}) Found rejected connection with id {serverConnection.Id}, removing connection...");
             OnRejectingConnection?.Invoke(serverConnection);
                 
             ServerConnections.Remove(serverConnection);
                 
             OnRejectConnection?.Invoke();
-            Debug.Log($"[{nameof(TCPServer)}] ({nameof(OnRejectedConnection)}) Connection with id {serverConnection.Id} has been removed");
+            UniversalDebugger.Log($"[{nameof(TCPServer)}] ({nameof(OnRejectedConnection)}) Connection with id {serverConnection.Id} has been removed");
         }
     }
 }

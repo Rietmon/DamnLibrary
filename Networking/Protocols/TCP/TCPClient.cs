@@ -15,7 +15,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
 {
     public class TCPClient : ClientNetworkHandler, IClientProtocol
     {
-        public uint Id { get; set; }
+        public uint ConnectionId { get; set; }
         
         public Action OnConnect { get; set; }
         public Action<NetworkPacket> OnPacketReceive { get; set; }
@@ -73,7 +73,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             await Task.WhenAny(sendTask, timeoutTask);
             
             if (!sendTask.IsCompleted)
-                Debug.LogError($"[{nameof(TCPClient)}] ({nameof(WriteAsync)}) Reached timeout while sending message to id {Id}. Message might be not delivered!");
+                UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(WriteAsync)}) Reached timeout while sending message to id {ConnectionId}. Message might be not delivered!");
         }
 
         public void Disconnect()
@@ -83,7 +83,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             
             OnDisconnect?.Invoke();
             Client.Dispose();
-            UniversalDebugger.Log($"[{nameof(TCPClient)}] ({nameof(Disconnect)}) Disconnected. Id: {Id}");
+            UniversalDebugger.Log($"[{nameof(TCPClient)}] ({nameof(Disconnect)}) Disconnected. Id: {ConnectionId}");
         }
 
         protected override async Task OnHandleAsync()
@@ -143,7 +143,7 @@ namespace DamnLibrary.Networking.Protocols.TCP
             if (bytesRead > 0)
                 return true;
             
-            UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(ValidateReadPacket)}) Read empty response. Id: {Id}. Disconnecting...");
+            UniversalDebugger.LogError($"[{nameof(TCPClient)}] ({nameof(ValidateReadPacket)}) Read empty response. Id: {ConnectionId}. Disconnecting...");
             Disconnect();
             return false;
         }

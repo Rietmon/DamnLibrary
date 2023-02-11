@@ -8,7 +8,7 @@ namespace DamnLibrary.Networking.Protocols
 {
     public interface IClientProtocol
     {
-        public uint Id { get; set; }
+        public uint ConnectionId { get; set; }
         
         public bool IsConnected { get; }
         public bool IsPaused { get; set; }

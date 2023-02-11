@@ -35,8 +35,7 @@ namespace DamnLibrary.Management
                     $"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Unable to instantiate window because there is no instance of {nameof(WindowsManager)}!");
                 return null;
             }
-
-            Debug.Log($"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Opening {windowName}...");
+            
             var windowPrefab = await GetPrefabAsync(windowName);
             if (!windowPrefab)
             {
@@ -44,13 +43,11 @@ namespace DamnLibrary.Management
                     $"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Unable to open window, because prefab is equal null!");
                 return null;
             }
-            Debug.Log($"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Got prefab for {windowName}");
 
             var window = PrepareWindow(windowPrefab, windowName, windowContext);
-            Debug.Log($"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Window prepared for {windowName}");
             
             await window.OnOpenAsync();
-            Debug.Log($"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Has called {nameof(WindowBehaviour.OnOpenAsync)} {windowName}");
+            UniversalDebugger.Log($"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Opened {windowName}");
 
             return window;
         }
@@ -75,6 +72,7 @@ namespace DamnLibrary.Management
             var window = PrepareWindow(windowPrefab, windowName, windowContext);
             
             window.OnOpenAsync().Wait();
+            UniversalDebugger.Log($"[{nameof(WindowsManager)}] ({nameof(Open)}) Opened {windowName}");
 
             return window;
         }
@@ -99,6 +97,7 @@ namespace DamnLibrary.Management
             var window = PrepareWindow(windowPrefab, windowName, windowContext);
             
             window.OnOpenAsync();
+            UniversalDebugger.Log($"[{nameof(WindowsManager)}] ({nameof(OpenWithoutAwaiting)}) Opened {windowName}");
 
             return window;
         }
