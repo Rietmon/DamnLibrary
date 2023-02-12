@@ -82,7 +82,7 @@ namespace DamnLibrary.Networking.Server
             params byte[] additionalData) =>
             await Server.SendToEachWithoutResponseAsync(sendPacket, packetType, additionalData);
 
-        public void Stop() => Server.Stop();
+        public void Stop() => Server?.Stop();
     }
 }
 #endif
