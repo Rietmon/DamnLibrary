@@ -202,6 +202,8 @@ namespace DamnLibrary.Management
             var window = windowPrefab.SimpleInstantiate(Instance.transform);
             openedWindows.Add(window);
 
+            windowContext.OwnerWindow = window;
+            
             window.WindowName = windowName;
             window.BaseWindowContext = windowContext;
 

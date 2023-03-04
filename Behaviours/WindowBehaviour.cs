@@ -24,6 +24,12 @@ namespace DamnLibrary.Behaviours
         /// </summary>
         public virtual async Task OnCloseAsync() { }
 
+        public virtual void Show() => gameObject.SetActive(true);
+        
+        public virtual void Hide() => gameObject.SetActive(false);
+
+        public void Close() => WindowsManager.Close(this);
+
         public async void CloseAsync() => await WindowsManager.CloseAsync(this);
     }
     
