@@ -1,4 +1,5 @@
-﻿using DamnLibrary.Serialization;
+﻿#if ENABLE_NETWORKING
+using DamnLibrary.Serialization;
 
 namespace DamnLibrary.Networking.Packets
 {
@@ -12,3 +13,4 @@ namespace DamnLibrary.Networking.Packets
         public static bool IsValid(this IResponsePacket packet) => packet.Response == ResponseType.Ok;
     }
 }
+#endif
