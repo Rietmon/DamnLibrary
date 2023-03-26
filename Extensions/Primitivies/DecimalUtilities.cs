@@ -3,6 +3,11 @@
     // Copied from https://stackoverflow.com/questions/3467893/how-do-i-convert-byte-values-into-decimals
     public static class DecimalUtilities
     {
+        /// <summary>
+        /// Create decimal from bytes
+        /// </summary>
+        /// <param name="bytes">Bytes of decimal</param>
+        /// <returns>Decimal</returns>
         public static decimal FromBytes(byte[] bytes)
         {
             var bits = new int[4];
@@ -14,7 +19,12 @@
             return new decimal(bits);
         }
 
-        public static byte[] GetBytes(decimal value)
+        /// <summary>
+        /// Convert decimal to bytes
+        /// </summary>
+        /// <param name="value">Decimal</param>
+        /// <returns>Bytes array</returns>
+        public static byte[] GetBytes(this decimal value)
         {
             var bytes = new byte[16];
 

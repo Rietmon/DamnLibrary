@@ -1,19 +1,23 @@
-#if UNITY_5_3_OR_NEWER 
+#if UNITY_5_3_OR_NEWER && !DISABLE_PHYSICS 
 using System.Collections.Generic;
-using System.Linq;
 using DamnLibrary.Behaviours;
 using UnityEngine;
 
-#if !DISABLE_PHYSICS
 [RequireComponent(typeof(Collider2D))]
-public class ColliderSorting : UnityBehaviour
+public class ColliderSorting : DamnBehaviour
 {
+    /// <summary>
+    /// Collider sorting layer
+    /// </summary>
     public virtual int SortingLayer
     {
         get => sortingLayer;
         set => sortingLayer = value;
     }
 
+    /// <summary>
+    /// Attached collider
+    /// </summary>
     public Collider2D Collider => collider;
     
     [SerializeField] private int sortingLayer;
@@ -25,6 +29,11 @@ public class ColliderSorting : UnityBehaviour
         collider = GetComponent<Collider2D>();
     }
 
+    /// <summary>
+    /// Return greater collider from array of colliders
+    /// </summary>
+    /// <param name="colliders"></param>
+    /// <returns></returns>
     public static Collider2D GetGreaterCollider(params Collider2D[] colliders)
     {
         var collidersSorting = new List<ColliderSorting>();
@@ -53,5 +62,4 @@ public class ColliderSorting : UnityBehaviour
         return collidersSorting[greaterColliderIndex].Collider;
     }
 }
-#endif
 #endif

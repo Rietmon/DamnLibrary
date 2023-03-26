@@ -6,8 +6,11 @@ using DamnLibrary.Behaviours;
 using DamnLibrary.DamnScript;
 using UnityEngine;
 
-public class DefaultScriptExecutor : UnityBehaviour
+public class DefaultScriptExecutor : DamnBehaviour
 {
+    /// <summary>
+    /// Executor of the script
+    /// </summary>
     public ScriptExecutor Executor { get; private set; }
 
     [SerializeField] private DamnScriptAsset script;

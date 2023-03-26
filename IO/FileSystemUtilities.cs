@@ -1,5 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
+using DamnLibrary.Debugging;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,8 +13,9 @@ namespace DamnLibrary.FileSystem
     public static class FileSystemUtilities
     {
         /// <summary>
-        /// Will check existing of path and creating directories if needed
+        /// Check if a directory exists, if not, create it
         /// </summary>
+        /// <param name="path">Path to directory</param>
         public static void CheckOrCreateDirectory(string path)
         {
             if (Path.HasExtension(path))
@@ -30,21 +32,40 @@ namespace DamnLibrary.FileSystem
             CheckDirectory(path);
         }
 
+        /// <summary>
+        /// Write bytes to file async
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        /// <param name="bytes">Bytes to write</param>
         public static async Task WriteAllBytesAsync(string path, byte[] bytes)
         {
             var fileStream = File.Open(path, FileMode.OpenOrCreate);
             await fileStream.WriteAsync(bytes, 0, bytes.Length);
         }
 
+        /// <summary>
+        /// Read bytes from file async
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        /// <returns>Read bytes</returns>
         public static async Task<byte[]> ReadAllBytesAsync(string path)
         {
             var fileStream = File.OpenRead(path);
             var bytes = new byte[fileStream.Length];
-            await fileStream.ReadAsync(bytes, 0, bytes.Length);
+            var readBytes = await fileStream.ReadAsync(bytes, 0, bytes.Length);
+            if (readBytes != bytes.Length)
+            {
+                UniversalDebugger.LogError(
+                    $"[{nameof(FileSystemUtilities)}] ({nameof(ReadAllBytesAsync)}) Read {readBytes} bytes, but expected {bytes.Length}");
+            }
             return bytes;
         }
 
 #if UNITY_EDITOR
+        /// <summary>
+        /// Return selected folder in editor
+        /// </summary>
+        /// <returns>Path to folder</returns>
         public static string Editor_GetSelectedFolder()
         {
             var path = "Assets/";

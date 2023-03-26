@@ -67,7 +67,7 @@ namespace DamnLibrary.Management
                 (volume) => audioSource.volume = volume,
                 () => audioSource.volume);
 
-        protected override void OnDestroy()
+        private void OnDestroy()
         {
             pullManager?.Dispose();
         }

@@ -5,7 +5,7 @@ using DamnLibrary.DamnScript.Executing;
 
 namespace DamnLibrary.DamnScript
 {
-    public class NativeMethod
+    internal class NativeMethod
     {
         private readonly Func<ScriptCode, string[], Task<bool>> asyncFunction;
         

@@ -6,6 +6,12 @@ namespace DamnLibrary.Extensions
 {
     public static class TransformExtensions
     {
+        /// <summary>
+        /// Get component in parents
+        /// </summary>
+        /// <param name="transform">Transform</param>
+        /// <typeparam name="T">Component type</typeparam>
+        /// <returns>Component</returns>
         public static T GetComponentInParents<T>(this Transform transform)
         {
             var currentParent = transform.parent;
@@ -20,6 +26,11 @@ namespace DamnLibrary.Extensions
             return default;
         }
         
+        /// <summary>
+        /// Get transforms of childes
+        /// </summary>
+        /// <param name="transform">Transform</param>
+        /// <returns>Transforms of childes</returns>
         public static List<Transform> GetChildes(this Transform transform)
         {
             var result = new List<Transform>();
@@ -30,6 +41,12 @@ namespace DamnLibrary.Extensions
             return result;
         }
 
+        /// <summary>
+        /// Get components of childes
+        /// </summary>
+        /// <param name="transform">Transform</param>
+        /// <typeparam name="T">Component type</typeparam>
+        /// <returns>Components of childes</returns>
         public static List<T> GetChildes<T>(this Transform transform)
         {
             var result = new List<T>();
@@ -40,6 +57,12 @@ namespace DamnLibrary.Extensions
             return result;
         }
 
+        /// <summary>
+        /// Get all childes of transform (include childes of childes etc...)
+        /// </summary>
+        /// <param name="transform">Transform</param>
+        /// <param name="includeRoot">If true - include current transform</param>
+        /// <returns>Transforms of childes</returns>
         public static List<Transform> GetAllChildes(this Transform transform, bool includeRoot = false)
         {
             var result = new List<Transform>();
@@ -61,6 +84,12 @@ namespace DamnLibrary.Extensions
             return result;
         }
     
+        /// <summary>
+        /// Get all components of childes of transform (include childes of childes etc...)
+        /// </summary>
+        /// <param name="transform">Transform</param>
+        /// <param name="includeRoot">If true - include current transform</param>
+        /// <returns>Components of childes</returns>
         public static List<T> GetAllChildes<T>(this Transform transform, bool includeRoot = false)
         {
             var transforms = GetAllChildes(transform, includeRoot);
@@ -75,6 +104,12 @@ namespace DamnLibrary.Extensions
             return result;
         }
     
+        /// <summary>
+        /// Find child by name
+        /// </summary>
+        /// <param name="transform">Transform</param>
+        /// <param name="name">Child name</param>
+        /// <returns>Child transform</returns>
         public static Transform FindChildByName(this Transform transform, string name)
         {
             for (var i = 0; i < transform.childCount; i++)
@@ -89,12 +124,29 @@ namespace DamnLibrary.Extensions
             return null;
         }
 
+        /// <summary>
+        /// Get local position relative to another transform
+        /// </summary>
+        /// <param name="transform">Transform</param>
+        /// <param name="relative">Relative to</param>
+        /// <returns>Relative position</returns>
         public static Vector3 GetLocalPositionRelative(this Transform transform, Transform relative) =>
             transform.position - relative.position;
     
+        /// <summary>
+        /// Get local rotation relative to another transform
+        /// </summary>
+        /// <param name="transform">Transform</param>
+        /// <param name="relative">Relative to</param>
+        /// <returns>Relative rotation</returns>
         public static Quaternion GetLocalRotationRelative(this Transform transform, Transform relative) =>
             transform.rotation * relative.rotation;
 
+        /// <summary>
+        /// Set position without changing childes positions
+        /// </summary>
+        /// <param name="transform">Transform</param>
+        /// <param name="position">Position</param>
         public static void SetPositionWithoutChildes(this Transform transform, Vector3 position)
         {
             var childes = GetChildes(transform);
@@ -108,6 +160,11 @@ namespace DamnLibrary.Extensions
                 child.parent = transform;
         }
 
+        /// <summary>
+        /// Set rotation without changing childes rotations
+        /// </summary>
+        /// <param name="transform">Transform</param>
+        /// <param name="rotation">Rotation</param>
         public static void SetRotationWithoutChildes(this Transform transform, Quaternion rotation)
         {
             var childes = GetChildes(transform);

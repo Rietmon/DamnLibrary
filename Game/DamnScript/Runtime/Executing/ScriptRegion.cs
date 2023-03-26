@@ -18,52 +18,87 @@ namespace DamnLibrary.DamnScript.Executing
         : ISerializable
 #endif
     {
-        public string Name => regionData.name;
+        /// <summary>
+        /// Name of this region
+        /// </summary>
+        public string Name => RegionData.Name;
+        
+        /// <summary>
+        /// Script that contains this region
+        /// </summary>
         public Script Parent { get; }
 
-        public bool IsOver => currentCodeIndex >= regionData.CodesCount;
+        /// <summary>
+        /// Is nothing more to execute in this region?
+        /// </summary>
+        public bool IsOver => currentCodeIndex >= RegionData.CodesCount;
 
+        /// <summary>
+        /// Is this region paused?
+        /// </summary>
         public bool IsPaused { get; private set; }
         
-        public bool IsStopping { get; private set; }
+        /// <summary>
+        /// Is this region stopped?
+        /// </summary>
+        public bool IsStopped { get; private set; }
         
+        /// <summary>
+        /// Is this region executing right now?
+        /// </summary>
         public bool IsExecuting { get; private set; }
 
-        private readonly ScriptRegionData regionData;
-        
+        private ScriptRegionData RegionData { get; }
+
         private int currentCodeIndex;
 
         public ScriptRegion(Script parent, ScriptRegionData regionData)
         {
             Parent = parent;
-            this.regionData = regionData;
+            RegionData = regionData;
         }
 
+        /// <summary>
+        /// Start this region execution in background
+        /// </summary>
+        /// <param name="resetValues">If true - will reset current index and statuses</param>
         public void Start(bool resetValues = true)
         {
             if (resetValues)
             {
                 IsPaused = false;
-                IsStopping = false;
+                IsStopped = false;
                 currentCodeIndex = 0;
             }
             Parent.OnRegionStart(this);
             Handler();
         }
 
+        /// <summary>
+        /// Resume this region execution
+        /// </summary>
         public void Resume() => IsPaused = false;
 
+        /// <summary>
+        /// Pause this region execution
+        /// </summary>
         public void Pause() => IsPaused = true;
 
-        public void Stop() => IsStopping = true;
+        /// <summary>
+        /// Stop this region execution
+        /// </summary>
+        public void Stop() => IsStopped = true;
 
+        /// <summary>
+        /// Skip current code and execute next one
+        /// </summary>
         public void ForceNextCode() => currentCodeIndex++;
 
         private async void Handler()
         {
             IsExecuting = true;
 
-            var stopTask = TaskUtilities.WaitUntil(() => IsStopping);
+            var stopTask = TaskUtilities.WaitUntil(() => IsStopped);
             while (!IsOver)
             {
                 await Task.WhenAny(
@@ -76,7 +111,7 @@ namespace DamnLibrary.DamnScript.Executing
 
                 if (stopTask.IsCompleted)
                 {
-                    IsStopping = false;
+                    IsStopped = false;
                     Parent.OnRegionEnd(this);
                     break;
                 }
@@ -92,7 +127,7 @@ namespace DamnLibrary.DamnScript.Executing
 
         private ScriptCode CreateCode(int index)
         {
-            var codeData = regionData.GetCodeData(index);
+            var codeData = RegionData.GetCodeData(index);
             
             return codeData == null ? null : new ScriptCode(this, codeData);
         }

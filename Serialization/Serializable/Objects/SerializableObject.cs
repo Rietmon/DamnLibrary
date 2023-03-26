@@ -6,21 +6,21 @@ using UnityEngine;
 namespace DamnLibrary.Serialization
 {
     [AddComponentMenu("Serialization/SerializableObject")]
-    public class SerializableObject : SerializableUnityBehaviour
+    public class SerializableObject : SerializableDamnBehaviour
     {
-        public List<SerializableUnityBehaviour> SerializableComponents { get; private set; }
+        public List<SerializableDamnBehaviour> SerializableComponents { get; private set; }
         
         [SerializeField] private bool serializeAllComponents;
 
-        [SerializeField] private SerializableUnityBehaviour[] serializableComponents;
+        [SerializeField] private SerializableDamnBehaviour[] serializableComponents;
 
         private void OnEnable()
         {
             if (SerializableComponents != null)
                 return;
             
-            SerializableComponents = new List<SerializableUnityBehaviour>(serializeAllComponents 
-                ? GetComponents<SerializableUnityBehaviour>() 
+            SerializableComponents = new List<SerializableDamnBehaviour>(serializeAllComponents 
+                ? GetComponents<SerializableDamnBehaviour>() 
                 : serializableComponents);
             SerializableComponents.Remove(this);
         }

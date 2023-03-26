@@ -6,30 +6,49 @@ namespace DamnLibrary.Extensions
 {
     public static class ListExtensions
     {
-        public static void GetGreaterList(out int greaterCount, out int greaterArrayIndex, params IList[] arrays)
+        /// <summary>
+        /// Return a greater list from the lists
+        /// </summary>
+        /// <param name="greaterCount">Greater list length</param>
+        /// <param name="greaterArrayIndex">Greater list index</param>
+        /// <param name="lists">Lists</param>
+        public static void GetGreaterList(out int greaterCount, out int greaterArrayIndex, params IList[] lists)
         {
             greaterCount = 0;
             greaterArrayIndex = 0;
-            for (var i = 0; i < arrays.Length; i++)
+            for (var i = 0; i < lists.Length; i++)
             {
-                if (arrays[i].Count > greaterCount)
+                if (lists[i].Count > greaterCount)
                 {
-                    greaterCount = arrays[i].Count;
+                    greaterCount = lists[i].Count;
                     greaterArrayIndex = i;
                 }
             }
         }
         
-        public static void AddIfNotContains<T>(this List<T> array, T element)
+        /// <summary>
+        /// Add an element to the list if it doesn't contains it
+        /// </summary>
+        /// <param name="list">List</param>
+        /// <param name="element">Element</param>
+        /// <typeparam name="T">List type</typeparam>
+        public static void AddIfNotContains<T>(this List<T> list, T element)
         {
-            if (!array.Contains(element))
-                array.Add(element);
+            if (!list.Contains(element))
+                list.Add(element);
         }
 
-        public static void AddIfNotExists<T>(this List<T> array, T element, Predicate<T> existMethod)
+        /// <summary>
+        /// Add an element to the list if it doesn't exists
+        /// </summary>
+        /// <param name="list">List</param>
+        /// <param name="element">Element</param>
+        /// <param name="existMethod">Predicate</param>
+        /// <typeparam name="T">List type</typeparam>
+        public static void AddIfNotExists<T>(this List<T> list, T element, Predicate<T> existMethod)
         {
-            if (!array.Exists(existMethod))
-                array.Add(element);
+            if (!list.Exists(existMethod))
+                list.Add(element);
         }
     }
 }

@@ -70,6 +70,10 @@ namespace DamnLibrary.Extensions
 #endif
         }
 
+        /// <summary>
+        /// Task.Delay implementation with WebGL support
+        /// </summary>
+        /// <param name="milliseconds">Milliseconds</param>
         public static async Task Delay(int milliseconds)
         {
 #if !UNITY_WEBGL
@@ -83,6 +87,10 @@ namespace DamnLibrary.Extensions
 #endif
         }
 
+        /// <summary>
+        /// Forget task for sync execution
+        /// </summary>
+        /// <param name="task">Task</param>
         public static void Forget(this Task task) => task.ConfigureAwait(false);
     }
 }

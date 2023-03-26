@@ -4,7 +4,7 @@ using UnityEngine;
 namespace DamnLibrary.Attributes
 {
     /// <summary>
-    /// Made field only viewable in the inspector
+    /// Made field only readable in the inspector
     /// </summary>
     public class ReadOnlyAttribute : PropertyAttribute { }
 }

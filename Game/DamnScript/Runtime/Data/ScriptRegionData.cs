@@ -3,20 +3,25 @@ namespace DamnLibrary.DamnScript.Data
 {
     public class ScriptRegionData
     {
-        public int CodesCount => codesData.Length;
+        public int CodesCount => CodesData.Length;
         
-        public readonly string name;
+        public string Name { get; }
 
-        internal readonly ScriptCodeData[] codesData;
+        internal ScriptCodeData[] CodesData { get; }
 
         public ScriptRegionData(string name, ScriptCodeData[] codesData)
         {
-            this.name = name;
-            this.codesData = codesData;
+            Name = name;
+            CodesData = codesData;
         }
 
+        /// <summary>
+        /// Return code data with the given index
+        /// </summary>
+        /// <param name="index">Index</param>
+        /// <returns>ScriptCodeData</returns>
         public ScriptCodeData GetCodeData(int index) => 
-            index >= codesData.Length ? null : codesData[index];
+            index >= CodesData.Length ? null : CodesData[index];
     }
 }
 #endif

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace DamnLibrary.Serialization
 {
-    public abstract class SerializableUnityBehaviour : UnityBehaviour
+    public abstract class SerializableDamnBehaviour : DamnBehaviour
     {
         /// <summary>
         /// Unique Id for serialization

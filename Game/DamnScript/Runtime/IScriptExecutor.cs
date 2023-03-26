@@ -5,6 +5,9 @@ namespace DamnLibrary.DamnScript
 {
     public interface IScriptExecutor
     { 
+        /// <summary>
+        /// Script that will be executed
+        /// </summary>
         Script Script { get; }
     } 
 }

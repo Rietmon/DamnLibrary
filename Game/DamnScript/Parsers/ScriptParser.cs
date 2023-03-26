@@ -5,7 +5,7 @@ using DamnLibrary.Other;
 
 namespace DamnLibrary.DamnScript.Parsers
 {
-    public static class ScriptParser
+    internal static class ScriptParser
     {
         private static readonly char[] ignoreSymbols = {'\n', '\t', '\r', '\a', '\v'};
 

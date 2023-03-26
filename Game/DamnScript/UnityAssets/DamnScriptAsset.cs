@@ -5,6 +5,9 @@ namespace DamnLibrary.DamnScript
 {
     public class DamnScriptAsset : ScriptableObject
     {
+        /// <summary>
+        /// Script content
+        /// </summary>
         public string Content
         {
             get => content;

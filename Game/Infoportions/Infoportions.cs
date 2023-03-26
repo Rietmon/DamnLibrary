@@ -15,6 +15,10 @@ namespace DamnLibrary.Game
     {
         private static readonly List<string> infoportions = new();
 
+        /// <summary>
+        /// Add infoportion to the list
+        /// </summary>
+        /// <param name="name">Infoportion name</param>
         public static void AddInfoportion(string name)
         {
             if (HasInfoportion(name))
@@ -23,8 +27,17 @@ namespace DamnLibrary.Game
             infoportions.Add(name);
         }
 
+        /// <summary>
+        /// Check if infoportion was added
+        /// </summary>
+        /// <param name="name">Infoportion name</param>
+        /// <returns>True if was added</returns>
         public static bool HasInfoportion(string name) => infoportions.Contains(name);
 
+        /// <summary>
+        /// Remove infoportion from the list
+        /// </summary>
+        /// <param name="name">Infoportion name</param>
         public static void RemoveInfoportion(string name) => infoportions.Remove(name);
 
 #if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT

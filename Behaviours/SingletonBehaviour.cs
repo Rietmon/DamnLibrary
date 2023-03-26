@@ -1,7 +1,7 @@
 #if UNITY_5_3_OR_NEWER 
 namespace DamnLibrary.Behaviours
 {
-    public class SingletonBehaviour<T> : UnityBehaviour where T : class
+    public class SingletonBehaviour<T> : DamnBehaviour where T : class
     {
         public static T Instance { get; private set; }
 
@@ -11,7 +11,7 @@ namespace DamnLibrary.Behaviours
         }
     }
     
-    public class ProtectedSingletonBehaviour<T> : UnityBehaviour where T : class
+    public class ProtectedSingletonBehaviour<T> : DamnBehaviour where T : class
     {
         protected static T Instance { get; private set; }
 

@@ -3,7 +3,7 @@ using System;
 
 namespace DamnLibrary.Extensions
 {
-    public unsafe interface IUnsafeArray<out TArrayType, TSaveType> : IDisposable 
+    internal unsafe interface IUnsafeArray<out TArrayType, TSaveType> : IDisposable 
         where TArrayType : struct where TSaveType : unmanaged
     {
         int Length { get; set; }

@@ -7,15 +7,15 @@ using UnityEngine;
 
 namespace DamnLibrary.Game
 {
-    public class DontDestroy : UnityBehaviour
+    public class DontDestroy : DamnBehaviour
     {
-        private static readonly List<short> ids = new();
+        private static List<short> Ids { get; } = new();
 
         [SerializeField, ReadOnly] private short id;
 
         private void OnEnable()
         {
-            if (ids.Contains(id))
+            if (Ids.Contains(id))
             {
                 DestroyObject();
                 return;
@@ -23,7 +23,7 @@ namespace DamnLibrary.Game
 
             DontDestroyOnLoad(gameObject);
 
-            ids.Add(id);
+            Ids.Add(id);
         
             RemoveComponent();
         }

@@ -5,7 +5,7 @@ using DamnLibrary.Serialization;
 using UnityEngine;
 
 [RequireComponent(typeof(SerializableObject))]
-public class SerializeGameObject : SerializableUnityBehaviour
+public class SerializeGameObject : SerializableDamnBehaviour
 {
     [SerializeField] private ToSerializeFlags toSerialize;
 

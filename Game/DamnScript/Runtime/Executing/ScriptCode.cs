@@ -6,20 +6,35 @@ namespace DamnLibrary.DamnScript.Executing
 {
     public class ScriptCode
     {
+        /// <summary>
+        /// Script that contains this code
+        /// </summary>
         public Script Script => Parent.Parent;
+        
+        /// <summary>
+        /// Region that contains this code
+        /// </summary>
         public ScriptRegion Parent { get; }
 
-        private readonly ScriptCodeData codeData;
+        private ScriptCodeData CodeData { get; }
 
         public ScriptCode(ScriptRegion parent, ScriptCodeData codeData)
         {
             Parent = parent;
-            this.codeData = codeData;
+            CodeData = codeData;
         }
 
-        public async Task<bool> ExecuteAsync() => await ScriptEngine.InvokeAsync(this, codeData.codes);
+        /// <summary>
+        /// Execute this code async
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> ExecuteAsync() => await ScriptEngine.InvokeAsync(this, CodeData.Codes);
     
-        public bool Execute() => ScriptEngine.Invoke(this, codeData.codes);
+        /// <summary>
+        /// Execute this code
+        /// </summary>
+        /// <returns></returns>
+        public bool Execute() => ScriptEngine.Invoke(this, CodeData.Codes);
     }
   
 }

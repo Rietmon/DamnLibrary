@@ -11,8 +11,12 @@ namespace DamnLibrary.DamnScript.Compiling
 
         private ScriptCodeDataCompilingContainer[] codesDataContainer;
 
+        /// <summary>
+        /// Create a ScriptRegionData from this ScriptRegionDataCompilingContainer
+        /// </summary>
+        /// <returns>ScriptRegionData</returns>
         public ScriptRegionData ToData() =>
-            new(name, codesDataContainer.SmartCast((codeDataContainer) => codeDataContainer.ToData()));
+            new(name, codesDataContainer.FuncCast((codeDataContainer) => codeDataContainer.ToData()));
 
         void ISerializable.Serialize(SerializationStream stream)
         {
@@ -26,12 +30,17 @@ namespace DamnLibrary.DamnScript.Compiling
             codesDataContainer = stream.Read<ScriptCodeDataCompilingContainer[]>();
         }
         
+        /// <summary>
+        /// Create a new ScriptRegionDataCompilingContainer from a ScriptRegionData
+        /// </summary>
+        /// <param name="data">ScriptRegionData</param>
+        /// <returns>ScriptRegionDataCompilingContainer</returns>
         public static ScriptRegionDataCompilingContainer FromData(ScriptRegionData data)
         {
             return new ScriptRegionDataCompilingContainer
             {
-                name = data.name,
-                codesDataContainer = data.codesData.SmartCast(ScriptCodeDataCompilingContainer.FromData)
+                name = data.Name,
+                codesDataContainer = data.CodesData.FuncCast(ScriptCodeDataCompilingContainer.FromData)
             };
         }
     }

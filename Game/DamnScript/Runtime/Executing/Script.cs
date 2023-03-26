@@ -16,21 +16,35 @@ namespace DamnLibrary.DamnScript.Executing
         : ISerializable
 #endif
     {
-        public string Name => scriptData.name;
+        /// <summary>
+        /// Name of the script
+        /// </summary>
+        public string Name => ScriptData.Name;
+        
+        /// <summary>
+        /// Script executor that is executing this script
+        /// </summary>
         public IScriptExecutor Parent { get; }
 
-        private List<ScriptRegion> ExecutingRegions { get; } = new();
-
+        /// <summary>
+        /// Is this script executing right now?
+        /// </summary>
         public bool IsExecuting => ExecutingRegions.Count > 0;
+
+        private List<ScriptRegion> ExecutingRegions { get; } = new();
         
-        private readonly ScriptData scriptData;
+        private ScriptData ScriptData { get; }
 
         public Script(ScriptData scriptData, IScriptExecutor parent)
         {
             Parent = parent;
-            this.scriptData = scriptData;
+            ScriptData = scriptData;
         }
 
+        /// <summary>
+        /// Start executing region with the given name
+        /// </summary>
+        /// <param name="regionName">Region name</param>
         public void StartRegion(string regionName = "Main")
         {
             var region = CreateRegion(regionName);
@@ -43,18 +57,30 @@ namespace DamnLibrary.DamnScript.Executing
             region.Start();
         }
         
+        /// <summary>
+        /// Resume executing region with the given name
+        /// </summary>
+        /// <param name="regionName">Region name</param>
         public void ResumeRegion(string regionName)
         {
             if (!TryGetExecutingRegion(regionName, nameof(ResumeRegion), out var region))
                 region.Resume();
         }
 
+        /// <summary>
+        /// Pause executing region with the given name
+        /// </summary>
+        /// <param name="regionName">Region name</param>
         public void PauseRegion(string regionName)
         {
             if (!TryGetExecutingRegion(regionName, nameof(PauseRegion), out var region))
                 region.Pause();
         }
 
+        /// <summary>
+        /// Stop executing region with the given name
+        /// </summary>
+        /// <param name="regionName"></param>
         public void StopRegion(string regionName)
         {
             if (TryGetExecutingRegion(regionName, nameof(StopRegion), out var region))
@@ -68,13 +94,13 @@ namespace DamnLibrary.DamnScript.Executing
                 return true;
             
             UniversalDebugger.LogError(
-                $"{nameof(Script)} ({methodName}) Unable to find EXECUTING region with the name {regionName}.");
+                $"{nameof(Script)} ({methodName}) Unable to find executing region with the name {regionName}.");
             return false;
         }
 
         private ScriptRegion CreateRegion(string regionName)
         {
-            var regionData = scriptData.GetRegionData(regionName);
+            var regionData = ScriptData.GetRegionData(regionName);
             
             return regionData == null ? null : new ScriptRegion(this, regionData);
         }

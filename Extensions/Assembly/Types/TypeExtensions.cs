@@ -9,6 +9,12 @@ namespace DamnLibrary.Extensions
 {
     public static class TypeExtensions
     {
+        /// <summary>
+        /// Safe invoke static method. If the method doesn't exists, it will log a warning
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="methodName">Method name</param>
+        /// <param name="arguments">Arguments</param>
         public static void SafeInvokeStaticMethod(this Type type, string methodName, params object[] arguments)
         {
             var methodInfo = type.GetMethod(methodName,
@@ -25,6 +31,13 @@ namespace DamnLibrary.Extensions
             methodInfo.Invoke(null, arguments);
         }
 
+        /// <summary>
+        /// Safe invoke method. If the method doesn't exists, it will log a warning
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="owner">Owner</param>
+        /// <param name="methodName">Method name</param>
+        /// <param name="arguments">Arguments</param>
         public static void SafeInvokeMethod(this Type type, object owner, string methodName, params object[] arguments)
         {
             var methodInfo = type.GetMethod(methodName,
@@ -41,18 +54,36 @@ namespace DamnLibrary.Extensions
             methodInfo.Invoke(owner, arguments);
         }
 
+        /// <summary>
+        /// Return a field by name. Field can be private or static. If the field doesn't exists return default
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="name">Field name</param>
+        /// <returns>FieldInfo</returns>
         public static FieldInfo GetFieldByName(this Type type, string name)
         {
             var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             return fields.FindOrDefault((fieldInfo) => fieldInfo.Name == name);
         }
 
+        /// <summary>
+        /// Return a property by name. Property can be private or static. If the property doesn't exists return default
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="name">Property name</param>
+        /// <returns>PropertyInfo</returns>
         public static PropertyInfo GetPropertyByName(this Type type, string name)
         {
             var properties = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             return properties.FindOrDefault((propertyInfo) => propertyInfo.Name == name);
         }
 
+        /// <summary>
+        /// Return a method by name. Method can be private or static. If the method doesn't exists return default
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="name">Method name</param>
+        /// <returns>MethodInfo</returns>
         public static MethodInfo GetMethodByName(this Type type, string name)
         {
             var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);

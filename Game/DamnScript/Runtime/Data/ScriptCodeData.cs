@@ -3,11 +3,11 @@ namespace DamnLibrary.DamnScript.Data
 {
     public class ScriptCodeData
     {
-        public readonly string[] codes;
+        public string[] Codes { get; }
 
         public ScriptCodeData(string[] codes)
         {
-            this.codes = codes;
+            Codes = codes;
         }
     }
 }

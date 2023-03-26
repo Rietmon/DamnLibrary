@@ -14,8 +14,19 @@ namespace DamnLibrary.Debugging
 #endif
     public static class UniversalDebugger
     {
+        /// <summary>
+        /// Callback for log
+        /// </summary>
         public static Action<string> OnLog { get; set; }
+        
+        /// <summary>
+        /// Callback for warning
+        /// </summary>
         public static Action<string> OnWarning { get; set; }
+        
+        /// <summary>
+        /// Callback for error
+        /// </summary>
         public static Action<string> OnError { get; set; }
 
         static UniversalDebugger()

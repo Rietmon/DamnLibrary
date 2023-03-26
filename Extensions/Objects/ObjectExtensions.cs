@@ -8,7 +8,7 @@ namespace DamnLibrary.Extensions
         /// <summary>
         /// Total destroy all object. If it's a component - will destroy GameObject parent
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="obj">Object</param>
         public static void TotalDestroy(this Object obj)
         {
             if (obj is Component component)
@@ -20,8 +20,8 @@ namespace DamnLibrary.Extensions
         /// <summary>
         /// Return transform universally for GameObject and Component
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj">Object</param>
+        /// <returns>Transform</returns>
         public static Transform GetTransform(this Object obj)
         {
             switch (obj)

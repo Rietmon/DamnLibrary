@@ -5,7 +5,7 @@ using DamnLibrary.Debugging;
 
 namespace DamnLibrary.DamnScript.Data
 {
-    public static class ScriptDatasManager
+    internal static class ScriptDatasManager
     {
         private static readonly Dictionary<string, ScriptData> scriptsData = new();
 
@@ -14,8 +14,10 @@ namespace DamnLibrary.DamnScript.Data
 
         public static ScriptData Create(string name, string code)
         {
+#if DEBUG
             var debugStopwatch = new DebugStopwatch();
             debugStopwatch.Start();
+#endif
             
             var regions = ScriptParser.ParseRegions(code);
             var regionsData = new ScriptRegionData[regions.Length];
@@ -37,7 +39,10 @@ namespace DamnLibrary.DamnScript.Data
             
             scriptsData.Add(name, scriptData);
             
-            debugStopwatch.Stop("Parsed ScriptData in {0} ms.");
+#if DEBUG
+            UniversalDebugger.Log(
+                $"[{nameof(ScriptDatasManager)}] ({nameof(Create)}) Parsed ScriptData in {debugStopwatch.Stop()} ms");
+#endif
             
             return scriptData;
         }

@@ -5,18 +5,23 @@ namespace DamnLibrary.DamnScript.Data
 {
     public class ScriptData
     {
-        public readonly string name;
+        public string Name { get; }
 
-        internal readonly ScriptRegionData[] regionsData;
+        internal ScriptRegionData[] RegionsData { get; }
 
         public ScriptData(string name, ScriptRegionData[] regionsData)
         {
-            this.name = name;
-            this.regionsData = regionsData;
+            Name = name;
+            RegionsData = regionsData;
         }
 
+        /// <summary>
+        /// Return ScriptRegionData with the given name
+        /// </summary>
+        /// <param name="regionName">Region name</param>
+        /// <returns>ScriptRegionData</returns>
         public ScriptRegionData GetRegionData(string regionName) => 
-            regionsData.Find((data) => data.name == regionName);
+            RegionsData.FindOrDefault((data) => data.Name == regionName);
     }
 }
 #endif

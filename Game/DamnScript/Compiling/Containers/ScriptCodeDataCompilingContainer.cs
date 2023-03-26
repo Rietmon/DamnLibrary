@@ -8,6 +8,10 @@ namespace DamnLibrary.DamnScript.Compiling
     {
         private string[] codes;
 
+        /// <summary>
+        /// Create a ScriptCodeData from this ScriptCodeDataCompilingContainer
+        /// </summary>
+        /// <returns>ScriptCodeData</returns>
         public ScriptCodeData ToData() => new(codes);
 
         void ISerializable.Serialize(SerializationStream stream)
@@ -20,11 +24,16 @@ namespace DamnLibrary.DamnScript.Compiling
             codes = stream.Read<string[]>();
         }
         
+        /// <summary>
+        /// Create a new ScriptCodeDataCompilingContainer from a ScriptCodeData
+        /// </summary>
+        /// <param name="data">ScriptCodeData</param>
+        /// <returns>ScriptCodeDataCompilingContainer</returns>
         public static ScriptCodeDataCompilingContainer FromData(ScriptCodeData data)
         {
             return new ScriptCodeDataCompilingContainer
             {
-                codes = data.codes
+                codes = data.Codes
             };
         }
     }

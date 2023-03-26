@@ -15,10 +15,18 @@ namespace DamnLibrary.Extensions
 #endif
         };
 
+        /// <summary>
+        /// Loaded assemblies
+        /// </summary>
         public static Assembly[] MainAssemblies => mainAssemblies ??= GetAssemblies(mainAssemblyNames).ToArray();
 
         private static Assembly[] mainAssemblies;
 
+        /// <summary>
+        /// Return assemblies with the names
+        /// </summary>
+        /// <param name="names">Names of assemblies</param>
+        /// <returns>Array of assemblies</returns>
         public static IEnumerable<Assembly> GetAssemblies(params string[] names)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -29,6 +37,11 @@ namespace DamnLibrary.Extensions
             }
         }
 
+        /// <summary>
+        /// Return all types with the attribute from all assemblies
+        /// </summary>
+        /// <typeparam name="T">Attribute type</typeparam>
+        /// <returns>Array of types</returns>
         public static IEnumerable<Type> GetAllAttributeInheritsFromAllAssemblies<T>()
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -43,6 +56,12 @@ namespace DamnLibrary.Extensions
             }
         }
 
+        /// <summary>
+        /// Return all types with the attribute from assemblies
+        /// </summary>
+        /// <param name="assemblyNames">Assemblies names</param>
+        /// <typeparam name="T">Attribute type</typeparam>
+        /// <returns>Array of types</returns>
         public static IEnumerable<Type> GetAllAttributeInherits<T>(params string[] assemblyNames)
         {
             var assemblies = assemblyNames == null || assemblyNames.Length == 0
@@ -59,6 +78,11 @@ namespace DamnLibrary.Extensions
             }
         }
 
+        /// <summary>
+        /// Return all types that inherits from T from all assemblies
+        /// </summary>
+        /// <typeparam name="T">Parent class</typeparam>
+        /// <returns>Array of types</returns>
         public static IEnumerable<Type> GetAllInheritsFromAllAssemblies<T>()
         {
             var types = Assembly.GetExecutingAssembly().GetTypes();
@@ -69,6 +93,12 @@ namespace DamnLibrary.Extensions
             }
         }
 
+        /// <summary>
+        /// Return all types that inherits from T from assemblies
+        /// </summary>
+        /// <param name="assemblyNames">Assemblies names</param>
+        /// <typeparam name="T">Parent class</typeparam>
+        /// <returns>Array of types</returns>
         public static IEnumerable<Type> GetAllInheritsFrom<T>(params string[] assemblyNames)
         {
             var assemblies = assemblyNames != null && assemblyNames.Length > 0

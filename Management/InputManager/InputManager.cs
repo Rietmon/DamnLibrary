@@ -14,7 +14,7 @@ namespace DamnLibrary.Management
 #if ENABLE_DAMN_SCRIPT
     [DamnScriptable]
 #endif
-    public class InputManager : UnityBehaviour
+    public class InputManager : DamnBehaviour
     {
         public static bool IsPaused { get; set; }
         
