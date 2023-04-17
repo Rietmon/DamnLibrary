@@ -163,7 +163,7 @@ namespace DamnLibrary.Management
         private T CreateObject() =>
             instantiateMethod != null
                 ? instantiateMethod.Invoke(examplePrefab.PrefabObject)
-                : examplePrefab.SimpleInstantiate();
+                : examplePrefab.Instantiate();
 
         public void Dispose()
         {

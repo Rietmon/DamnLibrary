@@ -1,4 +1,6 @@
-﻿namespace DamnLibrary.Extensions
+﻿using System;
+
+namespace DamnLibrary.Extensions
 {
     public static class StringExtensions
     {
@@ -11,5 +13,13 @@
         /// string.IsNullOrEmpty implementation
         /// </summary>
         public static bool IsNullOrEmpty(this string str) => string.IsNullOrEmpty(str);
+
+        public static string Reverse(this string str)
+        {
+            var charArray = str.ToCharArray();
+            Array.Reverse(charArray);
+            var reversed = new string(charArray);
+            return reversed;
+        }
     }
 }

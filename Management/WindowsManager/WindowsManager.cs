@@ -199,7 +199,7 @@ namespace DamnLibrary.Management
 
         private static WindowBehaviour PrepareWindow(Prefab<WindowBehaviour> windowPrefab, string windowName, WindowContext windowContext)
         {
-            var window = windowPrefab.SimpleInstantiate(Instance.transform);
+            var window = windowPrefab.Instantiate(Instance.transform);
             openedWindows.Add(window);
 
             windowContext.OwnerWindow = window;

@@ -14,7 +14,7 @@ namespace DamnLibrary.Extensions
         /// </summary>
         /// <param name="array">Array</param>
         /// <returns>Content</returns>
-        public static string ToStringContent(this IEnumerable<object> array) =>
+        public static string ToStringContent<T>(this IEnumerable<T> array) =>
             array.Aggregate("", (current, obj) => current + $"{obj}\n");
 
         /// <summary>
@@ -31,14 +31,39 @@ namespace DamnLibrary.Extensions
         }
 
         /// <summary>
-        /// Cast an array to another type
+        /// Return a random elements from the array
+        /// </summary>
+        /// <param name="array">Array</param>
+        /// <param name="count">Count of elements</param>
+        /// <typeparam name="T">Array type</typeparam>
+        /// <returns>Element</returns>
+        public static T[] Random<T>(this IEnumerable<T> array, int count)
+        {
+            var result = new T[count];
+            var enumerable = array as T[] ?? array.ToArray();
+            var indicesToUse = new List<int>();
+            for (var i = 0; i < enumerable.Length; i++)
+                indicesToUse.Add(i);
+
+            for (var i = 0; i < count; i++)
+            {
+                var randomIndex = RandomUtilities.Range(0, indicesToUse.Count);
+                result[i] = enumerable[indicesToUse[randomIndex]];
+                indicesToUse.Remove(indicesToUse[randomIndex]);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Cast an IEnumerable to another type
         /// </summary>
         /// <param name="array">Array</param>
         /// <param name="castFunction">Cast function</param>
         /// <typeparam name="TOut">Out type</typeparam>
         /// <typeparam name="TIn">In type</typeparam>
-        /// <returns></returns>
-        public static IEnumerable<TOut> FuncCast<TOut, TIn>(this IEnumerable<TIn> array, Func<TIn, TOut> castFunction) => 
-            array.Select(castFunction.Invoke).ToList();
+        /// <returns>Casted IEnumerable</returns>
+        public static IEnumerable<TOut> FuncCast<TOut, TIn>(this IEnumerable<TIn> array, Func<TIn, TOut> castFunction) =>
+            array.Select(castFunction.Invoke);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DamnLibrary.Extensions
 {
@@ -50,5 +51,28 @@ namespace DamnLibrary.Extensions
             if (!list.Exists(existMethod))
                 list.Add(element);
         }
+
+        /// <summary>
+        /// Remove elements from the list if they exists
+        /// </summary>
+        /// <param name="list">List</param>
+        /// <param name="elements">Elements to remove</param>
+        /// <typeparam name="T">List type</typeparam>
+        public static void RemoveRange<T>(this List<T> list, IEnumerable<T> elements)
+        {
+            foreach (var element in elements)
+                list.Remove(element);
+        }
+        
+        /// <summary>
+        /// Cast an array to another type
+        /// </summary>
+        /// <param name="list">List</param>
+        /// <param name="castFunction">Cast function</param>
+        /// <typeparam name="TOut">Out type</typeparam>
+        /// <typeparam name="TIn">In type</typeparam>
+        /// <returns>Casted list</returns>
+        public static List<TOut> FuncCast<TOut, TIn>(this List<TIn> list, Func<TIn, TOut> castFunction) => 
+            list.Select(castFunction.Invoke).ToList();
     }
 }

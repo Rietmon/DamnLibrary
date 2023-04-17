@@ -116,6 +116,8 @@ namespace DamnLibrary.Serialization
                 case IList l: WriteList(l); return;
                 case IDictionary d: WriteDictionary(d); return;
                 case IConvertible e: WriteConvertible(e); return;
+                
+                //case IEquatable<DateTime> dt: WriteDateTime((DateTime)dt); return;
             }
 
             var targetSerializationType = obj.GetType();
@@ -293,7 +295,12 @@ namespace DamnLibrary.Serialization
         private void WriteConvertible(IConvertible value)
         {
             var valueTypeCode = value.GetTypeCode();
+         
             Write(Convert.ChangeType(value, valueTypeCode), value.GetType());
+        }
+        private void WriteDateTime(DateTime value)
+        {
+            WriteLong(value.Ticks);
         }
 
         public T Read<T>() => (T)Read(typeof(T));
@@ -336,6 +343,8 @@ namespace DamnLibrary.Serialization
             if (typeof(IList).IsAssignableFrom(type)) return ReadList(type);
             if (typeof(IDictionary).IsAssignableFrom(type)) return ReadDictionary(type);
             if (typeof(IConvertible).IsAssignableFrom(type)) return ReadConvertible(type);
+            
+            if (type == typeof(DateTime)) return ReadDateTime();
 
             if (customDeserialization.TryGetValue(type, out var method)) return method.Invoke(this);
 
@@ -555,6 +564,12 @@ namespace DamnLibrary.Serialization
         {
             var valueType = Enum.GetUnderlyingType(type);
             return Read(valueType);
+        }
+
+        public object ReadDateTime()
+        {
+            var ticks = ReadLong();
+            return new DateTime(ticks);
         }
 
         public byte[] ToArray() => stream.ToArray();
