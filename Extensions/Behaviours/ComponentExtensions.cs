@@ -22,7 +22,7 @@ namespace DamnLibrary.Extensions
         /// </summary>
         /// <param name="component">Component</param>
         /// <param name="state">State</param>
-        public static void SetObjectActive(this Component component, bool state) => component.gameObject.SetActive(state);
+        public static void SetActiveObject(this Component component, bool state) => component.gameObject.SetActive(state);
     }
 }
 #endif

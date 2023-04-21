@@ -74,12 +74,6 @@ namespace DamnLibrary.Behaviours
         /// </summary>
         /// <param name="monoBehaviour">Reference to component</param>
         public void DestroyObject(Component component) => Destroy(component.gameObject);
-
-        /// <summary>
-        /// Set active GameObject
-        /// </summary>
-        /// <param name="state">State</param>
-        public void SetObjectActive(bool state) => gameObject.SetActive(state);
     }
 }
 #endif

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DamnLibrary.Management;
 using DamnLibrary.Behaviours;
 using DamnLibrary.Debugging;
+using DamnLibrary.Management.Animations;
 using UnityEngine;
 #pragma warning disable 1998
 
@@ -20,30 +21,39 @@ namespace DamnLibrary.Behaviours
         /// </summary>
         public WindowContext BaseWindowContext { get; set; }
         
+        [field: SerializeField] public WindowAnimator Animator { get; set; }
+
         /// <summary>
         /// Will be called after creating object
         /// </summary>
-        public virtual async Task OnOpenAsync() { }
+        public virtual async Task OnOpen() { }
+        
+        public virtual async Task OnOpenAnimationOver() { }
+        
+        public virtual async Task OnShow() { }
+        
+        public virtual async Task OnShowAnimationOver() { }
+        
+        public virtual async Task OnHide() { }
+        
+        public virtual async Task OnHideAnimationOver() { }
 
         /// <summary>
         /// Will be called before destroying object
         /// </summary>
-        public virtual async Task OnCloseAsync() { }
+        public virtual async Task OnClose() { }
+        
+        public virtual async Task OnCloseAnimationOver() { }
 
         /// <summary>
         /// Show window. Can be overriden to add custom logic
         /// </summary>
-        public virtual void Show() => gameObject.SetActive(true);
+        public virtual async Task ShowAsync() => await WindowsManager.ShowAsync(this);
         
         /// <summary>
         /// Hide window. Can be overriden to add custom logic
         /// </summary>
-        public virtual void Hide() => gameObject.SetActive(false);
-
-        /// <summary>
-        /// Close window
-        /// </summary>
-        public void Close() => WindowsManager.Close(this);
+        public virtual async Task HideAsync() => await WindowsManager.HideAsync(this);
 
         /// <summary>
         /// Close async window
