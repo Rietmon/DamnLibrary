@@ -41,7 +41,8 @@ namespace DamnLibrary.Management
             var window = PrepareWindow(windowPrefab, windowName, windowContext);
 
             await window.OnOpen();
-            await window.Animator.PlayOpenAnimationAsync();
+            if (window.Animator)
+                await window.Animator.PlayOpenAnimationAsync();
             await window.OnOpenAnimationOver();
             UniversalDebugger.Log($"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Opened {windowName}");
 
@@ -56,7 +57,8 @@ namespace DamnLibrary.Management
             window.SetActiveObject(true);
             
             await window.OnShow();
-            await window.Animator.PlayShowAnimationAsync();
+            if (window.Animator)
+                await window.Animator.PlayShowAnimationAsync();
             await window.OnShowAnimationOver();
         }
         
@@ -66,7 +68,8 @@ namespace DamnLibrary.Management
         public static async Task HideAsync(WindowBehaviour window)
         {
             await window.OnHide();
-            await window.Animator.PlayHideAnimationAsync();
+            if (window.Animator)
+                await window.Animator.PlayHideAnimationAsync();
             await window.OnHideAnimationOver();
             
             window.SetActiveObject(true);
@@ -87,7 +90,8 @@ namespace DamnLibrary.Management
                 return;
 
             await window.OnClose();
-            await window.Animator.PlayCloseAnimationAsync();
+            if (window.Animator)
+                await window.Animator.PlayCloseAnimationAsync();
             await window.OnCloseAnimationOver();
 
             openedWindows.Remove(window);
@@ -129,7 +133,8 @@ namespace DamnLibrary.Management
                 windowContext.OwnerWindow = window;
             
             window.WindowName = windowName;
-            window.BaseWindowContext = windowContext;
+            window.BaseContext = windowContext;
+            window.Animator.Internal_CloseWindow = () => window.CloseAsync();
 
             return window;
         }

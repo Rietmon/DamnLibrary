@@ -1,8 +1,6 @@
 #if UNITY_5_3_OR_NEWER 
 using System.Threading.Tasks;
 using DamnLibrary.Management;
-using DamnLibrary.Behaviours;
-using DamnLibrary.Debugging;
 using DamnLibrary.Management.Animations;
 using UnityEngine;
 #pragma warning disable 1998
@@ -19,7 +17,7 @@ namespace DamnLibrary.Behaviours
         /// <summary>
         /// Non-casted context of this window. Use WindowContext property to get casted context
         /// </summary>
-        public WindowContext BaseWindowContext { get; set; }
+        protected internal WindowContext BaseContext { get; set; }
         
         [field: SerializeField] public WindowAnimator Animator { get; set; }
 
@@ -66,9 +64,9 @@ namespace DamnLibrary.Behaviours
         /// <summary>
         /// Casted context of this window
         /// </summary>
-        public TContext WindowContext => windowContext ??= BaseWindowContext.To<TContext>();
+        public TContext Context => context ??= BaseContext.To<TContext>();
 
-        private TContext windowContext;
+        private TContext context;
     }
 }
 #endif

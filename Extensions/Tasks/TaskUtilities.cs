@@ -27,10 +27,12 @@ namespace DamnLibrary.Extensions
         /// <returns>true - condition has been completed, false - timeout</returns>
         public static async Task<bool> WaitWhile(Func<bool> condition, int frequency = 25, int timeout = -1)
         {
-            var waitTask = Task.Run(async () =>
+            async Task Handler()
             {
                 while (condition()) await Task.Delay(frequency);
-            });
+            }
+
+            var waitTask = Handler();
 
             return waitTask == await Task.WhenAny(waitTask, Task.Delay(timeout));
         }
@@ -45,10 +47,12 @@ namespace DamnLibrary.Extensions
         public static async Task<bool> WaitUntil(Func<bool> condition, int frequency = 25, int timeout = -1)
         {
 #if !UNITY_WEBGL
-            var waitTask = Task.Run(async () =>
+            async Task Handler()
             {
                 while (!condition()) await Task.Delay(frequency);
-            });
+            }
+
+            var waitTask = Handler();
 
             return waitTask == await Task.WhenAny(waitTask, Task.Delay(timeout));
 #else
