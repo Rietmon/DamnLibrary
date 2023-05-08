@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using DamnLibrary.Management;
 using DamnLibrary.Management.Animations;
 using UnityEngine;
-#pragma warning disable 1998
 
 namespace DamnLibrary.Behaviours
 {
@@ -14,27 +13,24 @@ namespace DamnLibrary.Behaviours
         /// </summary>
         public string WindowName { get; set; }
         
-        /// <summary>
-        /// Non-casted context of this window. Use WindowContext property to get casted context
-        /// </summary>
-        protected internal WindowContext BaseContext { get; set; }
-        
         [field: SerializeField] public WindowAnimator Animator { get; set; }
+        
+        protected internal WindowContext BaseContext { get; set; }
 
         /// <summary>
         /// Will be called after creating object
         /// </summary>
-        public virtual async Task OnOpen() { }
+        public virtual Task OnOpen() => Task.CompletedTask;
         
-        public virtual async Task OnOpenAnimationOver() { }
+        public virtual Task OnOpenAnimationOver() => Task.CompletedTask;
         
-        public virtual async Task OnShow() { }
+        public virtual Task OnShow() => Task.CompletedTask;
         
-        public virtual async Task OnShowAnimationOver() { }
+        public virtual Task OnShowAnimationOver() => Task.CompletedTask;
         
-        public virtual async Task OnHide() { }
+        public virtual Task OnHide() => Task.CompletedTask;
         
-        public virtual async Task OnHideAnimationOver() { }
+        public virtual Task OnHideAnimationOver() => Task.CompletedTask;
 
         /// <summary>
         /// Will be called before destroying object
@@ -64,7 +60,7 @@ namespace DamnLibrary.Behaviours
         /// <summary>
         /// Casted context of this window
         /// </summary>
-        public TContext Context => context ??= BaseContext.To<TContext>();
+        protected TContext Context => context ??= BaseContext.To<TContext>();
 
         private TContext context;
     }

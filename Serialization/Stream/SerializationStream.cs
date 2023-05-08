@@ -73,13 +73,13 @@ namespace DamnLibrary.Serialization
         {
             if (!IsWriting)
             {
-                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unable to write in DeserializationStream");
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Unable to write at deserialization!");
                 return;
             }
 
             if (obj == null)
             {
-                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Object cannot be null");
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(Write)}) Object cannot be null!");
                 return;
             }
 
@@ -101,6 +101,7 @@ namespace DamnLibrary.Serialization
                 case long l: WriteLong(l); return;
                 case ulong l: WriteULong(l); return;
                 case decimal l: WriteDecimal(l); return;
+                case char c: WriteChar(c); return;
                 case string s: WriteString(s); return;
                 case ISerializable s: WriteSerializable(s); return;
 #if UNITY_5_3_OR_NEWER 
@@ -193,7 +194,12 @@ namespace DamnLibrary.Serialization
 
         private void WriteDecimal(decimal value)
         {
-            WriteToStream(DecimalUtilities.GetBytes(value));
+            WriteToStream(value.GetBytes());
+        }
+
+        private void WriteChar(char value)
+        {
+            WriteToStream(Convert.ToByte(value));
         }
 
         private void WriteString(string value)
@@ -295,9 +301,16 @@ namespace DamnLibrary.Serialization
         private void WriteConvertible(IConvertible value)
         {
             var valueTypeCode = value.GetTypeCode();
+
+            if (valueTypeCode == TypeCode.DateTime)
+            {
+                WriteDateTime((DateTime)value);
+                return;
+            }
          
             Write(Convert.ChangeType(value, valueTypeCode), value.GetType());
         }
+        
         private void WriteDateTime(DateTime value)
         {
             WriteLong(value.Ticks);
@@ -328,6 +341,7 @@ namespace DamnLibrary.Serialization
             if (type == typeof(long)) return ReadLong();
             if (type == typeof(ulong)) return ReadULong();
             if (type == typeof(decimal)) return ReadDecimal();
+            if (type == typeof(char)) return ReadChar();
             if (type == typeof(string)) return ReadString();
             if (typeof(ISerializable).IsAssignableFrom(type)) return ReadSerializable(type);
 #if UNITY_5_3_OR_NEWER 
@@ -343,8 +357,6 @@ namespace DamnLibrary.Serialization
             if (typeof(IList).IsAssignableFrom(type)) return ReadList(type);
             if (typeof(IDictionary).IsAssignableFrom(type)) return ReadDictionary(type);
             if (typeof(IConvertible).IsAssignableFrom(type)) return ReadConvertible(type);
-            
-            if (type == typeof(DateTime)) return ReadDateTime();
 
             if (customDeserialization.TryGetValue(type, out var method)) return method.Invoke(this);
 
@@ -355,7 +367,10 @@ namespace DamnLibrary.Serialization
         private byte[] ReadFromStream(int count)
         {
             var bytes = new byte[count];
-            stream.Read(bytes, 0, count);
+            var bytesRead = stream.Read(bytes, 0, count);
+            if (bytesRead != count)
+                UniversalDebugger.LogError(
+                    $"[{nameof(SerializationStream)}] ({nameof(ReadFromStream)}) Read bytes less than needed!");
             return bytes;
         }
 
@@ -377,7 +392,7 @@ namespace DamnLibrary.Serialization
 
         private sbyte ReadSByte()
         {
-            return (sbyte)((sbyte)ReadFromStream(1).First() - 128);
+            return (sbyte)(ReadFromStream(1).First() - 128);
         }
 
         private short ReadShort()
@@ -429,6 +444,11 @@ namespace DamnLibrary.Serialization
         {
             var length = ReadUShort();
             return Encoding.UTF8.GetString(ReadFromStream(length));
+        }
+
+        private char ReadChar()
+        {
+            return BitConverter.ToChar(ReadFromStream(2));
         }
 
         private object ReadSerializable(Type type)
@@ -515,10 +535,13 @@ namespace DamnLibrary.Serialization
         }
 #endif
 
-        private object ReadArray(Type type)
+        private Array ReadArray(Type type)
         {
             var length = ReadUShort();
             var elementType = type.GetElementType();
+            if (elementType == null)
+                UniversalDebugger.LogError(
+                    $"[{nameof(SerializationStream)}] ({nameof(ReadArray)}) Unable to get element type! Type={type.FullName}");
             var array = Array.CreateInstance(elementType, length);
             
             for (var i = 0; i < length; i++)
@@ -529,7 +552,7 @@ namespace DamnLibrary.Serialization
             return array;
         }
 
-        private object ReadList(Type type)
+        private IList ReadList(Type type)
         {
             var length = ReadUShort();
             var elementType = type.GetGenericArguments().First();
@@ -543,7 +566,7 @@ namespace DamnLibrary.Serialization
             return list;
         }
         
-        private object ReadDictionary(Type type)
+        private IDictionary ReadDictionary(Type type)
         {
             var length = ReadUShort();
             var keyType = type.GetGenericArguments()[0];
@@ -562,11 +585,33 @@ namespace DamnLibrary.Serialization
 
         private object ReadConvertible(Type type)
         {
-            var valueType = Enum.GetUnderlyingType(type);
-            return Read(valueType);
+            var valueTypeCode = Type.GetTypeCode(type);
+            switch (valueTypeCode)
+            {
+                case TypeCode.Boolean: return ReadBool();
+                case TypeCode.Byte: return ReadByte();
+                case TypeCode.Char: return (char)ReadByte();
+                case TypeCode.DateTime: return ReadDateTime();
+                case TypeCode.Decimal: return ReadDecimal();
+                case TypeCode.Double: return ReadDouble();
+                case TypeCode.Int16: return ReadShort();
+                case TypeCode.Int32: return ReadInt();
+                case TypeCode.Int64: return ReadLong();
+                case TypeCode.SByte: return ReadSByte();
+                case TypeCode.Single: return ReadFloat();
+                case TypeCode.String: return ReadString();
+                case TypeCode.UInt16: return ReadUShort();
+                case TypeCode.UInt32: return ReadUInt();
+                case TypeCode.UInt64: return ReadULong();
+                default:
+                {
+                    UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(ReadConvertible)}) Unsupported type. Type={type}");
+                    return null;
+                }
+            }
         }
 
-        public object ReadDateTime()
+        private DateTime ReadDateTime()
         {
             var ticks = ReadLong();
             return new DateTime(ticks);
