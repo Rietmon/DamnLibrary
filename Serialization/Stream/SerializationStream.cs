@@ -117,8 +117,6 @@ namespace DamnLibrary.Serialization
                 case IList l: WriteList(l); return;
                 case IDictionary d: WriteDictionary(d); return;
                 case IConvertible e: WriteConvertible(e); return;
-                
-                //case IEquatable<DateTime> dt: WriteDateTime((DateTime)dt); return;
             }
 
             var targetSerializationType = obj.GetType();
