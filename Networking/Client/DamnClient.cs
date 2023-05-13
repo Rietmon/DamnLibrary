@@ -9,7 +9,7 @@ using DamnLibrary.Networking.Handlers;
 using DamnLibrary.Networking.Packets;
 using DamnLibrary.Networking.Protocols;
 using DamnLibrary.Networking.Protocols.TCP;
-using DamnLibrary.Other;
+using DamnLibrary.Types;
 using DamnLibrary.Serialization;
 using ProtocolType = DamnLibrary.Networking.Protocols.ProtocolType;
 

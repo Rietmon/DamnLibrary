@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 #endif
 
-namespace DamnLibrary.Other
+namespace DamnLibrary.Types
 {
     [Serializable]
     public struct Pair<T1, T2>

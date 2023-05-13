@@ -1,14 +1,14 @@
-﻿namespace DamnLibrary.Other
+﻿namespace DamnLibrary.Types
 {
-    internal class Identification32 : Identification
+    internal class Identification128 : Identification
     {
-        public override byte Size => 4;
+        public override byte Size => 16;
 
         public override object Id => id;
 
-        public readonly int id;
+        public readonly decimal id;
 
-        public Identification32(int id)
+        public Identification128(decimal id)
         {
             this.id = id;
         }
@@ -20,6 +20,8 @@
                 Identification8 id8 => id == id8.id,
                 Identification16 id16 => id == id16.id,
                 Identification32 id32 => id == id32.id,
+                Identification64 id64 => id == id64.id,
+                Identification128 id128 => id == id128.id,
                 _ => false
             };
         }

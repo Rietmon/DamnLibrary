@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using DamnLibrary.Extensions;
-using DamnLibrary.Other;
+using DamnLibrary.Types;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;

@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 using DamnLibrary.Networking.Packets;
 using DamnLibrary.Networking.Server;
-using DamnLibrary.Other;
+using DamnLibrary.Types;
 using DamnLibrary.Serialization;
 
 namespace DamnLibrary.Networking.Protocols

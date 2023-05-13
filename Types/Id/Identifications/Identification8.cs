@@ -1,14 +1,14 @@
-﻿namespace DamnLibrary.Other
+﻿namespace DamnLibrary.Types
 {
-    internal class Identification16 : Identification
+    internal class Identification8 : Identification
     {
-        public override byte Size => 2;
+        public override byte Size => 1;
 
         public override object Id => id;
 
-        public readonly short id;
+        public readonly byte id;
 
-        public Identification16(short id)
+        public Identification8(byte id)
         {
             this.id = id;
         }
@@ -18,7 +18,6 @@
             return other switch
             {
                 Identification8 id8 => id == id8.id,
-                Identification16 id16 => id == id16.id,
                 _ => false
             };
         }

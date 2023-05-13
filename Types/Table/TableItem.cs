@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DamnLibrary.Other
+namespace DamnLibrary.Types
 {
 	public class TableItem<T>
 	{

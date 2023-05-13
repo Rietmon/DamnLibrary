@@ -1,4 +1,4 @@
-namespace DamnLibrary.Other
+namespace DamnLibrary.Types
 {
     public interface IRanged<T>
     {

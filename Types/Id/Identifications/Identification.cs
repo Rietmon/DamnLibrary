@@ -2,7 +2,7 @@
 
 #pragma warning disable 660,661
 
-namespace DamnLibrary.Other
+namespace DamnLibrary.Types
 {
     internal abstract class Identification
     {

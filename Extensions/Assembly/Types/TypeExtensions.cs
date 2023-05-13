@@ -89,5 +89,24 @@ namespace DamnLibrary.Extensions
             var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             return methods.FindOrDefault((methodInfo) => methodInfo.Name == name);
         }
+
+        public static object GetValue(this MemberInfo member, object owner = null) =>
+            member switch
+            {
+                FieldInfo field => field.GetValue(owner),
+                PropertyInfo property => property.GetValue(owner),
+                _ => throw new ArgumentOutOfRangeException(nameof(member), member, "Unsupported type!")
+            };
+
+        public static void SetValue(this MemberInfo member, object value, object owner = null)
+        {
+            switch (member)
+            {
+                case FieldInfo field: field.SetValue(owner, value);
+                    break;
+                case PropertyInfo property: property.SetValue(owner, value);
+                    break;
+            }
+        }
     }
 }

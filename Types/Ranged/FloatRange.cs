@@ -4,36 +4,36 @@ using DamnLibrary.Extensions;
 using UnityEngine;
 #endif
 
-namespace DamnLibrary.Other
+namespace DamnLibrary.Types
 {
     [Serializable]
-    public struct DoubleRange : IRanged<double>
+    public struct FloatRange : IRanged<float>
     {
-        public double MinimalValue
+        public float MinimalValue
         {
             get => minimalValue;
             set => minimalValue = value;
         }
 
-        public double MaximalValue
+        public float MaximalValue
         {
             get => maximalValue;
             set => maximalValue = value;
         }
 
-        public double RandomValue => RandomUtilities.Range(MinimalValue, MaximalValue);
+        public float RandomValue => RandomUtilities.Range(MinimalValue, MaximalValue);
 
 #if UNITY_5_3_OR_NEWER 
         [SerializeField]
 #endif
-        private double minimalValue;
+        private float minimalValue;
 
 #if UNITY_5_3_OR_NEWER 
         [SerializeField]
 #endif
-        private double maximalValue;
+        private float maximalValue;
 
-        public DoubleRange(double min, double max)
+        public FloatRange(float min, float max)
         {
             minimalValue = min;
             maximalValue = max;

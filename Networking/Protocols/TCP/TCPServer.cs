@@ -8,7 +8,7 @@ using DamnLibrary.Debugging;
 using DamnLibrary.Networking.Handlers;
 using DamnLibrary.Networking.Packets;
 using DamnLibrary.Networking.Server;
-using DamnLibrary.Other;
+using DamnLibrary.Types;
 using DamnLibrary.Serialization;
 using UnityEngine;
 

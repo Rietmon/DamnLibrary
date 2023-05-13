@@ -5,7 +5,7 @@ using DamnLibrary.Serialization;
 #endif
 #pragma warning disable 660,661
 
-namespace DamnLibrary.Other
+namespace DamnLibrary.Types
 {
     [Serializable]
     public struct Id 

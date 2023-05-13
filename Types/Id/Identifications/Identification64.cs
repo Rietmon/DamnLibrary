@@ -1,4 +1,4 @@
-﻿namespace DamnLibrary.Other
+﻿namespace DamnLibrary.Types
 {
     internal class Identification64 : Identification
     {

@@ -4,31 +4,31 @@ using DamnLibrary.Extensions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace DamnLibrary.Other
+namespace DamnLibrary.Types
 {
     [Serializable]
-    public struct Vector3IntRange : IRanged<Vector3Int>
+    public struct Vector3Range : IRanged<Vector3>
     {
-        public Vector3Int MinimalValue
+        public Vector3 MinimalValue
         {
             get => minimalValue;
             set => minimalValue = value;
         }
 
-        public Vector3Int MaximalValue
+        public Vector3 MaximalValue
         {
             get => maximalValue;
             set => maximalValue = value;
         }
 
-        public Vector3Int RandomValue => new(RandomUtilities.Range(MinimalValue.x, MaximalValue.x),
+        public Vector3 RandomValue => new(RandomUtilities.Range(MinimalValue.x, MaximalValue.x),
             RandomUtilities.Range(MinimalValue.y, MaximalValue.y), RandomUtilities.Range(MinimalValue.z, MaximalValue.z));
 
-        [SerializeField] private Vector3Int minimalValue;
+        [SerializeField] private Vector3 minimalValue;
 
-        [SerializeField] private Vector3Int maximalValue;
+        [SerializeField] private Vector3 maximalValue;
 
-        public Vector3IntRange(Vector3Int min, Vector3Int max)
+        public Vector3Range(Vector3 min, Vector3 max)
         {
             minimalValue = min;
             maximalValue = max;

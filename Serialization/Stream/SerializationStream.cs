@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
+using DamnLibrary.Management;
 #if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
@@ -85,7 +86,7 @@ namespace DamnLibrary.Serialization
 
             if (realType != null && IsDynamicType(realType) ||
                 realType == null && IsDynamicType(typeof(T)))
-                WriteValueType(obj.GetType());
+                WriteType(obj.GetType());
             
             switch (obj)
             {
@@ -117,6 +118,8 @@ namespace DamnLibrary.Serialization
                 case IList l: WriteList(l); return;
                 case IDictionary d: WriteDictionary(d); return;
                 case IConvertible e: WriteConvertible(e); return;
+                
+                case Type t: WriteType(t); return;
             }
 
             var targetSerializationType = obj.GetType();
@@ -131,9 +134,9 @@ namespace DamnLibrary.Serialization
             stream.Write(bytes, 0, bytes.Length);
         }
 
-        private void WriteValueType(Type type)
+        private void WriteType(Type type)
         {
-            Write(type.FullName);
+            Write(type.AssemblyQualifiedName);
         }
 
         private void WriteBool(bool value)
@@ -355,6 +358,8 @@ namespace DamnLibrary.Serialization
             if (typeof(IList).IsAssignableFrom(type)) return ReadList(type);
             if (typeof(IDictionary).IsAssignableFrom(type)) return ReadDictionary(type);
             if (typeof(IConvertible).IsAssignableFrom(type)) return ReadConvertible(type);
+
+            if (type == typeof(Type)) return ReadType();
 
             if (customDeserialization.TryGetValue(type, out var method)) return method.Invoke(this);
 

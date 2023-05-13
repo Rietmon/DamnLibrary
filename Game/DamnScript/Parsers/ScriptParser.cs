@@ -1,7 +1,7 @@
 ﻿#if ENABLE_DAMN_SCRIPT
 using System.Collections.Generic;
 using System.Linq;
-using DamnLibrary.Other;
+using DamnLibrary.Types;
 
 namespace DamnLibrary.DamnScript.Parsers
 {

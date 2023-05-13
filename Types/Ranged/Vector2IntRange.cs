@@ -4,7 +4,7 @@ using DamnLibrary.Extensions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace DamnLibrary.Other
+namespace DamnLibrary.Types
 {
     [Serializable]
     public struct Vector2IntRange : IRanged<Vector2Int>

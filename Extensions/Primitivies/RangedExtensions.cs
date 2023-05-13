@@ -1,4 +1,4 @@
-using DamnLibrary.Other;
+using DamnLibrary.Types;
 
 namespace DamnLibrary.Extensions
 {
