@@ -65,5 +65,13 @@ namespace DamnLibrary.Extensions
         /// <returns>Casted IEnumerable</returns>
         public static IEnumerable<TOut> FuncCast<TOut, TIn>(this IEnumerable<TIn> array, Func<TIn, TOut> castFunction) =>
             array.Select(castFunction.Invoke);
+
+        /// <summary>
+        /// Check if IEnumerable contains elements and not equals null
+        /// </summary>
+        /// <param name="array">Array</param>
+        /// <typeparam name="T">Type of the array</typeparam>
+        /// <returns>True if array is null or empty</returns>
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> array) => array == null || !array.Any();
     }
 }

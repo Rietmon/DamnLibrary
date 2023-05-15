@@ -253,13 +253,5 @@ namespace DamnLibrary.Extensions
         /// <param name="array">Array</param>
         /// <typeparam name="T">Type of the array</typeparam>
         public static void Sort<T>(this T[] array) => Array.Sort(array);
-
-        /// <summary>
-        /// Check if array contains elements and not equals null
-        /// </summary>
-        /// <param name="array">Array</param>
-        /// <typeparam name="T">Type of the array</typeparam>
-        /// <returns>True if array is null or empty</returns>
-        public static bool IsNullOrEmpty<T>(this T[] array) => array == null || array.Length == 0;
     }
 }
