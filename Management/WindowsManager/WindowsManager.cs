@@ -134,7 +134,8 @@ namespace DamnLibrary.Management
             
             window.WindowName = windowName;
             window.BaseContext = windowContext;
-            window.Animator.Internal_CloseWindow = () => window.CloseAsync();
+            if (window.Animator)
+                window.Animator.Internal_CloseWindow = () => window.CloseAsync();
 
             return window;
         }

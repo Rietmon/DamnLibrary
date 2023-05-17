@@ -20,24 +20,24 @@ namespace DamnLibrary.Behaviours
         /// <summary>
         /// Will be called after creating object
         /// </summary>
-        public virtual Task OnOpen() => Task.CompletedTask;
+        protected internal virtual Task OnOpen() => Task.CompletedTask;
         
-        public virtual Task OnOpenAnimationOver() => Task.CompletedTask;
+        protected internal virtual Task OnOpenAnimationOver() => Task.CompletedTask;
         
-        public virtual Task OnShow() => Task.CompletedTask;
+        protected internal virtual Task OnShow() => Task.CompletedTask;
         
-        public virtual Task OnShowAnimationOver() => Task.CompletedTask;
+        protected internal virtual Task OnShowAnimationOver() => Task.CompletedTask;
         
-        public virtual Task OnHide() => Task.CompletedTask;
+        protected internal virtual Task OnHide() => Task.CompletedTask;
         
-        public virtual Task OnHideAnimationOver() => Task.CompletedTask;
+        protected internal virtual Task OnHideAnimationOver() => Task.CompletedTask;
 
         /// <summary>
         /// Will be called before destroying object
         /// </summary>
-        public virtual async Task OnClose() { }
+        protected internal virtual async Task OnClose() { }
         
-        public virtual async Task OnCloseAnimationOver() { }
+        protected internal virtual async Task OnCloseAnimationOver() { }
 
         /// <summary>
         /// Show window. Can be overriden to add custom logic
@@ -52,7 +52,7 @@ namespace DamnLibrary.Behaviours
         /// <summary>
         /// Close async window
         /// </summary>
-        public async void CloseAsync() => await WindowsManager.CloseAsync(this);
+        public async Task CloseAsync() => await WindowsManager.CloseAsync(this);
     }
     
     public abstract class WindowBehaviour<TContext> : WindowBehaviour where TContext : WindowContext
@@ -60,7 +60,7 @@ namespace DamnLibrary.Behaviours
         /// <summary>
         /// Casted context of this window
         /// </summary>
-        protected TContext Context => context ??= BaseContext.To<TContext>();
+        protected TContext Context => context ??= BaseContext as TContext;
 
         private TContext context;
     }
