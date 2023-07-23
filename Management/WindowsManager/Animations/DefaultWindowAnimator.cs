@@ -1,3 +1,4 @@
+#if ENABLE_DOTWEEN
 using System.Threading.Tasks;
 using DamnLibrary.Extensions;
 using DamnLibrary.Types;
@@ -67,3 +68,4 @@ namespace DamnLibrary.Management.Animations
 		}
 	}
 }
+#endif
