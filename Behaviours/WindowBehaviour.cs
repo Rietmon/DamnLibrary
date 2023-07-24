@@ -35,9 +35,9 @@ namespace DamnLibrary.Behaviours
         /// <summary>
         /// Will be called before destroying object
         /// </summary>
-        protected internal virtual async Task OnClose() { }
+        protected internal virtual Task OnClose() => Task.CompletedTask;
         
-        protected internal virtual async Task OnCloseAnimationOver() { }
+        protected internal virtual Task OnCloseAnimationOver() => Task.CompletedTask;
 
         /// <summary>
         /// Show window. Can be overriden to add custom logic
