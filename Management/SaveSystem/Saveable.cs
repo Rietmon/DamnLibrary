@@ -1,3 +1,4 @@
+#if ENABLE_SERIALIZATION
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,3 +71,4 @@ namespace DamnLibrary.Management
 		protected abstract Type GetTypeFromAssembly(string name);
 	}
 }
+#endif

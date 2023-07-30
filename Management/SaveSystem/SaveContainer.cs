@@ -1,3 +1,4 @@
+#if ENABLE_SERIALIZATION
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using DamnLibrary.Debugging;
@@ -37,3 +38,4 @@ namespace DamnLibrary.Management
 			UniversalDebugger.LogError($"[{nameof(SaveContainer)}] ({nameof(Deserialize)}) Unable to deserialize!");
 	}
 }
+#endif

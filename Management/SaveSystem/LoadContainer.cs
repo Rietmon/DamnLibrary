@@ -1,3 +1,4 @@
+#if ENABLE_SERIALIZATION
 using System;
 using DamnLibrary.Debugging;
 using DamnLibrary.Serialization;
@@ -25,3 +26,4 @@ namespace DamnLibrary.Management
 		}
 	}
 }
+#endif

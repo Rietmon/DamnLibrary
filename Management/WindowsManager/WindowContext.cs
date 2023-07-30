@@ -1,3 +1,4 @@
+#if UNITY_5_3_OR_NEWER
 using DamnLibrary.Behaviours;
 
 namespace DamnLibrary.Management
@@ -7,3 +8,4 @@ namespace DamnLibrary.Management
         public WindowBehaviour OwnerWindow { get; internal set; }
     }
 }
+#endif

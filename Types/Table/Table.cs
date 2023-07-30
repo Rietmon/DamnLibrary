@@ -1,3 +1,4 @@
+#if UNITY_5_3_OR_NEWER
 using UnityEngine;
 
 namespace DamnLibrary.Types
@@ -63,3 +64,4 @@ namespace DamnLibrary.Types
 		}
 	}
 }
+#endif

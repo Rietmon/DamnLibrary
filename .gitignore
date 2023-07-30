@@ -1,2 +1,5 @@
 *.meta
 *.asmdef
+/bin/
+/obj/
+*.csproj
