@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
-using UnityEngine.SceneManagement;
 #if UNITY_5_3_OR_NEWER 
+using UnityEngine.SceneManagement;
 using DamnLibrary.Behaviours;
 using DamnLibrary.Management;
 #if UNITY_EDITOR

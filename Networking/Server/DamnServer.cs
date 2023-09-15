@@ -1,88 +1,50 @@
-﻿#if ENABLE_SERIALIZATION && ENABLE_NETWORKING
-using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
-using DamnLibrary.Debugging;
+using System.Text;
 using DamnLibrary.Networking.Packets;
-using DamnLibrary.Networking.Protocols;
-using DamnLibrary.Networking.Protocols.TCP;
-using DamnLibrary.Types;
 using DamnLibrary.Serialization;
-using ProtocolType = DamnLibrary.Networking.Protocols.ProtocolType;
 
-namespace DamnLibrary.Networking.Server
+namespace DamnLibrary.Networking.Server;
+
+public class DamnServer
 {
-    public class DamnServer
+    private Socket Socket { get; }
+
+    private byte[] Buffer { get; } = new byte[ushort.MaxValue];
+
+    public DamnServer(int port)
     {
-        public Func<Task> OnHandle { get => Server.OnHandle; set => Server.OnHandle = value; }
-        public Action<ServerConnection> OnAcceptConnection { get => Server.OnAcceptConnection; set => Server.OnAcceptConnection = value; }
-        public Action<ServerConnection> OnRejectingConnection { get => Server.OnRejectingConnection; set => Server.OnRejectingConnection = value; }
-        public Action OnRejectConnection { get => Server.OnRejectConnection; set => Server.OnRejectConnection = value; }
-        public Action OnUpdatedConnections { get => Server.OnUpdatedConnections; set => Server.OnUpdatedConnections = value; }
-        
-        public bool IsWorking => Server.IsWorking;
-        
-        public bool IsPaused => Server.IsPaused;
-        
-        private IServerProtocol Server { get; set; }
+        Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        var localEndPoint = new IPEndPoint(IPAddress.Any, port);
+        Socket.Bind(localEndPoint);
 
-        public void Start(ProtocolType protocolType, string address, int port)
+        Handle();
+    }
+
+    public DamnServer(string address, int port)
+    {
+        Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        var localEndPoint = new IPEndPoint(IPAddress.Parse(address), port);
+        Socket.Connect(localEndPoint);
+    }
+
+    public async Task<int> SendAsync(ISerializable packet, IConvertible packetType, params IConvertible[] additionalData)
+    {
+        var serializationStream = new SerializationStream();
+        var header = new PacketHeader(packetType.ToUInt16(null), additionalData.Cast<byte>().ToArray());
+        
+    }
+
+    private async void Handle()
+    {
+        while (true)
         {
-            if (Server != null)
-            {
-                UniversalDebugger.LogError($"[{nameof(DamnServer)}] ({nameof(Start)}) Server is already started");
-                return;
-            }
+            var result = await Socket.ReceiveAsync(Buffer, SocketFlags.None);
+            var bytes = Buffer.AsSpan(0, result).ToArray();
+
+            Console.WriteLine(Encoding.UTF8.GetString(bytes));
             
-            switch (protocolType)
-            {
-                case ProtocolType.TCP: Server = new TCPServer(new TcpListener(IPAddress.Parse(address), port)); break;
-                default: UniversalDebugger.LogError($"[{nameof(DamnServer)}] ({nameof(Start)}) Unknown protocol type, type = {protocolType}"); return;
-            }
-            
-            Server.Handle();
+            await Task.Delay(33);
         }
-
-        public int GetClientConnectionsCount() => Server.GetServerConnectionsCount();
-
-        public ServerConnection GetClientConnection(uint id) => Server.GetServerConnection(id);
-
-        public async Task<Pair<PacketHeader, TReceive>> SendAsync<TReceive>(ServerConnection clientConnection,
-            ISerializable sendPacket,
-            IConvertible packetType, params byte[] additionalData)
-            where TReceive : ISerializable, new() =>
-            await Server.SendAsync<TReceive>(clientConnection, sendPacket, packetType, additionalData);
-
-        public async Task<Pair<PacketHeader, TReceive>[]> SendToSelectedAsync<TReceive>(Func<ServerConnection, bool> predicate,
-            ISerializable sendPacket, 
-            IConvertible packetType, params byte[] additionalData)
-            where TReceive : ISerializable, new() =>
-            await Server.SendToSelectedAsync<TReceive>(predicate, sendPacket, packetType, additionalData);
-
-        public async Task<Pair<PacketHeader, TReceive>[]> SendToEachAsync<TReceive>(ISerializable sendPacket,
-            IConvertible packetType,
-            params byte[] additionalData)
-            where TReceive : ISerializable, new() =>
-            await Server.SendToEachAsync<TReceive>(sendPacket, packetType, additionalData);
-
-        
-        public async Task SendWithoutResponseAsync(ServerConnection clientConnection,
-            ISerializable sendPacket,
-            IConvertible packetType, params byte[] additionalData) =>
-            await Server.SendWithoutResponseAsync(clientConnection, sendPacket, packetType, additionalData);
-
-        public async Task SendToSelectedWithoutResponseAsync(Func<ServerConnection, bool> predicate,
-            ISerializable sendPacket, 
-            IConvertible packetType, params byte[] additionalData) =>
-            await Server.SendToSelectedWithoutResponseAsync(predicate, sendPacket, packetType, additionalData);
-
-        public async Task SendToEachWithoutResponseAsync(ISerializable sendPacket,
-            IConvertible packetType,
-            params byte[] additionalData) =>
-            await Server.SendToEachWithoutResponseAsync(sendPacket, packetType, additionalData);
-
-        public void Stop() => Server?.Stop();
     }
 }
-#endif
