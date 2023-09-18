@@ -1,7 +1,7 @@
 #if UNITY_5_3_OR_NEWER 
 using System;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Audios
 {
     public class AudioExecutor
     {

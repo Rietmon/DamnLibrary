@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-namespace DamnLibrary.Management.Animations
+namespace DamnLibrary.Management.Windows.Animations
 {
 	public class DefaultWindowAnimator : WindowAnimator
 	{

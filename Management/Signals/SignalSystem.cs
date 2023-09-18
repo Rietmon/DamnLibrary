@@ -5,7 +5,7 @@ using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using DamnLibrary.Types;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Signals
 {
     public static class SignalSystem
     {

@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
 using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
+using DamnLibrary.Management.Pools;
 using UnityEngine;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Audios
 {
     public class AudioManager : SingletonBehaviour<AudioManager>
     {
-        private static PullManager<AudioSource> pullManager;
+        private static PoolManager<AudioSource> poolManager;
         
         [SerializeField] private int audioSourcesPullCount = 16;
 
@@ -23,17 +24,17 @@ namespace DamnLibrary.Management
                 DontDestroyOnLoad(audioManager);
             }
             var exampleObject = new GameObject("AudioSource").AddComponent<AudioSource>();
-            pullManager = new PullManager<AudioSource>(
+            poolManager = new PoolManager<AudioSource>(
                 Instance.audioSourcesPullCount,
                 exampleObject,
                 (source) => Instantiate(source, Instance.transform));
-            pullManager.EnableGameObjectOptimization();
+            poolManager.EnableGameObjectOptimization();
         }
 
         public static AudioExecutor Play(AudioClip clip)
         {
-            var pullCallback = (Action)EmptyCallback;
-            var audioSource = pullManager.GetObject(ref pullCallback);
+            var poolCallback = (Action)EmptyCallback;
+            var audioSource = poolManager.GetObject(ref poolCallback);
 
             ClearAudioSource(audioSource);
 
@@ -47,7 +48,7 @@ namespace DamnLibrary.Management
                 await Task.WhenAny(TaskUtilities.WaitUntil(() => !audioSource.isPlaying),
                     TaskUtilities.WaitUntil(() => needToStop));
                 audioSource.Stop();
-                pullCallback?.Invoke();
+                poolCallback?.Invoke();
             }
 
             StopAudioSourceCallback();
@@ -69,7 +70,7 @@ namespace DamnLibrary.Management
 
         private void OnDestroy()
         {
-            pullManager?.Dispose();
+            poolManager?.Dispose();
         }
 
         private static void EmptyCallback()

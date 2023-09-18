@@ -6,7 +6,7 @@ using System.Reflection;
 using DamnLibrary.Extensions;
 using DamnLibrary.Serialization;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Saves
 {
 	public abstract class Saveable : ISerializable
 	{

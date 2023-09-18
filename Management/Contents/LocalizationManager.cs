@@ -6,7 +6,7 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 using DamnLibrary.Debugging;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Contents
 {
     public static class LocalizationManager
     {

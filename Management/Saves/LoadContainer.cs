@@ -3,7 +3,7 @@ using System;
 using DamnLibrary.Debugging;
 using DamnLibrary.Serialization;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Saves
 {
 	public class LoadContainer : ISerializable
 	{

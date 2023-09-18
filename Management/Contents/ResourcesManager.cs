@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.U2D;
 using Object = UnityEngine.Object;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Contents
 {
     public static class ResourcesManager
     {

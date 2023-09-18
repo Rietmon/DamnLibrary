@@ -1,7 +1,8 @@
 #if UNITY_5_3_OR_NEWER 
 using System.Threading.Tasks;
 using DamnLibrary.Management;
-using DamnLibrary.Management.Animations;
+using DamnLibrary.Management.Windows;
+using DamnLibrary.Management.Windows.Animations;
 using UnityEngine;
 
 namespace DamnLibrary.Behaviours

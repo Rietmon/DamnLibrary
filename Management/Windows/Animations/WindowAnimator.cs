@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
 
-namespace DamnLibrary.Management.Animations
+namespace DamnLibrary.Management.Windows.Animations
 {
 	public abstract class WindowAnimator : DamnBehaviour
 	{

@@ -8,15 +8,15 @@ using DamnLibrary.Game;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Pools
 {
-    public class PullManager<T> : IDisposable where T : Object
+    public class PoolManager<T> : IDisposable where T : Object
     {
-        public int PullCapacity { get; private set; }
+        public int PoolCapacity { get; private set; }
 
-        public int FreeObjectsCount => objectsPull.Count;
+        public int FreeObjectsCount => objectsPool.Count;
 
-        public int BusyObjectsCount => objectPullExecuting.Count;
+        public int BusyObjectsCount => objectPoolExecuting.Count;
 
         public Action<T> OnWillBusy { get; set; }
 
@@ -26,26 +26,26 @@ namespace DamnLibrary.Management
 
         private readonly Func<T, T> instantiateMethod;
 
-        private readonly List<T> objectsPull = new();
+        private readonly List<T> objectsPool = new();
 
-        private readonly List<T> objectPullExecuting = new();
+        private readonly List<T> objectPoolExecuting = new();
 
-        public PullManager(int capacity, T example, Func<T, T> instantiateMethod = null)
+        public PoolManager(int capacity, T example, Func<T, T> instantiateMethod = null)
         {
-            PullCapacity = capacity;
+            PoolCapacity = capacity;
             examplePrefab = example;
             this.instantiateMethod = instantiateMethod;
 
             for (var i = 0; i < capacity; i++)
             {
                 var pullObject = CreateObject();
-                objectsPull.Add(pullObject);
+                objectsPool.Add(pullObject);
             }
         }
 
         public void ForEachFreeObject(Action<T> action)
         {
-            for (var i = 0; i < objectsPull.Count; i++)
+            for (var i = 0; i < objectsPool.Count; i++)
             {
                 var callback = ActionUtilities.GetDummy();
                 var pullObject = GetObject(ref callback);
@@ -57,7 +57,7 @@ namespace DamnLibrary.Management
         
         public async Task ForEachFreeObjectAsync(Func<T, Task> action)
         {
-            for (var i = 0; i < objectsPull.Count; i++)
+            for (var i = 0; i < objectsPool.Count; i++)
             {
                 var callback = ActionUtilities.GetDummy();
                 var pullObject = GetObject(ref callback);
@@ -69,16 +69,16 @@ namespace DamnLibrary.Management
 
         public T GetObject(ref Action endCallback)
         {
-            if (objectsPull.Count > 0)
+            if (objectsPool.Count > 0)
             {
-                var obj = objectsPull.First();
-                objectsPull.RemoveAt(0);
-                objectPullExecuting.Add(obj);
+                var obj = objectsPool.First();
+                objectsPool.RemoveAt(0);
+                objectPoolExecuting.Add(obj);
 
                 endCallback += () =>
                 {
-                    objectPullExecuting.Remove(obj);
-                    objectsPull.Add(obj);
+                    objectPoolExecuting.Remove(obj);
+                    objectsPool.Add(obj);
                     OnWillFree?.Invoke(obj);
                 };
 
@@ -102,11 +102,11 @@ namespace DamnLibrary.Management
             }
         }
 
-        public bool IsObjectBusy(T pullObject) => objectPullExecuting.Contains(pullObject);
+        public bool IsObjectBusy(T pullObject) => objectPoolExecuting.Contains(pullObject);
 
         public void EnableGameObjectOptimization()
         {
-            foreach (var freeObject in objectsPull)
+            foreach (var freeObject in objectsPool)
                 (freeObject as GameObject)?.SetActive(false);
 
             OnWillBusy += (obj) => (obj as GameObject)?.SetActive(true);
@@ -115,7 +115,7 @@ namespace DamnLibrary.Management
 
         public void DisableGameObjectOptimization()
         {
-            foreach (var freeObject in objectsPull)
+            foreach (var freeObject in objectsPool)
                 (freeObject as GameObject)?.SetActive(true);
 
             OnWillBusy -= (obj) => (obj as GameObject)?.SetActive(true);
@@ -123,10 +123,10 @@ namespace DamnLibrary.Management
         }
 
         public void DestroyLastObjects(int count, bool onlyFree = false) =>
-            DestroyObjects(objectsPull.Count - 1, 0, count, onlyFree);
+            DestroyObjects(objectsPool.Count - 1, 0, count, onlyFree);
         
         public void DestroyFirstObjects(int count, bool onlyFree = false) =>
-            DestroyObjects(0, objectsPull.Count - 1, count, onlyFree);
+            DestroyObjects(0, objectsPool.Count - 1, count, onlyFree);
 
         public void DestroyObjects(int fromIndex, int toIndex, int count, bool onlyFree = false)
         {
@@ -135,8 +135,8 @@ namespace DamnLibrary.Management
                 if (count == 0)
                     return;
                 
-                var pullObject = objectsPull[i];
-                if (onlyFree && IsObjectBusy(pullObject))
+                var poolObject = objectsPool[i];
+                if (onlyFree && IsObjectBusy(poolObject))
                     continue;
 
                 DestroyObject(i);
@@ -146,18 +146,18 @@ namespace DamnLibrary.Management
 
         public void DestroyObject(int index)
         {
-            if (objectsPull.Count <= index)
+            if (objectsPool.Count <= index)
                 return;
 
-            var pullObject = objectsPull[index];
+            var poolObject = objectsPool[index];
 
-            objectsPull.Remove(pullObject);
-            objectPullExecuting.Remove(pullObject);
-            OnWillFree?.Invoke(pullObject);
+            objectsPool.Remove(poolObject);
+            objectPoolExecuting.Remove(poolObject);
+            OnWillFree?.Invoke(poolObject);
             
-            pullObject.TotalDestroy();
+            poolObject.TotalDestroy();
             
-            PullCapacity--;
+            PoolCapacity--;
         }
 
         private T CreateObject() =>
@@ -167,10 +167,10 @@ namespace DamnLibrary.Management
 
         public void Dispose()
         {
-            foreach (var obj in objectsPull)
+            foreach (var obj in objectsPool)
                 obj.TotalDestroy();
 
-            foreach (var obj in objectPullExecuting)
+            foreach (var obj in objectPoolExecuting)
                 obj.TotalDestroy();
         }
     }

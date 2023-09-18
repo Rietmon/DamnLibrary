@@ -1,6 +1,6 @@
 using System;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Saves
 {
 	public class SaveAttribute : Attribute { }
 }

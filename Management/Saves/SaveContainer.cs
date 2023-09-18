@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using DamnLibrary.Debugging;
 using DamnLibrary.Serialization;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Saves
 {
 	public class SaveContainer : ISerializable
 	{

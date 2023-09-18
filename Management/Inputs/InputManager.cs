@@ -9,7 +9,7 @@ using DamnLibrary.DamnScript;
 using DamnLibrary.Extensions;
 using UnityEngine;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Inputs
 {
 #if ENABLE_DAMN_SCRIPT
     [DamnScriptable]

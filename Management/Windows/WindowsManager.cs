@@ -5,10 +5,11 @@ using DamnLibrary.Behaviours;
 using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using DamnLibrary.Game;
+using DamnLibrary.Management.Contents;
 
 #pragma warning disable 4014
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Windows
 {
     public class WindowsManager : ProtectedSingletonBehaviour<WindowsManager>
     {

@@ -2,7 +2,7 @@ using System;
 using DamnLibrary.Extensions;
 #pragma warning disable 660,661
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Signals
 {
     internal readonly struct SignalSystemId
     {

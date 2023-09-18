@@ -8,7 +8,7 @@ using DamnLibrary.Debugging;
 using DamnLibrary.Extensions;
 using UnityEngine.U2D;
 
-namespace DamnLibrary.Management
+namespace DamnLibrary.Management.Contents
 {
     public static class AddressableManager
     {
