@@ -37,6 +37,11 @@ namespace DamnLibrary.Types
             this.second = second;
         }
 
+        public static bool operator ==(Pair<T1, T2> l, Pair<T1, T2> r) => Equals(r.First, l.First) && 
+                                                                          Equals(r.Second, l.Second);
+
+        public static bool operator !=(Pair<T1, T2> l, Pair<T1, T2> r) => !(l == r);
+
         public static implicit operator KeyValuePair<T1, T2>(Pair<T1, T2> pair) =>
             new(pair.First, pair.Second);
         
