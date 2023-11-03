@@ -1,5 +1,5 @@
 using System;
-using DamnLibrary.Extensions;
+using DamnLibrary.DamnLibrary.Utilities;
 #if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif

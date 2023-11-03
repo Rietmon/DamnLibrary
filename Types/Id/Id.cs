@@ -1,5 +1,5 @@
 using System;
-using DamnLibrary.Extensions;
+using DamnLibrary.DamnLibrary.Utilities;
 #if ENABLE_SERIALIZATION
 using DamnLibrary.Serialization;
 #endif
