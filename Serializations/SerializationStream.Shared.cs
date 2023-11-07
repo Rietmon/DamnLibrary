@@ -5,11 +5,13 @@ namespace DamnLibrary.Serializations
 {
     public partial class SerializationStream
     {
+        public static int BufferSize { get; set; } = 4096;
+        
         private Stream Stream { get; set; }
         
         private Stack<Stream> Containers { get; } = new();
         
-        private byte[] Buffer { get; } = new byte[1024];
+        private byte[] Buffer { get; } = new byte[BufferSize];
         
         public SerializationStream() => Stream = new MemoryStream();
 
