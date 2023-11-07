@@ -4,7 +4,7 @@ using DamnLibrary.Utilities.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace DamnLibrary.Games.Prefab
+namespace DamnLibrary.Games
 {
     [Serializable]
     public class Prefab<T> where T : Object

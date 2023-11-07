@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DamnLibrary.Utilities;
 using UnityEngine;
 
-namespace DamnLibrary.Animations.SpriteSequenceAnimations
+namespace DamnLibrary.Animations
 {
     public class SpriteSequenceAsyncAnimator : ISpriteSequenceAnimator
     {

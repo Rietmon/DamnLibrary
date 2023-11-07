@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DamnLibrary.Behaviours;
 using UnityEngine;
 
-namespace DamnLibrary.Games.CollisionSorting
+namespace DamnLibrary.Games
 {
     [RequireComponent(typeof(Collider2D))]
     public class ColliderSorting : DamnBehaviour

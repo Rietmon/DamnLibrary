@@ -8,12 +8,12 @@ using DamnLibrary.Utilities.Extensions;
 #if ENABLE_SERIALIZATION
 #endif
 
-namespace DamnLibrary.Games.Infoportions
+namespace DamnLibrary.Games
 {
 #if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
     [DamnScriptable]
 #endif
-    public static class Infoportions
+    public static class Infoportion
     {
         private static readonly List<string> infoportions = new();
 

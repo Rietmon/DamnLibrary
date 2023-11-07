@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
 using DamnLibrary.Debugs;
-using DamnLibrary.Games.Prefab;
+using DamnLibrary.Games;
 using DamnLibrary.Utilities;
 using DamnLibrary.Utilities.Extensions;
 using UnityEngine;

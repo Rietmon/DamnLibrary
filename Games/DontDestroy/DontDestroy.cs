@@ -4,7 +4,7 @@ using DamnLibrary.Attributes;
 using DamnLibrary.Behaviours;
 using UnityEngine;
 
-namespace DamnLibrary.Games.DontDestroy
+namespace DamnLibrary.Games
 {
     public class DontDestroy : DamnBehaviour
     {

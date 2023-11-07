@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace DamnLibrary.Animations.SpriteSequenceAnimations
+namespace DamnLibrary.Animations
 {
     public interface ISpriteSequenceAnimator : IDisposable
     {
