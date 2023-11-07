@@ -139,23 +139,34 @@ namespace DamnLibrary.Serializations
             var valuePtr = (byte*)&v;
             WriteBytesToBufferAndStream(valuePtr, 16);
         }
+
+        public void WriteIEnumerable<T>(IEnumerable<T> enumerable, int count) =>
+            WriteManagedIEnumerable(enumerable, count);
+
+        public void WriteArray<T>(T[] array) => 
+            WriteIEnumerable(array, array.Length);
         
-        public void WriteIEnumerable<T>(IEnumerable<T> enumerable, int count)
-        {
-            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
-                WriteManagedIEnumerable(enumerable, count);
-            else 
-                WriteUnmanagedIEnumerable(enumerable, count);
-        }
+        public void WriteUnmanagedArray<T>(T[] array) where T : unmanaged => 
+            WriteUnmanagedIEnumerable(array, array.Length);
 
-        public void WriteArray<T>(T[] array) => WriteIEnumerable(array, array.Length);
-
-        public void WriteList<T>(IList<T> list) => WriteIEnumerable(list, list.Count);
+        public void WriteList<T>(IList<T> list) => 
+            WriteIEnumerable(list, list.Count);
+        
+        public void WriteUnmanagedList<T>(IList<T> list) where T : unmanaged => 
+            WriteUnmanagedIEnumerable(list, list.Count);
 
         public void WriteDictionary<T1, T2>(IDictionary<T1, T2> dictionary)
         {
             WriteIEnumerable(dictionary.Keys, dictionary.Count);
             WriteIEnumerable(dictionary.Values, dictionary.Count);
+        }
+        
+        public void WriteUnmanagedDictionary<T1, T2>(IDictionary<T1, T2> dictionary) 
+            where T1 : unmanaged
+            where T2 : unmanaged
+        {
+            WriteUnmanagedIEnumerable(dictionary.Keys, dictionary.Count);
+            WriteUnmanagedIEnumerable(dictionary.Values, dictionary.Count);
         }
 
         public void WriteManagedIEnumerable<T>(IEnumerable<T> enumerable, int count)
@@ -165,7 +176,7 @@ namespace DamnLibrary.Serializations
                 Write(value);
         }
 
-        public void WriteUnmanagedIEnumerable<T>(IEnumerable<T> enumerable, int count)
+        public void WriteUnmanagedIEnumerable<T>(IEnumerable<T> enumerable, int count) where T : unmanaged
         {
             var sizeOfElement = (uint)Marshal.SizeOf<T>();
             uint currentSize = 0;

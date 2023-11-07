@@ -146,11 +146,7 @@ namespace DamnLibrary.Serializations
                 return *(decimal*)arrayPtr;
         }
 
-        public T[] ReadArray<T>() => RuntimeHelpers.IsReferenceOrContainsReferences<T>() 
-            ? ReadManagedArray<T>() 
-            : ReadUnmanagedArray<T>();
-
-        public T[] ReadUnmanagedArray<T>()
+        public T[] ReadUnmanagedArray<T>() where T : unmanaged
         {
             var length = ReadInt();
             var size = Marshal.SizeOf<T>();
@@ -176,15 +172,27 @@ namespace DamnLibrary.Serializations
             return array;
         }
 
-        public List<T> ReadList<T>() => RuntimeHelpers.IsReferenceOrContainsReferences<T>() 
-            ? new List<T>(ReadManagedArray<T>()) 
-            : new List<T>(ReadUnmanagedArray<T>());
+        public List<T> ReadUnmanagedList<T>() where T : unmanaged => new(ReadUnmanagedArray<T>());
 
-        public Dictionary<TKey, TValue> ReadDictionary<TKey, TValue>()
+        public List<T> ReadList<T>() => new(ReadManagedArray<T>());
+            
+        public Dictionary<TKey, TValue> ReadUnmanagedDictionary<TKey, TValue>() 
+            where TKey : unmanaged 
+            where TValue : unmanaged
         {
             var result = new Dictionary<TKey, TValue>();
-            var keys = ReadArray<TKey>();
-            var values = ReadArray<TValue>();
+            var keys = ReadUnmanagedArray<TKey>();
+            var values = ReadUnmanagedArray<TValue>();
+            for (var i = 0; i < keys.Length; i++)
+                result.Add(keys[i], values[i]);
+            return result;
+        }
+            
+        public Dictionary<TKey, TValue> ReadManagedDictionary<TKey, TValue>()
+        {
+            var result = new Dictionary<TKey, TValue>();
+            var keys = ReadManagedArray<TKey>();
+            var values = ReadManagedArray<TValue>();
             for (var i = 0; i < keys.Length; i++)
                 result.Add(keys[i], values[i]);
             return result;

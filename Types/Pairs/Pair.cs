@@ -36,9 +36,18 @@ namespace DamnLibrary.Types.Pairs
             this.first = first;
             this.second = second;
         }
+        
+        public bool Equals(Pair<T1, T2> other) => 
+            EqualityComparer<T1>.Default.Equals(first, other.first) 
+            && EqualityComparer<T2>.Default.Equals(second, other.second);
 
-        public static bool operator ==(Pair<T1, T2> l, Pair<T1, T2> r) => Equals(r.First, l.First) && 
-                                                                          Equals(r.Second, l.Second);
+        public override bool Equals(object obj) => 
+            obj is Pair<T1, T2> other && Equals(other);
+
+        public override int GetHashCode() => HashCode.Combine(first, second);
+
+        public static bool operator ==(Pair<T1, T2> l, Pair<T1, T2> r) => Equals(r.First, l.First) 
+                                                                          && Equals(r.Second, l.Second);
 
         public static bool operator !=(Pair<T1, T2> l, Pair<T1, T2> r) => !(l == r);
 
