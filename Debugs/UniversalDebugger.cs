@@ -1,4 +1,7 @@
 ﻿using System;
+using DamnLibrary.DamnScript.Parsers;
+using DamnLibrary.DamnScript.Runtime;
+using DamnLibrary.Utilities.Extensions;
 #if ENABLE_DAMN_SCRIPT
 #endif
 #if UNITY_5_3_OR_NEWER

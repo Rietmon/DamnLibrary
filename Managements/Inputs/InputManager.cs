@@ -1,7 +1,13 @@
 #if UNITY_5_3_OR_NEWER
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using DamnLibrary.Behaviours;
-using DamnLibrary.Games.DamnScript.Parsers;
-using DamnLibrary.Games.DamnScript.Runtime;
+using DamnLibrary.DamnScript.Parsers;
+using DamnLibrary.DamnScript.Runtime;
+using DamnLibrary.Utilities;
+using UnityEngine;
+using UnityEngine.Windows;
 #if ENABLE_DAMN_SCRIPT
 #endif
 

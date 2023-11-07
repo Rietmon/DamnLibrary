@@ -1,6 +1,12 @@
 ﻿#if UNITY_5_3_OR_NEWER
+using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
+using DamnLibrary.Debugs;
 using DamnLibrary.Games.Prefab;
+using DamnLibrary.Utilities;
+using DamnLibrary.Utilities.Extensions;
+using UnityEngine;
+using UnityEngine.U2D;
 using Object = UnityEngine.Object;
 
 namespace DamnLibrary.Managements.Contents

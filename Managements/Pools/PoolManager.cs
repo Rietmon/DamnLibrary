@@ -1,5 +1,12 @@
 #if UNITY_5_3_OR_NEWER
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using DamnLibrary.Games.Prefab;
+using DamnLibrary.Utilities;
+using DamnLibrary.Utilities.Extensions;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace DamnLibrary.Managements.Pools

@@ -1,5 +1,8 @@
 using System;
 using DamnLibrary.Utilities;
+#if UNITY_5_3_OR_NEWER
+using UnityEngine;
+#endif
 
 namespace DamnLibrary.Types.Rangeds
 {

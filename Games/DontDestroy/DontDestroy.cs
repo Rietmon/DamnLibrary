@@ -1,5 +1,8 @@
 ﻿#if UNITY_5_3_OR_NEWER
+using System.Collections.Generic;
+using DamnLibrary.Attributes;
 using DamnLibrary.Behaviours;
+using UnityEngine;
 
 namespace DamnLibrary.Games.DontDestroy
 {

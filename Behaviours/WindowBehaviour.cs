@@ -1,6 +1,5 @@
 #if UNITY_5_3_OR_NEWER 
 using System.Threading.Tasks;
-using DamnLibrary.Management;
 using DamnLibrary.Managements.Windows;
 using DamnLibrary.Managements.Windows.Animations;
 using UnityEngine;

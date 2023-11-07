@@ -1,5 +1,7 @@
 #if UNITY_5_3_OR_NEWER
-#pragma warning disable 4014
+using System.Threading.Tasks;
+using DamnLibrary.Utilities;
+using UnityEngine;
 
 namespace DamnLibrary.Animations.SpriteSequenceAnimations
 {
@@ -56,7 +58,7 @@ namespace DamnLibrary.Animations.SpriteSequenceAnimations
                 {
                     await Task.Delay((int)(animationDuration * 1000));
                     IsPlaying = false;
-                });
+                }).Forget();
             }
 
             while (!needToStopAnimation)

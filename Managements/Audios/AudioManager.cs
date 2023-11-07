@@ -1,6 +1,11 @@
 #if UNITY_5_3_OR_NEWER
+using System;
+using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
+using DamnLibrary.Debugs;
 using DamnLibrary.Managements.Pools;
+using DamnLibrary.Utilities;
+using UnityEngine;
 
 namespace DamnLibrary.Managements.Audios
 {

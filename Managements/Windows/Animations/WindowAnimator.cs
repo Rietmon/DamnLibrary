@@ -1,4 +1,6 @@
 #if UNITY_5_3_OR_NEWER
+using System;
+using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
 
 namespace DamnLibrary.Managements.Windows.Animations
