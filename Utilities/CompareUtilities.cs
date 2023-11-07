@@ -1,4 +1,4 @@
-﻿namespace DamnLibrary.DamnLibrary.Utilities
+﻿namespace DamnLibrary.Utilities
 {
     public static class CompareUtilities
     {

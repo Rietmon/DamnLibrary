@@ -1,10 +1,8 @@
 #if ENABLE_SERIALIZATION && ENABLE_DAMN_SCRIPT
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DamnLibrary.Behaviours;
-using DamnLibrary.DamnScript;
-using UnityEngine;
+using DamnLibrary.Games.DamnScript.UnityAssets;
+
+namespace DamnLibrary.Games.DamnScript.Runtime;
 
 public class DefaultScriptExecutor : DamnBehaviour
 {

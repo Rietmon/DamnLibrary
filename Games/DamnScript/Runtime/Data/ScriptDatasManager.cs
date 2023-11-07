@@ -1,9 +1,7 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using System.Collections.Generic;
-using DamnLibrary.DamnScript.Parsers;
-using DamnLibrary.Debugging;
+using DamnLibrary.Games.DamnScript.Parsers;
 
-namespace DamnLibrary.DamnScript.Data
+namespace DamnLibrary.Games.DamnScript.Runtime.Data
 {
     internal static class ScriptDatasManager
     {

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Reflection;
 
-namespace Tiny
+namespace DamnLibrary.TinyJson
 {
     using Encoder = Action<object, JsonBuilder>;
 

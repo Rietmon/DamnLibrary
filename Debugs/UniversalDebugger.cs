@@ -1,12 +1,11 @@
 ﻿using System;
 #if ENABLE_DAMN_SCRIPT
-using DamnLibrary.DamnScript;
 #endif
 #if UNITY_5_3_OR_NEWER
 using UnityEngine;
 #endif
 
-namespace DamnLibrary.Debugging
+namespace DamnLibrary.Debugs
 {
 #if ENABLE_DAMN_SCRIPT
     [DamnScriptable]

@@ -1,11 +1,11 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
-using DamnLibrary.Debugging;
+using System.IO;
+using System.Text;
+using DamnLibrary.Debugs;
 
-namespace Tiny
+namespace DamnLibrary.TinyJson
 {
     public class JsonParser : IDisposable
     {

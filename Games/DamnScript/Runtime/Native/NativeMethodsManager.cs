@@ -1,7 +1,5 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using System.Collections.Generic;
-
-namespace DamnLibrary.DamnScript
+namespace DamnLibrary.Games.DamnScript.Runtime.Native
 {
     internal static class NativeMethodsManager
     {

@@ -1,9 +1,7 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using System;
-using System.Threading.Tasks;
-using DamnLibrary.DamnScript.Executing;
+using DamnLibrary.Games.DamnScript.Runtime.Executing;
 
-namespace DamnLibrary.DamnScript
+namespace DamnLibrary.Games.DamnScript.Runtime.Native
 {
     internal class NativeMethod
     {

@@ -1,4 +1,4 @@
-namespace DamnLibrary.Management.Signals
+namespace DamnLibrary.Managements.Signals
 {
     public abstract class Signal { }
 }

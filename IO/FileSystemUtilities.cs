@@ -1,6 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
-using DamnLibrary.Debugging;
+using DamnLibrary.Debugs;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 #endif
 
-namespace DamnLibrary.FileSystem
+namespace DamnLibrary.IO
 {
     public static class FileSystemUtilities
     {

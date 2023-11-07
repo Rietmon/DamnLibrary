@@ -1,7 +1,7 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using DamnLibrary.DamnScript.Executing;
+using DamnLibrary.Games.DamnScript.Runtime.Executing;
 
-namespace DamnLibrary.DamnScript
+namespace DamnLibrary.Games.DamnScript.Runtime
 {
     public interface IScriptExecutor
     { 

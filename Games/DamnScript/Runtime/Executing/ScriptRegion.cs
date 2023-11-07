@@ -1,12 +1,8 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using System.Threading.Tasks;
-using DamnLibrary.DamnScript.Data;
-using DamnLibrary.Extensions;
-#if ENABLE_SERIALIZATION
-using DamnLibrary.Serialization;
-#endif
+using DamnLibrary.Games.DamnScript.Parsers;
+using DamnLibrary.Games.DamnScript.Runtime.Data;
 
-namespace DamnLibrary.DamnScript.Executing
+namespace DamnLibrary.Games.DamnScript.Runtime.Executing
 {
     [DamnScriptable
 #if ENABLE_SERIALIZATION

@@ -1,15 +1,9 @@
 ﻿#if UNITY_5_3_OR_NEWER
-using System;
-using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
-using DamnLibrary.Debugging;
-using DamnLibrary.Extensions;
-using DamnLibrary.Game;
-using UnityEngine;
-using UnityEngine.U2D;
+using DamnLibrary.Games.Prefab;
 using Object = UnityEngine.Object;
 
-namespace DamnLibrary.Management.Contents
+namespace DamnLibrary.Managements.Contents
 {
     public static class ResourcesManager
     {

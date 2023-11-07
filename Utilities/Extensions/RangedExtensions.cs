@@ -1,6 +1,6 @@
-using DamnLibrary.Types;
+using DamnLibrary.Types.Rangeds;
 
-namespace DamnLibrary.DamnLibrary.Utilities.Extensions
+namespace DamnLibrary.Utilities.Extensions
 {
 	public static class RangedExtensions
 	{

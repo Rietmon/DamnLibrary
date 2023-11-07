@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Tiny
+namespace DamnLibrary.TinyJson
 {
-    public static class TypeExtensions
+    internal static class TypeExtensions
     {
         public static bool IsInstanceOfGenericType(this Type type, Type genericType)
         {
@@ -76,7 +76,7 @@ namespace Tiny
         }
     }
 
-    public static class JsonExtensions
+    internal static class JsonExtensions
     {
         public static bool IsNullable(this Type type)
         {

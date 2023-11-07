@@ -1,14 +1,8 @@
-#if UNITY_5_3_OR_NEWER 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DamnLibrary.Extensions;
-using DamnLibrary.Game;
-using UnityEngine;
+#if UNITY_5_3_OR_NEWER
+using DamnLibrary.Games.Prefab;
 using Object = UnityEngine.Object;
 
-namespace DamnLibrary.Management.Pools
+namespace DamnLibrary.Managements.Pools
 {
     public class PoolManager<T> : IDisposable where T : Object
     {

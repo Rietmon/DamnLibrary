@@ -1,7 +1,5 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using DamnLibrary.Extensions;
-
-namespace DamnLibrary.DamnScript.Data
+namespace DamnLibrary.Games.DamnScript.Runtime.Data
 {
     public class ScriptData
     {

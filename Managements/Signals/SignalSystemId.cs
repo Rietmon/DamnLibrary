@@ -1,9 +1,9 @@
 using System;
-using DamnLibrary.DamnLibrary.Utilities;
+using DamnLibrary.Utilities;
 
 #pragma warning disable 660,661
 
-namespace DamnLibrary.Management.Signals
+namespace DamnLibrary.Managements.Signals
 {
     internal readonly struct SignalSystemId
     {

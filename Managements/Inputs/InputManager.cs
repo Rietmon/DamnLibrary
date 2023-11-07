@@ -1,15 +1,11 @@
-#if UNITY_5_3_OR_NEWER 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+#if UNITY_5_3_OR_NEWER
 using DamnLibrary.Behaviours;
+using DamnLibrary.Games.DamnScript.Parsers;
+using DamnLibrary.Games.DamnScript.Runtime;
 #if ENABLE_DAMN_SCRIPT
-using DamnLibrary.DamnScript;
 #endif
-using DamnLibrary.Extensions;
-using UnityEngine;
 
-namespace DamnLibrary.Management.Inputs
+namespace DamnLibrary.Managements.Inputs
 {
 #if ENABLE_DAMN_SCRIPT
     [DamnScriptable]

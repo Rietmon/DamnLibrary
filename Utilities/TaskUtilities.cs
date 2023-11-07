@@ -1,8 +1,10 @@
-﻿#if UNITY_5_3_OR_NEWER 
+﻿using System;
+using System.Threading.Tasks;
+#if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
-namespace DamnLibrary.DamnLibrary.Utilities
+namespace DamnLibrary.Utilities
 {
     public static class TaskUtilities
     {

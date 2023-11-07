@@ -1,7 +1,5 @@
-﻿#if UNITY_5_3_OR_NEWER 
-using UnityEngine;
-
-namespace DamnLibrary.Extensions
+﻿#if UNITY_5_3_OR_NEWER
+namespace DamnLibrary.Utilities.Extensions
 {
     public static class Vector3Extensions
     {

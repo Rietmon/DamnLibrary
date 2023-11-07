@@ -1,10 +1,7 @@
-﻿#if UNITY_5_3_OR_NEWER 
-using System;
-using DamnLibrary.Extensions;
-using UnityEngine;
+﻿#if UNITY_5_3_OR_NEWER
 using Object = UnityEngine.Object;
 
-namespace DamnLibrary.Game
+namespace DamnLibrary.Games.Prefab
 {
     [Serializable]
     public class Prefab<T> where T : Object

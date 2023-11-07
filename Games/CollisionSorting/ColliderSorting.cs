@@ -1,7 +1,7 @@
-#if UNITY_5_3_OR_NEWER && !DISABLE_PHYSICS 
-using System.Collections.Generic;
+#if UNITY_5_3_OR_NEWER && !DISABLE_PHYSICS
 using DamnLibrary.Behaviours;
-using UnityEngine;
+
+namespace DamnLibrary.Games.CollisionSorting;
 
 [RequireComponent(typeof(Collider2D))]
 public class ColliderSorting : DamnBehaviour

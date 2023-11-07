@@ -1,7 +1,7 @@
 #if UNITY_5_3_OR_NEWER
 using DamnLibrary.Behaviours;
 
-namespace DamnLibrary.Management.Windows
+namespace DamnLibrary.Managements.Windows
 {
     public abstract class WindowContext
     {

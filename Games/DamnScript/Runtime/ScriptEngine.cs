@@ -1,17 +1,13 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using System;
-using System.Collections.Generic;
-using System.IO;
-using DamnLibrary.DamnScript.Executing;
-using System.Threading.Tasks;
+using DamnLibrary.Games.DamnScript.Compiling;
+using DamnLibrary.Games.DamnScript.Parsers;
+using DamnLibrary.Games.DamnScript.Runtime.Data;
+using DamnLibrary.Games.DamnScript.Runtime.Executing;
+using DamnLibrary.Games.DamnScript.Runtime.Native;
 #if ENABLE_SERIALIZATION
-using DamnLibrary.DamnScript.Compiling;
 #endif
-using DamnLibrary.DamnScript.Data;
-using DamnLibrary.Debugging;
-using DamnLibrary.Extensions;
 
-namespace DamnLibrary.DamnScript
+namespace DamnLibrary.Games.DamnScript.Runtime
 {
     [DamnScriptable]
     public static class ScriptEngine

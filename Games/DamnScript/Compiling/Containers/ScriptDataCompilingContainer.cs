@@ -1,9 +1,9 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_DAMN_SCRIPT
-using DamnLibrary.DamnScript.Data;
-using DamnLibrary.Extensions;
-using DamnLibrary.Serialization;
+using System.Runtime.Serialization;
+using DamnLibrary.Games.DamnScript.Runtime.Data;
+using DamnLibrary.Utilities.Extensions;
 
-namespace DamnLibrary.DamnScript.Compiling
+namespace DamnLibrary.Games.DamnScript.Compiling.Containers
 {
     internal class ScriptDataCompilingContainer : ISerializable
     {

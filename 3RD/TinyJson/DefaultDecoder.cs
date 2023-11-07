@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using DamnLibrary.Debugging;
+using DamnLibrary.Debugs;
 
-namespace Tiny
+namespace DamnLibrary.TinyJson
 {
     using Decoder = Func<Type, object, object>;
 

@@ -1,4 +1,4 @@
-﻿namespace DamnLibrary.Management.Windows
+﻿namespace DamnLibrary.Managements.Windows
 {
     public enum WindowsDataProviderType : byte
     {

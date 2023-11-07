@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 #if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
-using DamnLibrary.DamnScript;
+using DamnLibrary.Games.DamnScript.Parsers;
 #endif
 #if ENABLE_SERIALIZATION
 #endif
 
-namespace DamnLibrary.Game
+namespace DamnLibrary.Games.Infoportions
 {
 #if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
     [DamnScriptable]

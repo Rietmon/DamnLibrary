@@ -1,12 +1,7 @@
 #if ENABLE_SERIALIZATION
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using DamnLibrary.Extensions;
-using DamnLibrary.Serialization;
 
-namespace DamnLibrary.Management.Saves
+namespace DamnLibrary.Managements.Saves
 {
 	public abstract class Saveable : ISerializable
 	{

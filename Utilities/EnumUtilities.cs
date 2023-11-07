@@ -1,4 +1,7 @@
-namespace DamnLibrary.DamnLibrary.Utilities
+using System;
+using System.Linq;
+
+namespace DamnLibrary.Utilities
 {
     public static class EnumUtilities
     {

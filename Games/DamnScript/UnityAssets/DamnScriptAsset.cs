@@ -1,7 +1,5 @@
 #if UNITY_5_3_OR_NEWER && ENABLE_DAMN_SCRIPT
-using UnityEngine;
-
-namespace DamnLibrary.DamnScript
+namespace DamnLibrary.Games.DamnScript.UnityAssets
 {
     public class DamnScriptAsset : ScriptableObject
     {

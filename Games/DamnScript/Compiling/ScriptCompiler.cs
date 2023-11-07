@@ -1,10 +1,10 @@
 ﻿#if ENABLE_SERIALIZATION && ENABLE_DAMN_SCRIPT
-using System.IO;
-using DamnLibrary.DamnScript.Data;
-using DamnLibrary.Debugging;
-using DamnLibrary.Serialization;
+using DamnLibrary.Debugs;
+using DamnLibrary.Games.DamnScript.Compiling.Containers;
+using DamnLibrary.Games.DamnScript.Runtime;
+using DamnLibrary.Games.DamnScript.Runtime.Data;
 
-namespace DamnLibrary.DamnScript.Compiling
+namespace DamnLibrary.Games.DamnScript.Compiling
 {
 	public static class ScriptCompiler
 	{

@@ -1,9 +1,9 @@
 using System;
-using System.Text;
 using System.Collections;
-using DamnLibrary.Debugging;
+using System.Text;
+using DamnLibrary.Debugs;
 
-namespace Tiny
+namespace DamnLibrary.TinyJson
 {
     public class JsonBuilder
     {

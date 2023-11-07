@@ -1,10 +1,7 @@
 #if ENABLE_SERIALIZATION
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using DamnLibrary.Debugging;
-using DamnLibrary.Serialization;
 
-namespace DamnLibrary.Management.Saves
+namespace DamnLibrary.Managements.Saves
 {
 	public class SaveContainer : ISerializable
 	{

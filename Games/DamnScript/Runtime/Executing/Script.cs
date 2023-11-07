@@ -1,12 +1,7 @@
 ﻿#if ENABLE_DAMN_SCRIPT
-using System.Collections.Generic;
-using DamnLibrary.DamnScript.Data;
-using DamnLibrary.Debugging;
-#if ENABLE_SERIALIZATION
-using DamnLibrary.Serialization;
-#endif
+using DamnLibrary.Games.DamnScript.Runtime.Data;
 
-namespace DamnLibrary.DamnScript.Executing
+namespace DamnLibrary.Games.DamnScript.Runtime.Executing
 {
 #if ENABLE_SERIALIZATION
     [DontCreateInstanceAtDeserialization]

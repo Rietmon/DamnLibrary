@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace DamnLibrary.DamnLibrary.Utilities.Extensions
+namespace DamnLibrary.Utilities.Extensions
 {
     public static class ListExtensions
     {

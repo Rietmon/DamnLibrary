@@ -1,15 +1,11 @@
-#if UNITY_5_3_OR_NEWER 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+#if UNITY_5_3_OR_NEWER
 using DamnLibrary.Behaviours;
-using DamnLibrary.Debugging;
-using DamnLibrary.Extensions;
-using DamnLibrary.Game;
-using DamnLibrary.Management.Contents;
+using DamnLibrary.Games.Prefab;
+using DamnLibrary.Managements.Contents;
 
 #pragma warning disable 4014
 
-namespace DamnLibrary.Management.Windows
+namespace DamnLibrary.Managements.Windows
 {
     public class WindowsManager : ProtectedSingletonBehaviour<WindowsManager>
     {

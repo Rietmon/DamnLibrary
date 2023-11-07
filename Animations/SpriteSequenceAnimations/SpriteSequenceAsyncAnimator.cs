@@ -1,11 +1,7 @@
-#if UNITY_5_3_OR_NEWER 
-using System.Threading.Tasks;
-using DamnLibrary.Extensions;
-using UnityEngine;
-
+#if UNITY_5_3_OR_NEWER
 #pragma warning disable 4014
 
-namespace DamnLibrary.Animations
+namespace DamnLibrary.Animations.SpriteSequenceAnimations
 {
     public class SpriteSequenceAsyncAnimator : ISpriteSequenceAnimator
     {

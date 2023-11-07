@@ -1,6 +1,7 @@
-﻿using DamnLibrary.Management.Signals;
+﻿using System.Threading.Tasks;
+using DamnLibrary.Managements.Signals;
 
-namespace DamnLibrary.DamnLibrary.Utilities.Extensions
+namespace DamnLibrary.Utilities.Extensions
 {
     public static class SignalExtensions
     {

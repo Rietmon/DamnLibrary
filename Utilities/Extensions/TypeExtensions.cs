@@ -1,9 +1,10 @@
+using System;
 using System.Reflection;
 #if UNITY_5_3_OR_NEWER 
 using UnityEngine;
 #endif
 
-namespace DamnLibrary.DamnLibrary.Utilities.Extensions
+namespace DamnLibrary.Utilities.Extensions
 {
     public static class TypeExtensions
     {

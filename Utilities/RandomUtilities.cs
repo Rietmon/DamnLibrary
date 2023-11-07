@@ -1,8 +1,9 @@
+using System;
 #if UNITY_5_3_OR_NEWER 
 using Random = UnityEngine.Random;
 #endif
 
-namespace DamnLibrary.DamnLibrary.Utilities
+namespace DamnLibrary.Utilities
 {
     public static class RandomUtilities
     {

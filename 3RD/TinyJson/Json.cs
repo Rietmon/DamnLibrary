@@ -1,6 +1,6 @@
 using System;
 
-namespace Tiny
+namespace DamnLibrary.TinyJson
 {
     public static class Json
     {

@@ -1,13 +1,8 @@
-#if UNITY_5_3_OR_NEWER 
-using System;
-using System.Threading.Tasks;
+#if UNITY_5_3_OR_NEWER
 using DamnLibrary.Behaviours;
-using DamnLibrary.Debugging;
-using DamnLibrary.Extensions;
-using DamnLibrary.Management.Pools;
-using UnityEngine;
+using DamnLibrary.Managements.Pools;
 
-namespace DamnLibrary.Management.Audios
+namespace DamnLibrary.Managements.Audios
 {
     public class AudioManager : SingletonBehaviour<AudioManager>
     {

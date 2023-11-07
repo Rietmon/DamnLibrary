@@ -1,8 +1,5 @@
-#if UNITY_5_3_OR_NEWER 
-using System;
-using UnityEngine;
-
-namespace DamnLibrary.Animations
+#if UNITY_5_3_OR_NEWER
+namespace DamnLibrary.Animations.SpriteSequenceAnimations
 {
     public interface ISpriteSequenceAnimator : IDisposable
     {

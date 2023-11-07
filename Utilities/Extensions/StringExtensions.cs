@@ -1,4 +1,6 @@
-﻿namespace DamnLibrary.DamnLibrary.Utilities.Extensions
+﻿using System;
+
+namespace DamnLibrary.Utilities.Extensions
 {
     public static class StringExtensions
     {

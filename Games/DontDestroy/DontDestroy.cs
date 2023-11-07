@@ -1,11 +1,7 @@
-﻿#if UNITY_5_3_OR_NEWER 
-using System.Collections.Generic;
-using DamnLibrary.Attributes;
+﻿#if UNITY_5_3_OR_NEWER
 using DamnLibrary.Behaviours;
-using DamnLibrary.Extensions;
-using UnityEngine;
 
-namespace DamnLibrary.Game
+namespace DamnLibrary.Games.DontDestroy
 {
     public class DontDestroy : DamnBehaviour
     {

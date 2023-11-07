@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DamnLibrary.DamnLibrary.Utilities;
-using DamnLibrary.Debugging;
-using DamnLibrary.Types;
+using DamnLibrary.Debugs;
+using DamnLibrary.Types.Pairs;
+using DamnLibrary.Utilities;
 
-namespace DamnLibrary.Management.Signals
+namespace DamnLibrary.Managements.Signals
 {
     public static class SignalSystem
     {

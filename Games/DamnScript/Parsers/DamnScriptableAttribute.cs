@@ -1,7 +1,5 @@
 #if ENABLE_DAMN_SCRIPT
-using System;
-
-namespace DamnLibrary.DamnScript
+namespace DamnLibrary.Games.DamnScript.Parsers
 {
     /// <summary>
     /// Mark a class as a DamnScriptable.
