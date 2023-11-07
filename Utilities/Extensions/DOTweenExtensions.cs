@@ -4,7 +4,7 @@ using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using TMPro;
 
-namespace DamnLibrary.Extensions
+namespace DamnLibrary.Utilities.Extensions
 {
     public static class DOTweenExtensions
     {

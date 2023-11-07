@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace DamnLibrary.Extensions
+namespace DamnLibrary.Utilities.Extensions
 {
     public static class SerializedPropertyExtensions
     {

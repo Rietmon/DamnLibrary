@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using DamnLibrary.DamnScript.Parsers;
-using DamnLibrary.DamnScript.Runtime;
 using DamnLibrary.Utilities;
 using DamnLibrary.Utilities.Extensions;
-#if UNITY_5_3_OR_NEWER  && ENABLE_DAMN_SCRIPT
-#endif
-#if ENABLE_SERIALIZATION
+#if ENABLE_DAMN_SCRIPT
+using DamnLibrary.DamnScript.Parsers;
+using DamnLibrary.DamnScript.Runtime;
 #endif
 
 namespace DamnLibrary.Games

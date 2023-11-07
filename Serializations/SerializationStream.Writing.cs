@@ -5,6 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using DamnLibrary.Serializations.Serializables;
+#if UNITY_5_3_OR_NEWER
+using Unity.Collections.LowLevel.Unsafe;
+#endif
 
 namespace DamnLibrary.Serializations
 {
@@ -168,13 +171,13 @@ namespace DamnLibrary.Serializations
             uint currentSize = 0;
             fixed (byte* arrayPtr = Buffer)
             {
-                Unsafe.CopyBlock(arrayPtr, &count, 4);
+                MemoryCopy(arrayPtr, &count, 4);
                 currentSize += 4;
                 
                 foreach (var value in enumerable)
                 {
                     var valuePtr = (byte*)&value;
-                    Unsafe.CopyBlock(arrayPtr + currentSize, valuePtr, sizeOfElement);
+                    MemoryCopy(arrayPtr + currentSize, valuePtr, sizeOfElement);
                     currentSize += sizeOfElement;
                 }
             }
@@ -210,14 +213,21 @@ namespace DamnLibrary.Serializations
         {
             var lengthPtr = &length;
             fixed (byte* arrayPtr = Buffer)
-                Unsafe.CopyBlock(arrayPtr, lengthPtr, 4);
+                MemoryCopy(arrayPtr, lengthPtr, 4);
         }
         
         private void WriteBytesToBufferAndStream(byte* valuePtr, int size)
         {
             fixed (byte* arrayPtr = Buffer)
-                Unsafe.CopyBlock(arrayPtr, valuePtr, (uint)size);
+                MemoryCopy(arrayPtr, valuePtr, (uint)size);
             Stream.Write(Buffer, 0, size);
         }
+        
+        private static void MemoryCopy(void* source, void* destination, uint size) => 
+#if !UNITY_5_3_OR_NEWER
+            Unsafe.CopyBlock(destination, source, size);
+#else
+            UnsafeUtility.MemCpy(destination, source, size);
+#endif
     }
 }

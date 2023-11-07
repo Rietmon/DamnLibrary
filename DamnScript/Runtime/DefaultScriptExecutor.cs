@@ -21,5 +21,5 @@ namespace DamnLibrary.DamnScript.Runtime
             Executor.StartRegion();
         }
     }
-#endif
 }
+#endif

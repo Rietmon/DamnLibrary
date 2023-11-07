@@ -3,12 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DamnLibrary.Behaviours;
+using UnityEngine;
+#if ENABLE_DAMN_SCRIPT
 using DamnLibrary.DamnScript.Parsers;
 using DamnLibrary.DamnScript.Runtime;
-using DamnLibrary.Utilities;
-using UnityEngine;
-using UnityEngine.Windows;
-#if ENABLE_DAMN_SCRIPT
 #endif
 
 namespace DamnLibrary.Managements.Inputs
