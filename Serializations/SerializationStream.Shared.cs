@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using DamnLibrary.Utilities;
 using DamnLibrary.Utilities.Extensions;
 #if UNITY_5_3_OR_NEWER
 using Unity.Collections.LowLevel.Unsafe;
+#else
+using System.Runtime.CompilerServices;
 #endif
 
 namespace DamnLibrary.Serializations
