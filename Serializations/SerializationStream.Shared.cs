@@ -79,7 +79,7 @@ namespace DamnLibrary.Serializations
             return bytes?.Encrypt(key);
         }
 
-        private int Unsafe_SizeOf<T>() =>
+        private static int Unsafe_SizeOf<T>() =>
 #if UNITY_5_3_OR_NEWER
             Marshal.SizeOf<T>();
 #else
@@ -87,21 +87,21 @@ namespace DamnLibrary.Serializations
 #endif
 
 #if !UNITY_5_3_OR_NEWER
-        private T Unsafe_ReadNetCore<T>(void* buffer, int index, int sizeOfElement) =>
+        private static T Unsafe_ReadNetCore<T>(void* buffer, int index, int sizeOfElement) =>
             Unsafe.Read<T>((byte*)buffer + index * sizeOfElement);
 #else
         private T Unsafe_ReadUnity<T>(void* buffer, int index) => 
             UnsafeUtility.ReadArrayElement<T>(buffer, index);
 #endif
 
-        private void Unsafe_MemoryCopy<T>(void* buffer, ref T value) =>
+        private static void Unsafe_MemoryCopy<T>(void* buffer, ref T value) =>
 #if !UNITY_5_3_OR_NEWER
             Unsafe.Copy(buffer, ref value);
 #else
             UnsafeUtility.WriteArrayElement(buffer, 0, value);
 #endif
 
-        private ref T Unsafe_AsRef<T>(ref T value) =>
+        private static ref T Unsafe_AsRef<T>(ref T value) =>
 #if !UNITY_5_3_OR_NEWER
             ref Unsafe.AsRef(in value);
 #else
