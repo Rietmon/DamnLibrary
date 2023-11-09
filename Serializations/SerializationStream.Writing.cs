@@ -1,18 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using DamnLibrary.Serializations.Serializables;
-#if UNITY_5_3_OR_NEWER
-using Unity.Collections.LowLevel.Unsafe;
-#endif
 
 namespace DamnLibrary.Serializations
 {
     public unsafe partial class SerializationStream
     {
+        private BinaryWriter Writer { get; set; }
+
         public void Write<T>(T value)
         {
             switch (value)
@@ -26,11 +26,11 @@ namespace DamnLibrary.Serializations
                 case uint v: WriteUInt(v); return;
                 case long v: WriteLong(v); return;
                 case ulong v: WriteULong(v); return;
-                case char v: WriteChar(v); return;
                 case float v: WriteFloat(v); return;
                 case double v: WriteDouble(v); return;
-                case string v: WriteString(v); return;
                 case decimal v: WriteDecimal(v); return;
+                case char v: WriteChar(v); return;
+                case string v: WriteString(v); return;
                 case Array: throw new Exception("Use WriteArray instead of Write<T[]>"!);
                 case IList: case IList<T>: throw new Exception("Use WriteList instead of Write<IList>"!);
                 case IDictionary: throw new Exception("Use WriteDictionary instead of Write<IDictionary>"!);
@@ -48,96 +48,65 @@ namespace DamnLibrary.Serializations
 
             WriteWithReflection(value, type);
         }
-
+        
         public void WriteUnmanaged<T>(T v) where T : unmanaged
         {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, sizeof(T));
+            var size = sizeof(T);
+            var buffer = (Span<byte>)stackalloc byte[size];
+            MemoryMarshal.Write(buffer, ref v);
+            Writer.Write(buffer);
         }
+
+        public void WriteBool(bool v) => Writer.Write(v);
         
-        public void WriteBool(bool v)
+        public void WriteSByte(sbyte v) => Writer.Write(v);
+        
+        public void WriteByte(byte v) => Writer.Write(v);
+        
+        public void WriteShort(short v) => Writer.Write(v);
+        
+        public void WriteUShort(ushort v) => Writer.Write(v);
+        
+        public void WriteInt(int v) => Writer.Write(v);
+        
+        public void WriteUInt(uint v) => Writer.Write(v);
+        
+        public void WriteLong(long v) => Writer.Write(v);
+        
+        public void WriteULong(ulong v) => Writer.Write(v);
+        
+        public void WriteChar(char v) => Writer.Write(v);
+        
+        public void WriteFloat(float v) => Writer.Write(v);
+        
+        public void WriteDouble(double v) => Writer.Write(v);
+        
+        public void WriteDecimal(decimal v) => Writer.Write(v);
+        
+        public void WriteString(string v) => Writer.Write(v);
+
+        public void WriteUnmanagedIEnumerable<T>(IEnumerable<T> enumerable, int count)
         {
-            Buffer[0] = v ? (byte)1 : (byte)0;
-            Stream.Write(Buffer, 0, 1);
+            var sizeOfElement = sizeof(T);
+            var size = count * sizeOfElement + 4;
+            var buffer = stackalloc byte[size];
+            Unsafe.Copy(buffer, ref count);
+            buffer += 4;
+            foreach (var value in enumerable)
+            {
+                Unsafe.Copy(buffer, ref Unsafe.AsRef(in value));
+                buffer += sizeOfElement;
+            }
+
+            var span = new ReadOnlySpan<byte>(buffer - size, size);
+            Writer.Write(span);
         }
-        
-        public void WriteSByte(sbyte v)
+
+        public void WriteManagedIEnumerable<T>(IEnumerable<T> enumerable, int count)
         {
-            Buffer[0] = (byte)(v + 128);
-            Stream.Write(Buffer, 0, 1);
-        }
-        
-        public void WriteByte(byte v)
-        {
-            Buffer[0] = v;
-            Stream.Write(Buffer, 0, 1);
-        }
-        
-        public void WriteShort(short v)
-        {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, 2);
-        }
-        
-        public void WriteUShort(ushort v)
-        {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, 2);
-        }
-        
-        public void WriteInt(int v)
-        {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, 4);
-        }
-        
-        public void WriteUInt(uint v)
-        {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, 4);
-        }
-        
-        public void WriteLong(long v)
-        {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, 8);
-        }
-        
-        public void WriteULong(ulong v)
-        {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, 8);
-        }
-        
-        public void WriteChar(char v)
-        {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, 2);
-        }
-        
-        public void WriteFloat(float v)
-        {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, 4);
-        }
-        
-        public void WriteDouble(double v)
-        {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, 8);
-        }
-        
-        public void WriteString(string v)
-        {
-            WriteLengthToBuffer(v.Length);
-            Encoding.UTF8.GetBytes(v, 0, v.Length, Buffer, 4);
-            Stream.Write(Buffer, 0, v.Length * 2 + 4);
-        }
-        
-        public void WriteDecimal(decimal v)
-        {
-            var valuePtr = (byte*)&v;
-            WriteBytesToBufferAndStream(valuePtr, 16);
+            WriteInt(count);
+            foreach (var value in enumerable)
+                Write(value);
         }
         
         public void WriteIEnumerable<T>(IEnumerable<T> enumerable, int count)
@@ -158,76 +127,16 @@ namespace DamnLibrary.Serializations
             WriteIEnumerable(dictionary.Values, dictionary.Count);
         }
 
-        public void WriteManagedIEnumerable<T>(IEnumerable<T> enumerable, int count)
-        {
-            WriteInt(count);
-            foreach (var value in enumerable)
-                Write(value);
-        }
-
-        public void WriteUnmanagedIEnumerable<T>(IEnumerable<T> enumerable, int count)
-        {
-            var sizeOfElement = (uint)Marshal.SizeOf<T>();
-            uint currentSize = 0;
-            fixed (byte* arrayPtr = Buffer)
-            {
-                MemoryCopy(arrayPtr, &count, 4);
-                currentSize += 4;
-                
-                foreach (var value in enumerable)
-                {
-                    var valuePtr = (byte*)&value;
-                    MemoryCopy(arrayPtr + currentSize, valuePtr, sizeOfElement);
-                    currentSize += sizeOfElement;
-                }
-            }
-            Stream.Write(Buffer, 0, (int)currentSize);
-        }
-
-        public void WriteNonGenericIEnumerable(IEnumerable enumerable, int count)
-        {
-            WriteInt(count);
-            foreach (var value in enumerable)
-                WriteObject(value);
-        }
-
         public void WriteSerializable(ISerializable serializable) => 
             serializable.Serialize(this);
 
         public void WriteDateTime(DateTime dateTime) =>
             WriteLong(dateTime.Ticks);
 
-        public void WriteObject(object value)
-        {
-            WriteString(value.GetType().FullName);
-            Write(value);
-        }
-
         public void WriteKeyValuePair<TKey, TValue>(TKey key, TValue value)
         {
             Write(key);
             Write(value);
         }
-        
-        private void WriteLengthToBuffer(int length)
-        {
-            var lengthPtr = &length;
-            fixed (byte* arrayPtr = Buffer)
-                MemoryCopy(arrayPtr, lengthPtr, 4);
-        }
-        
-        private void WriteBytesToBufferAndStream(byte* valuePtr, int size)
-        {
-            fixed (byte* arrayPtr = Buffer)
-                MemoryCopy(arrayPtr, valuePtr, (uint)size);
-            Stream.Write(Buffer, 0, size);
-        }
-        
-        private static void MemoryCopy(void* source, void* destination, uint size) => 
-#if !UNITY_5_3_OR_NEWER
-            Unsafe.CopyBlock(destination, source, size);
-#else
-            UnsafeUtility.MemCpy(destination, source, size);
-#endif
     }
 }

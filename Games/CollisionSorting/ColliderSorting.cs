@@ -64,5 +64,5 @@ namespace DamnLibrary.Games
             return collidersSorting[greaterColliderIndex].Collider;
         }
     }
-#endif
 }
+#endif

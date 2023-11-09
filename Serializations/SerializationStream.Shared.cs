@@ -5,26 +5,18 @@ namespace DamnLibrary.Serializations
 {
     public partial class SerializationStream
     {
-        public static int BufferSize { get; set; } = 4096;
-        
-        private Stream Stream { get; set; }
-        
-        private Stack<Stream> Containers { get; } = new();
-        
-        private byte[] Buffer { get; } = new byte[BufferSize];
-        
-        public SerializationStream() => Stream = new MemoryStream();
+        private Stack<BinaryWriter> Containers { get; } = new();
 
-        public SerializationStream(Stream currentStream) => Stream = currentStream;
+        public SerializationStream() => Writer = new BinaryWriter(new MemoryStream());
 
-        public SerializationStream(byte[] bytes) => Stream = new MemoryStream(bytes);
+        public SerializationStream(byte[] bytes) => Reader = new BinaryReader(new MemoryStream(bytes));
 
         public void BeginContainer()
         {
-            var stream = new MemoryStream();
-            if (Stream != null)
-                Containers.Push(Stream);
-            Stream = stream;
+            var stream = new BinaryWriter(new MemoryStream());
+            if (Writer != null)
+                Containers.Push(Writer);
+            Writer = stream;
         }
 
         public void EndContainer()
@@ -32,20 +24,20 @@ namespace DamnLibrary.Serializations
             if (Containers.Count <= 0)
                 return;
 
-            var oldStream = (MemoryStream)Stream;
-            var bytes = oldStream.ToArray();
-            Stream = Containers.Pop();
+            var oldStream = Writer;
+            var bytes = ((MemoryStream)oldStream.BaseStream).ToArray();
+            Writer = Containers.Pop();
             WriteUnmanagedIEnumerable(bytes, bytes.Length);
             oldStream.Dispose();
         }
 
         public byte[] ToArray()
         {
-            var savedPosition = Stream.Position;
-            Stream.Position = 0;
-            var bytes = new byte[Stream.Length];
-            var read = Stream.Read(bytes, 0, bytes.Length);
-            Stream.Position = savedPosition;
+            var savedPosition = Writer.BaseStream.Position;
+            Writer.BaseStream.Position = 0;
+            var bytes = new byte[Writer.BaseStream.Length];
+            var read = Writer.BaseStream.Read(bytes, 0, bytes.Length);
+            Writer.BaseStream.Position = savedPosition;
             return read == bytes.Length ? bytes : null;
         }
     }

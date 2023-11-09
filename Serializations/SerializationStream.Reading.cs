@@ -3,168 +3,103 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
 using DamnLibrary.Serializations.Serializables;
 
 namespace DamnLibrary.Serializations
 {
     public unsafe partial class SerializationStream
     {
-        public bool HasToRead => Stream.Length > Stream.Position;
+        public bool HasToRead => Reader.BaseStream.Length > Reader.BaseStream.Position;
+        
+        private BinaryReader Reader { get; }
+
+        public T Read<T>() where T : new()
+        { 
+            var value = default(T);
+            Read(ref value);
+            return value;
+        }
+
+        public void Read<T>(ref T value) where T : new()
+        {
+            switch (value)
+            {
+                case bool: value = (T)(object)ReadBool(); return;
+                case sbyte: value = (T)(object)ReadSByte(); return;
+                case byte: value = (T)(object)ReadByte(); return;
+                case short: value = (T)(object)ReadShort(); return;
+                case ushort: value = (T)(object)ReadUShort(); return;
+                case int: value = (T)(object)ReadInt(); return;
+                case uint: value = (T)(object)ReadUInt(); return;
+                case long: value = (T)(object)ReadLong(); return;
+                case ulong: value = (T)(object)ReadULong(); return;
+                case float: value = (T)(object)ReadFloat(); return;
+                case double: value = (T)(object)ReadDouble(); return;
+                case decimal: value = (T)(object)ReadDecimal(); return;
+                case char: value = (T)(object)ReadChar(); return;
+                case string: value = (T)(object)ReadString(); return;
+                case Array: throw new Exception("Use WriteArray instead of Write<T[]>"!);
+                case IList: case IList<T>: throw new Exception("Use WriteList instead of Write<IList>"!);
+                case IDictionary: throw new Exception("Use WriteDictionary instead of Write<IDictionary>"!);
+                case ISerializable: value = ReadSerializable<T>(); return;
+                case DateTime: value = (T)(object)ReadDateTime(); return;
+                case Type: value = (T)(object)ReadType(); return;
+            }
+        }
 
         public T ReadUnmanaged<T>() where T : unmanaged
         {
-            if (!ReadBytesToBuffer(sizeof(T)))
+            var size = sizeof(T);
+            var buffer = stackalloc T[1];
+            var read = Reader.Read(new Span<byte>(buffer, size));
+            if (read != size)
                 return default;
             
-            fixed (byte* arrayPtr = Buffer)
-                return *(T*)arrayPtr;
+            return *buffer;
         }
+
+        public bool ReadBool() => Reader.ReadBoolean();
+
+        public sbyte ReadSByte() => Reader.ReadSByte();
+
+        public byte ReadByte() => Reader.ReadByte();
+
+        public short ReadShort() => Reader.ReadInt16();
+
+        public ushort ReadUShort() => Reader.ReadUInt16();
+
+        public int ReadInt() => Reader.ReadInt32();
+
+        public uint ReadUInt() => Reader.ReadUInt32();
+
+        public long ReadLong() => Reader.ReadInt64();
+
+        public ulong ReadULong() => Reader.ReadUInt64();
+
+        public char ReadChar() => Reader.ReadChar();
         
-        public bool ReadBool()
-        {
-            if (!ReadBytesToBuffer(1))
-                return default;
-
-            return Buffer[0] == 1;
-        }
+        public float ReadFloat() => Reader.ReadSingle();
         
-        public sbyte ReadSByte()
-        {
-            if (!ReadBytesToBuffer(1))
-                return default;
-
-            return (sbyte)(Buffer[0] - 128);
-        }
+        public double ReadDouble() => Reader.ReadDouble();
         
-        public byte ReadByte()
-        {
-            if (!ReadBytesToBuffer(1))
-                return default;
+        public decimal ReadDecimal() => Reader.ReadDecimal();
 
-            return Buffer[0];
-        }
-        
-        public short ReadShort()
-        {
-            if (!ReadBytesToBuffer(2))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return *(short*)arrayPtr;
-        }
-        
-        public ushort ReadUShort()
-        {
-            if (!ReadBytesToBuffer(2))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return *(ushort*)arrayPtr;
-        }
-        
-        public int ReadInt()
-        {
-            if (!ReadBytesToBuffer(4))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return *(int*)arrayPtr;
-        }
-        
-        public uint ReadUInt()
-        {
-            if (!ReadBytesToBuffer(4))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return *(uint*)arrayPtr;
-        }
-        
-        public long ReadLong()
-        {
-            if (!ReadBytesToBuffer(8))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return *(long*)arrayPtr;
-        }
-        
-        public ulong ReadULong()
-        {
-            if (!ReadBytesToBuffer(8))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return *(ulong*)arrayPtr;
-        }
-        
-        public char ReadChar()
-        {
-            if (!ReadBytesToBuffer(2))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return *(char*)arrayPtr;
-        }
-        
-        public float ReadFloat()
-        {
-            if (!ReadBytesToBuffer(4))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return *(float*)arrayPtr;
-        }
-        
-        public double ReadDouble()
-        {
-            if (!ReadBytesToBuffer(8))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return *(double*)arrayPtr;
-        }
-        
-        public string ReadString()
-        {
-            var length = ReadInt();
-            if (!ReadBytesToBuffer(length * 2))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return Encoding.UTF8.GetString(arrayPtr, length);
-        }
-        
-        public decimal ReadDecimal()
-        {
-            if (!ReadBytesToBuffer(16))
-                return default;
-
-            fixed (byte* arrayPtr = Buffer)
-                return *(decimal*)arrayPtr;
-        }
-
-        public T[] ReadArray<T>() => RuntimeHelpers.IsReferenceOrContainsReferences<T>() 
-            ? ReadManagedArray<T>() 
-            : ReadUnmanagedArray<T>();
+        public string ReadString() => Reader.ReadString();
 
         public T[] ReadUnmanagedArray<T>()
         {
             var length = ReadInt();
-            var size = Marshal.SizeOf<T>();
-            if (!ReadBytesToBuffer(length * size))
+            var sizeOfElement = sizeof(T);
+            var size = length * sizeOfElement;
+            var buffer = stackalloc byte[size];
+            var read = Reader.Read(new Span<byte>(buffer, size));
+            if (read != size)
                 return default;
-            
-            var array = new T[length];
-            fixed (byte* arrayPtr = Buffer)
-            {
-                for (var i = 0; i < length; i++)
-                    array[i] = *(T*)(arrayPtr + i * size);
-            }
 
-            return array;
+            var result = new T[length];
+            for (var i = 0; i < length; i++)
+                result[i] = Unsafe.Read<T>(buffer + i * sizeOfElement);
+            return result;
         }
 
         public T[] ReadManagedArray<T>()
@@ -175,6 +110,10 @@ namespace DamnLibrary.Serializations
                 array[i] = ReadWithReflection<T>();
             return array;
         }
+
+        public T[] ReadArray<T>() => RuntimeHelpers.IsReferenceOrContainsReferences<T>() 
+            ? ReadManagedArray<T>() 
+            : ReadUnmanagedArray<T>();
 
         public List<T> ReadList<T>() => RuntimeHelpers.IsReferenceOrContainsReferences<T>() 
             ? new List<T>(ReadManagedArray<T>()) 
@@ -190,10 +129,11 @@ namespace DamnLibrary.Serializations
             return result;
         }
 
-        public T ReadSerializable<T>() where T : ISerializable, new()
+        public T ReadSerializable<T>() where T : new()
         {
             var result = new T();
-            result.Deserialize(this);
+            if (result is ISerializable serializable)
+                serializable.Deserialize(this);
             return result;
         }
 
@@ -209,12 +149,6 @@ namespace DamnLibrary.Serializations
         {
             var bytes = ReadUnmanagedArray<byte>();
             return new SerializationStream(bytes);
-        }
-        
-        private bool ReadBytesToBuffer(int size)
-        {
-            var read = Stream.Read(Buffer, 0, size);
-            return read == size;
         }
     }
 }
