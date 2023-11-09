@@ -87,7 +87,7 @@ namespace DamnLibrary.Serializations
         public T[] ReadUnmanagedArray<T>()
         {
             var length = ReadInt();
-            var sizeOfElement = Unsafe.SizeOf<T>();
+            var sizeOfElement = Unsafe_SizeOf<T>();
             var size = length * sizeOfElement;
             var buffer = stackalloc byte[size];
             var read = Reader.Read(new Span<byte>(buffer, size));
@@ -96,7 +96,13 @@ namespace DamnLibrary.Serializations
 
             var result = new T[length];
             for (var i = 0; i < length; i++)
-                result[i] = Unsafe.Read<T>(buffer + i * sizeOfElement);
+            {
+#if !UNITY_5_3_OR_NEWER
+                result[i] = Unsafe_ReadNetCore<T>(buffer, i, sizeOfElement);
+#else
+                result[i] = Unsafe_ReadUnity<T>(buffer, i);
+#endif
+            }
             return result;
         }
 

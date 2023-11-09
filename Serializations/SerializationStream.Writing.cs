@@ -49,9 +49,9 @@ namespace DamnLibrary.Serializations
 
         public void WriteForceUnmanaged<T>(T v)
         {
-            var sizeOfElement = Unsafe.SizeOf<T>();
+            var sizeOfElement = Unsafe_SizeOf<T>();
             var buffer = stackalloc byte[sizeOfElement];
-            Unsafe.Copy(buffer, ref v);
+            Unsafe_MemoryCopy(buffer, ref v);
             var span = new ReadOnlySpan<byte>(buffer, sizeOfElement);
             Writer.Write(span);
         }
@@ -86,14 +86,19 @@ namespace DamnLibrary.Serializations
 
         public void WriteUnmanagedIEnumerable<T>(IEnumerable<T> enumerable, int count)
         {
-            var sizeOfElement = Unsafe.SizeOf<T>();
+            var sizeOfElement = Unsafe_SizeOf<T>();
             var size = count * sizeOfElement + 4;
             var buffer = stackalloc byte[size];
-            Unsafe.Copy(buffer, ref count);
+            Unsafe_MemoryCopy(buffer, ref count);
             buffer += 4;
             foreach (var value in enumerable)
             {
-                Unsafe.Copy(buffer, ref Unsafe.AsRef(in value));
+#if !UNITY_5_3_OR_NEWER
+                Unsafe_MemoryCopy(buffer, ref Unsafe_AsRef(in value));
+#else
+                var v = value;
+                Unsafe_MemoryCopy(buffer, ref Unsafe_AsRef(ref v));
+#endif
                 buffer += sizeOfElement;
             }
 
