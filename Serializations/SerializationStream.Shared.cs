@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using DamnLibrary.Utilities;
 using DamnLibrary.Utilities.Extensions;
 #if UNITY_5_3_OR_NEWER
@@ -86,7 +86,7 @@ namespace DamnLibrary.Serializations
 
 #if !UNITY_5_3_OR_NEWER
         private T Unsafe_ReadNetCore<T>(void* buffer, int index, int sizeOfElement) =>
-            Unsafe.Read<T>(buffer + index * sizeOfElement);
+            Unsafe.Read<T>((byte*)buffer + index * sizeOfElement);
 #else
         private T Unsafe_ReadUnity<T>(void* buffer, int index) => 
             UnsafeUtility.ReadArrayElement<T>(buffer, index);
@@ -94,14 +94,14 @@ namespace DamnLibrary.Serializations
 
         private void Unsafe_MemoryCopy<T>(void* buffer, ref T value) =>
 #if !UNITY_5_3_OR_NEWER
-            Unsafe.Copy(buffer, ref v);
+            Unsafe.Copy(buffer, ref value);
 #else
             UnsafeUtility.WriteArrayElement(buffer, 0, value);
 #endif
 
         private ref T Unsafe_AsRef<T>(ref T value) =>
 #if !UNITY_5_3_OR_NEWER
-            Unsafe.AsRef(in value);
+            ref Unsafe.AsRef(in value);
 #else
             ref UnsafeUtility.As<T, T>(ref value);
 

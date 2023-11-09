@@ -93,10 +93,10 @@ namespace DamnLibrary.Serializations
             buffer += 4;
             foreach (var value in enumerable)
             {
-#if !UNITY_5_3_OR_NEWER
-                Unsafe_MemoryCopy(buffer, ref Unsafe_AsRef(in value));
-#else
                 var v = value;
+#if !UNITY_5_3_OR_NEWER
+                Unsafe_MemoryCopy(buffer, ref Unsafe_AsRef(ref v));
+#else
                 Unsafe_MemoryCopy(buffer, ref Unsafe_AsRef(ref v));
 #endif
                 buffer += sizeOfElement;
