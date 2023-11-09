@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Reflection;
 using DamnLibrary.Serializations.Serializables;
 
@@ -7,11 +7,71 @@ namespace DamnLibrary.Serializations
 {
     public partial class SerializationStream
     {
-        
-        
-        public void WriteWithReflection<T>(T value) => WriteWithReflection(value, typeof(T));
+        public void WriteWithReflection(object value)
+        {
+            var type = value.GetType();
+            switch (type)
+            {
+                case not null when type == boolType: WriteBool((bool)value); return;
+                case not null when type == sbyteType: WriteSByte((sbyte)value); return;
+                case not null when type == byteType: WriteByte((byte)value); return;
+                case not null when type == shortType: WriteShort((short)value); return;
+                case not null when type == ushortType: WriteUShort((ushort)value); return;
+                case not null when type == intType: WriteInt((int)value); return;
+                case not null when type == uintType: WriteUInt((uint)value); return;
+                case not null when type == longType: WriteLong((long)value); return;
+                case not null when type == ulongType: WriteULong((ulong)value); return;
+                case not null when type == charType: WriteChar((char)value); return;
+                case not null when type == floatType: WriteFloat((float)value); return;
+                case not null when type == doubleType: WriteDouble((double)value); return;
+                case not null when type == stringType: WriteString((string)value); return;
+                case not null when type == decimalType: WriteDecimal((decimal)value); return;
+                case not null when type.IsArray: WriteArrayWithReflection((Array)value); return;
+                case not null when iListType.IsAssignableFrom(type): WriteListWithReflection((IList)value); return;
+                case not null when iDictionaryType.IsAssignableFrom(type): WriteDictionaryWithReflection((IDictionary)value); return;
+                case not null when iSerializableType.IsAssignableFrom(type): WriteSerializable((ISerializable)value); return;
+                case not null when type == dateTimeType: WriteDateTime((DateTime)value); return;
+                case not null when type == typeType: WriteType((Type)value); return;
+            }
+            
+            if (TryGetSerializationActions(type, out var methods))
+            {
+                methods.Item1(value, this);
+                return;
+            }
 
-        private void WriteWithReflection<T>(T value, Type type)
+            WriteAnyWithReflection(value, type);
+        }
+
+        public void WriteIEnumerableWithReflection(IEnumerable enumerable, int count)
+        {
+            WriteInt(count);
+            foreach (var value in enumerable)
+                Write(value);
+        }
+
+        public void WriteNonGenericIEnumerableWithReflection(IEnumerable enumerable, int count)
+        {
+            WriteInt(count);
+            foreach (var value in enumerable)
+                WriteBoxed(value);
+        }
+
+        public void WriteArrayWithReflection(Array array) => 
+            WriteIEnumerableWithReflection(array, array.Length);
+
+        public void WriteListWithReflection(IList list) => 
+            WriteIEnumerableWithReflection(list, list.Count);
+
+        public void WriteDictionaryWithReflection(IDictionary dictionary)
+        {
+            WriteIEnumerableWithReflection(dictionary.Keys, dictionary.Count);
+            WriteIEnumerableWithReflection(dictionary.Values, dictionary.Count);
+        }
+        
+        public void WriteAnyWithReflection<T>(T value) => WriteAnyWithReflection(value, typeof(T));
+
+        private void WriteAnyWithReflection<T>(T value, Type type)
         {
             const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
             var layoutSettings = (SerializableLayoutAttribute)Attribute.GetCustomAttribute(type, typeof(SerializableLayoutAttribute));
@@ -49,55 +109,6 @@ namespace DamnLibrary.Serializations
 
             if (layoutSettings is { WrapToContainer: true })
                 EndContainer();
-        }
-
-        private object Internal_ReadWithReflection(Type type)
-        {
-            var layoutSettings = (SerializableLayoutAttribute)Attribute.GetCustomAttribute(type, typeof(SerializableLayoutAttribute));
-            
-            var stream = this;
-            if (layoutSettings is { WrapToContainer: true })
-            {
-                stream = ReadContainer();
-                if (layoutSettings is { UseKeyValuePair: true })
-                    return Internal_ReadKeyValuesWithReflection(stream, type);
-            }
-            
-            return Internal_ReadWithReflection(stream, type);
-        }
-
-        private static object Internal_ReadKeyValuesWithReflection(SerializationStream stream, Type type)
-        {
-            var result = Activator.CreateInstance(type);
-            const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
-
-            var keyValues = new List<(string, object)>();
-            while (stream.HasToRead)
-            {
-                var typeName = stream.ReadType();
-                keyValues.Add(((string, object))stream.ReadKeyValuePair(stringType, typeName));
-            }
-
-            foreach (var (name, value) in keyValues)
-            {
-                var property = type.GetProperty(name, flags);
-                if (property != null)
-                {
-                    property.SetValue(result, value);
-                    continue;
-                }
-                
-                var field = type.GetField(name, flags);
-                if (field != null)
-                    field.SetValue(result, value);
-            }
-
-            return result;
-        }
-
-        private static object Internal_ReadWithReflection(SerializationStream stream, Type type)
-        {
-            return default;
         }
     }
 }

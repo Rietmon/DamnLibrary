@@ -9,8 +9,6 @@ namespace DamnLibrary.Serializations
 {
     public unsafe partial class SerializationStream
     {
-        public bool HasToRead => Reader.BaseStream.Length > Reader.BaseStream.Position;
-        
         private BinaryReader Reader { get; }
 
         public T Read<T>() where T : new()
@@ -38,9 +36,9 @@ namespace DamnLibrary.Serializations
                 case decimal: value = (T)(object)ReadDecimal(); return;
                 case char: value = (T)(object)ReadChar(); return;
                 case string: value = (T)(object)ReadString(); return;
-                case Array: throw new Exception("Use WriteArray instead of Write<T[]>"!);
-                case IList: case IList<T>: throw new Exception("Use WriteList instead of Write<IList>"!);
-                case IDictionary: throw new Exception("Use WriteDictionary instead of Write<IDictionary>"!);
+                case Array: throw new Exception("Use ReadArray instead of Read<T[]>"!);
+                case IList: case IList<T>: throw new Exception("Use ReadList instead of Read<IList>"!);
+                case IDictionary: throw new Exception("Use ReadDictionary instead of Read<IDictionary>"!);
                 case ISerializable: value = ReadSerializable<T>(); return;
                 case DateTime: value = (T)(object)ReadDateTime(); return;
                 case Type: value = (T)(object)ReadType(); return;
@@ -89,7 +87,7 @@ namespace DamnLibrary.Serializations
         public T[] ReadUnmanagedArray<T>()
         {
             var length = ReadInt();
-            var sizeOfElement = sizeof(T);
+            var sizeOfElement = Unsafe.SizeOf<T>();
             var size = length * sizeOfElement;
             var buffer = stackalloc byte[size];
             var read = Reader.Read(new Span<byte>(buffer, size));

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 using DamnLibrary.Serializations.Serializables;
 
 namespace DamnLibrary.Serializations
@@ -36,17 +35,8 @@ namespace DamnLibrary.Serializations
                 case IDictionary: throw new Exception("Use WriteDictionary instead of Write<IDictionary>"!);
                 case ISerializable v: WriteSerializable(v); return;
                 case DateTime v: WriteDateTime(v); return;
-                case Type v: WriteString(v.FullName); return;
+                case Type v: WriteType(v); return;
             }
-
-            var type = typeof(T);
-            if (TryGetSerializationActions(type, out var methods))
-            {
-                methods.Item1(this);
-                return;
-            }
-
-            WriteWithReflection(value, type);
         }
         
         public void WriteUnmanaged<T>(T v) where T : unmanaged
@@ -55,6 +45,15 @@ namespace DamnLibrary.Serializations
             var buffer = (Span<byte>)stackalloc byte[size];
             MemoryMarshal.Write(buffer, ref v);
             Writer.Write(buffer);
+        }
+
+        public void WriteForceUnmanaged<T>(T v)
+        {
+            var sizeOfElement = Unsafe.SizeOf<T>();
+            var buffer = stackalloc byte[sizeOfElement];
+            Unsafe.Copy(buffer, ref v);
+            var span = new ReadOnlySpan<byte>(buffer, sizeOfElement);
+            Writer.Write(span);
         }
 
         public void WriteBool(bool v) => Writer.Write(v);
@@ -75,19 +74,19 @@ namespace DamnLibrary.Serializations
         
         public void WriteULong(ulong v) => Writer.Write(v);
         
-        public void WriteChar(char v) => Writer.Write(v);
-        
         public void WriteFloat(float v) => Writer.Write(v);
         
         public void WriteDouble(double v) => Writer.Write(v);
         
         public void WriteDecimal(decimal v) => Writer.Write(v);
         
+        public void WriteChar(char v) => Writer.Write(v);
+        
         public void WriteString(string v) => Writer.Write(v);
 
         public void WriteUnmanagedIEnumerable<T>(IEnumerable<T> enumerable, int count)
         {
-            var sizeOfElement = sizeof(T);
+            var sizeOfElement = Unsafe.SizeOf<T>();
             var size = count * sizeOfElement + 4;
             var buffer = stackalloc byte[size];
             Unsafe.Copy(buffer, ref count);
@@ -116,6 +115,13 @@ namespace DamnLibrary.Serializations
             else 
                 WriteUnmanagedIEnumerable(enumerable, count);
         }
+        
+        public void WriteNonGenericIEnumerable(IEnumerable enumerable, int count)
+        {
+            WriteInt(count);
+            foreach (var value in enumerable)
+                WriteBoxed(value);
+        }
 
         public void WriteArray<T>(T[] array) => WriteIEnumerable(array, array.Length);
 
@@ -123,8 +129,9 @@ namespace DamnLibrary.Serializations
 
         public void WriteDictionary<T1, T2>(IDictionary<T1, T2> dictionary)
         {
-            WriteIEnumerable(dictionary.Keys, dictionary.Count);
-            WriteIEnumerable(dictionary.Values, dictionary.Count);
+            var count = dictionary.Count;
+            WriteIEnumerable(dictionary.Keys, count);
+            WriteIEnumerable(dictionary.Values, count);
         }
 
         public void WriteSerializable(ISerializable serializable) => 
@@ -132,6 +139,18 @@ namespace DamnLibrary.Serializations
 
         public void WriteDateTime(DateTime dateTime) =>
             WriteLong(dateTime.Ticks);
+
+        public void WriteType(Type type) => 
+            WriteString(type.FullName);
+
+        public void WriteBoxed(object value)
+        {
+            WriteType(value.GetType());
+            WriteWithReflection(value);
+        }
+        
+        public void WriteKeyValuePair<TKey, TValue>(KeyValuePair<TKey, TValue> pair) =>
+            WriteKeyValuePair(pair.Key, pair.Value);
 
         public void WriteKeyValuePair<TKey, TValue>(TKey key, TValue value)
         {

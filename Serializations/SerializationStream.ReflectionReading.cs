@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DamnLibrary.Serializations.Serializables;
 
 namespace DamnLibrary.Serializations
@@ -32,10 +34,15 @@ namespace DamnLibrary.Serializations
                 not null when iSerializableType.IsAssignableFrom(type) => ReadSerializableWithReflection(type),
                 not null when type == dateTimeType => ReadDateTimeWithReflection(),
                 not null when type == typeType => ReadType(),
-                _ => Internal_ReadWithReflection(type)
+                _ => SolveUncommonType(type)
             };
 
-        public object ReadArrayWithReflection(Type type)
+        private object SolveUncommonType(Type type) => 
+            TryGetSerializationActions(type, out var methods) 
+                ? methods.Item2(this) 
+                : ReadAnyWithReflection(type);
+
+        public Array ReadArrayWithReflection(Type type)
         {
             var length = ReadInt();
             var arrayElementsType = type.GetElementType()!;
@@ -45,7 +52,7 @@ namespace DamnLibrary.Serializations
             return result;
         }
 
-        public object ReadListWithReflection(Type type)
+        public IList ReadListWithReflection(Type type)
         {
             var count = ReadInt();
             var listElementType = type.GenericTypeArguments.FirstOrDefault();
@@ -55,13 +62,13 @@ namespace DamnLibrary.Serializations
             return result;
         }
 
-        public object ReadDictionaryWithReflection(Type type)
+        public IDictionary ReadDictionaryWithReflection(Type type)
         {
             var keyType = type.GenericTypeArguments[0];
             var valueType = type.GenericTypeArguments[1];
             
-            var keys = (Array)ReadArrayWithReflection(keyType);
-            var values = (Array)ReadArrayWithReflection(valueType);
+            var keys = ReadArrayWithReflection(keyType);
+            var values = ReadArrayWithReflection(valueType);
             
             var result = (IDictionary)Activator.CreateInstance(type)!;
             for (var i = 0; i < keys.Length; i++)
@@ -69,13 +76,89 @@ namespace DamnLibrary.Serializations
             return result;
         }
         
-        public object ReadSerializableWithReflection(Type type)
+        public ISerializable ReadSerializableWithReflection(Type type)
         {
             var result = (ISerializable)Activator.CreateInstance(type)!;
             result.Deserialize(this);
             return result;
         }
         
-        public object ReadDateTimeWithReflection() => new DateTime(ReadLong());
+        public DateTime ReadDateTimeWithReflection() => new(ReadLong());
+
+        public object ReadBoxed()
+        {
+            var type = ReadType();
+            return ReadWithReflection(type);
+        }
+
+        public object ReadAnyWithReflection(Type type)
+        {
+            var layoutSettings = (SerializableLayoutAttribute)Attribute.GetCustomAttribute(type, typeof(SerializableLayoutAttribute));
+            
+            var stream = this;
+            if (layoutSettings is { WrapToContainer: true })
+            {
+                stream = ReadContainer();
+                if (layoutSettings is { UseKeyValuePair: true })
+                    return Internal_ReadKeyValuesWithReflection(stream, type);
+            }
+            
+            return Internal_ReadAnyWithReflection(stream, type);
+        }
+
+        private static object Internal_ReadKeyValuesWithReflection(SerializationStream stream, Type type)
+        {
+            var result = Activator.CreateInstance(type);
+            const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+
+            var keyValues = new List<(string, object)>();
+            while (stream.HasToRead)
+            {
+                var typeName = stream.ReadType();
+                keyValues.Add(((string, object))stream.ReadKeyValuePair(stringType, typeName));
+            }
+
+            foreach (var (name, value) in keyValues)
+            {
+                var property = type.GetProperty(name, flags);
+                if (property != null)
+                {
+                    property.SetValue(result, value);
+                    continue;
+                }
+                
+                var field = type.GetField(name, flags);
+                if (field != null)
+                    field.SetValue(result, value);
+            }
+
+            return result;
+        }
+
+        private static object Internal_ReadAnyWithReflection(SerializationStream stream, Type type)
+        {
+            var result = Activator.CreateInstance(type);
+            const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+            
+            foreach (var property in type.GetProperties(flags))
+            {
+                if (!Attribute.IsDefined(property, typeof(SerializeIncludeAttribute)))
+                    continue;
+
+                var value = stream.ReadWithReflection(property.PropertyType);
+                property.SetValue(result, value);
+            }
+            
+            foreach (var field in type.GetFields(flags))
+            {
+                if (!Attribute.IsDefined(field, typeof(SerializeIncludeAttribute)))
+                    continue;
+
+                var value = stream.ReadWithReflection(field.FieldType);
+                field.SetValue(result, value);
+            }
+
+            return result;
+        }
     }
 }

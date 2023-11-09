@@ -5,11 +5,11 @@ namespace DamnLibrary.Serializations
 {
     public partial class SerializationStream
     {
-        private static Dictionary<Type, (Action<SerializationStream>, Action<SerializationStream>)> RegisteredTypes { get; } = new();
+        private static Dictionary<Type, (Action<object, SerializationStream>, Func<SerializationStream, object>)> RegisteredTypes { get; } = new();
         
         public static void RegisterTypeForSerialization(Type type, 
-            Action<SerializationStream> write, 
-            Action<SerializationStream> read) =>
+            Action<object, SerializationStream> write, 
+            Func<SerializationStream, object> read) =>
             RegisteredTypes[type] = (write, read);
         
         public static bool IsTypeRegisteredForSerialization(Type type) =>
@@ -19,8 +19,7 @@ namespace DamnLibrary.Serializations
             RegisteredTypes.Remove(type);
 
         internal static bool TryGetSerializationActions(Type type,
-            out (Action<SerializationStream>, Action<SerializationStream>) result) =>
+            out (Action<object, SerializationStream>, Func<SerializationStream, object>) result) =>
             RegisteredTypes.TryGetValue(type, out result);
-
     }
 }
