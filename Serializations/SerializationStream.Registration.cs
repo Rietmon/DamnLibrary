@@ -1,3 +1,4 @@
+#if ENABLE_SERIALIZATION
 using System;
 using System.Collections.Generic;
 
@@ -23,3 +24,4 @@ namespace DamnLibrary.Serializations
             RegisteredTypes.TryGetValue(type, out result);
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if ENABLE_SERIALIZATION
 namespace DamnLibrary.Serializations.Serializables
 {
     public interface ISerializable
@@ -6,3 +7,4 @@ namespace DamnLibrary.Serializations.Serializables
         void Deserialize(SerializationStream stream);
     }
 }
+#endif

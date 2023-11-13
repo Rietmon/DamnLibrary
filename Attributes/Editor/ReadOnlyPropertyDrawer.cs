@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace DamnLibrary.Attributes
+namespace DamnLibrary.Attributes.Editor
 {
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyPropertyDrawer : PropertyDrawer

@@ -1,3 +1,4 @@
+#if ENABLE_SERIALIZATION
 using System;
 
 namespace DamnLibrary.Serializations.Serializables
@@ -9,3 +10,4 @@ namespace DamnLibrary.Serializations.Serializables
         public bool UseKeyValuePair { get; set; }
     }
 }
+#endif

@@ -1,5 +1,5 @@
 #if UNITY_5_3_OR_NEWER 
-namespace DamnLibrary.Animations
+namespace DamnLibrary.Animations.SpriteSequences
 {
     public enum SpriteSequenceAnimationType : byte
     {

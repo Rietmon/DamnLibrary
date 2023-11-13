@@ -1,3 +1,4 @@
+#if ENABLE_SERIALIZATION
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -162,3 +163,4 @@ namespace DamnLibrary.Serializations
         }
     }
 }
+#endif

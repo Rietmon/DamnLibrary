@@ -1,5 +1,6 @@
 #if UNITY_5_3_OR_NEWER
 using System.Threading.Tasks;
+using DamnLibrary.Animations.SpriteSequences;
 using DamnLibrary.Utilities;
 using UnityEngine;
 
