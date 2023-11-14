@@ -12,7 +12,7 @@ namespace DamnLibrary.Utilities.Extensions
         public static void TotalDestroy(this Object obj)
         {
             if (obj is Component component)
-                component.DestroyObject();
+                component.DestroyThisGameObject();
             else
                 Object.Destroy(obj);
         }

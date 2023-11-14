@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DamnLibrary.Attributes.Editor
 {
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
-    public class ReadOnlyPropertyDrawer : PropertyDrawer
+    public sealed class ReadOnlyPropertyDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => EditorGUI.GetPropertyHeight(property, label, true);
 

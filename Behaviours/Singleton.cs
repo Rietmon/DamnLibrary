@@ -1,20 +1,20 @@
 ﻿namespace DamnLibrary.Behaviours
 {
-    public class Singleton<T> where T : class
+    public abstract class Singleton<T> where T : class
     {
         public static T Instance { get; private set; }
 
-        public Singleton()
+        protected Singleton()
         {
             Instance = this as T;
         }
     }
     
-    public class ProtectedSingleton<T> where T : class
+    public abstract class ProtectedSingleton<T> where T : class
     {
         protected static T Instance { get; private set; }
 
-        public ProtectedSingleton()
+        protected ProtectedSingleton()
         {
             Instance = this as T;
         }

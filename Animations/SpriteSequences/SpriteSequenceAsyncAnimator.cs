@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace DamnLibrary.Animations
 {
-    public class SpriteSequenceAsyncAnimator : ISpriteSequenceAnimator
+    public sealed class SpriteSequenceAsyncAnimator : ISpriteSequenceAnimator
     {
         public bool IsPlaying
         {

@@ -5,24 +5,29 @@ namespace DamnLibrary.Utilities.Extensions
 {
     public static class ComponentExtensions
     {
-        /// <summary>
-        /// Remove this component
-        /// </summary>
-        /// <param name="component">Component</param>
-        public static void RemoveComponent(this Component component) => Object.Destroy(component);
+        public static T AddComponent<T>(this Component component) where T : Component => 
+            component.gameObject.AddComponent<T>();
+		
+        public static bool HasComponent<T>(this Component component) where T : Component => 
+            component.GetComponent<T>();
+		
+        public static int GetComponentsCount(this Component component) => 
+            component.GetComponents<Component>()?.Length ?? 0;
 
-        /// <summary>
-        /// Destroy the game object which has this component
-        /// </summary>
-        /// <param name="component">Component</param>
-        public static void DestroyObject(this Component component) => Object.Destroy(component.gameObject);
+        public static void RemoveComponent<T>(this Component component) where T : Component => 
+            Object.Destroy(component.GetComponent<T>());
 
-        /// <summary>
-        /// Set active GameObject
-        /// </summary>
-        /// <param name="component">Component</param>
-        /// <param name="state">State</param>
-        public static void SetActiveObject(this Component component, bool state) => component.gameObject.SetActive(state);
+        public static void RemoveThisComponent(this Component component) => 
+            Object.Destroy(component);
+
+        public static void SetGameObjectActive(this Component component, bool state) => 
+            component.gameObject.SetActive(state);
+
+        public static void DestroyThisGameObject(this Component component) => 
+            Object.Destroy(component.gameObject);
+
+        public static void DestroyGameObject(this Component component, Component other) => 
+            Object.Destroy(other.gameObject);
     }
 }
 #endif

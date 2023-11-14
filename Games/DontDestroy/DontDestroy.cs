@@ -17,7 +17,7 @@ namespace DamnLibrary.Games
         {
             if (Ids.Contains(id))
             {
-                DestroyObject();
+                DestroyThisGameObject();
                 return;
             }
 
@@ -25,7 +25,7 @@ namespace DamnLibrary.Games
 
             Ids.Add(id);
         
-            RemoveComponent();
+            RemoveThisComponent();
         }
 
 #if UNITY_EDITOR

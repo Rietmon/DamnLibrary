@@ -6,6 +6,6 @@ namespace DamnLibrary.Attributes
     /// <summary>
     /// Made field only readable in the inspector
     /// </summary>
-    public class ReadOnlyAttribute : PropertyAttribute { }
+    public sealed class ReadOnlyAttribute : PropertyAttribute { }
 }
 #endif

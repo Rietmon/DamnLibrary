@@ -48,11 +48,13 @@ namespace DamnLibrary.Games
                     collidersSorting.Add(colliderSorting);
             }
 
-            if (collidersSorting.Count == 0)
-                return null;
-
-            if (collidersSorting.Count == 1)
-                return collidersSorting[0].Collider;
+            switch (collidersSorting.Count)
+            {
+                case 0:
+                    return null;
+                case 1:
+                    return collidersSorting[0].Collider;
+            }
 
             var greaterColliderIndex = 0;
             for (var i = 0; i < collidersSorting.Count; i++)

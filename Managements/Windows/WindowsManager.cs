@@ -8,8 +8,6 @@ using DamnLibrary.Managements.Contents;
 using DamnLibrary.Utilities;
 using DamnLibrary.Utilities.Extensions;
 
-//#pragma warning disable 4014
-
 namespace DamnLibrary.Managements.Windows
 {
     public class WindowsManager : ProtectedSingletonBehaviour<WindowsManager>
@@ -56,7 +54,7 @@ namespace DamnLibrary.Managements.Windows
 
         public static async Task ShowAsync(WindowBehaviour window)
         {
-            window.SetActiveObject(true);
+            window.SetGameObjectActive(true);
             
             await window.OnShow();
             if (window.Animator)
@@ -74,7 +72,7 @@ namespace DamnLibrary.Managements.Windows
                 await window.Animator.PlayHideAnimationAsync();
             await window.OnHideAnimationOver();
             
-            window.SetActiveObject(true);
+            window.SetGameObjectActive(true);
         }
 
         public static async Task WaitForClose(WindowBehaviour window) =>
@@ -98,7 +96,7 @@ namespace DamnLibrary.Managements.Windows
 
             openedWindows.Remove(window);
 
-            window.DestroyObject();
+            window.DestroyThisGameObject();
         }
 
         public static WindowBehaviour GetOpenedWindowByName(string windowName) =>
