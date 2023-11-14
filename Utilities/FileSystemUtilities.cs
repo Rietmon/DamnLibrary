@@ -4,11 +4,9 @@ using DamnLibrary.Debugs;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-#if UNITY_5_3_OR_NEWER
 using UnityEngine;
-#endif
 
-namespace DamnLibrary.IO
+namespace DamnLibrary.Utilities
 {
     public static class FileSystemUtilities
     {

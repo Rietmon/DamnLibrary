@@ -43,7 +43,6 @@ namespace DamnLibrary.Management.Contents
             return result != null ? result.LocalizedValue : $"No translation found for \'{key}\' in {table.name}";
         }
 
-
         public static async Task<AssetTable> GetAssetTableAsync(string tableName) =>
             await AssetDatabase.GetTableAsync(tableName).Task;
         

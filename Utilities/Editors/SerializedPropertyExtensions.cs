@@ -1,10 +1,7 @@
 #if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 
-namespace DamnLibrary.Utilities.Extensions
+namespace DamnLibrary.Utilities.Editors
 {
     public static class SerializedPropertyExtensions
     {

@@ -185,7 +185,7 @@ namespace DamnLibrary.Utilities.Extensions
             var result = new TOut[array.Length];
             for (var i = 0; i < result.Length; i++)
             {
-                result[i] = castFunction.Invoke(array[i]);
+                result[i] = castFunction(array[i]);
             }
 
             return result;
@@ -202,7 +202,7 @@ namespace DamnLibrary.Utilities.Extensions
         {
             foreach (var element in array)
             {
-                if (condition.Invoke(element))
+                if (condition(element))
                     return element;
             }
 
