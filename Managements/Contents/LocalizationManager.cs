@@ -4,9 +4,8 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
-using DamnLibrary.Debugging;
 
-namespace DamnLibrary.Management.Contents
+namespace DamnLibrary.Managements.Contents
 {
     public static class LocalizationManager
     {
@@ -49,29 +48,17 @@ namespace DamnLibrary.Management.Contents
         public static AssetTable GetAssetTable(string tableName) =>
             AssetDatabase.GetTable(tableName);
 
-        public static async Task<T> GetLocalizedAssetAsync<T>(string tableName, string key) where T : Object
-        {
-            var result = await AssetDatabase.GetLocalizedAssetAsync<T>(tableName, key).Task;
-            return result;
-        }
+        public static async Task<T> GetLocalizedAssetAsync<T>(string tableName, string key) where T : Object =>
+            await AssetDatabase.GetLocalizedAssetAsync<T>(tableName, key).Task;
 
-        public static T GetLocalizedAsset<T>(string tableName, string key) where T : Object
-        {
-            var result = AssetDatabase.GetLocalizedAsset<T>(tableName, key);
-            return result;
-        }
+        public static T GetLocalizedAsset<T>(string tableName, string key) where T : Object =>
+            AssetDatabase.GetLocalizedAsset<T>(tableName, key);
 
-        public static async Task<T> GetLocalizedAssetAsync<T>(AssetTable table, string key) where T : Object
-        {
-            var result = await table.GetAssetAsync<T>(key).Task;
-            return result;
-        }
+        public static async Task<T> GetLocalizedAssetAsync<T>(AssetTable table, string key) where T : Object => 
+            await table.GetAssetAsync<T>(key).Task;
 
-        public static T GetLocalizedAsset<T>(AssetTable table, string key) where T : Object
-        {
-            var result = table.GetAssetAsync<T>(key).WaitForCompletion();
-            return result;
-        }
+        public static T GetLocalizedAsset<T>(AssetTable table, string key) where T : Object => 
+            table.GetAssetAsync<T>(key).WaitForCompletion();
     }
 }
 #endif

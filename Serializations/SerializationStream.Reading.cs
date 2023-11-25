@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using DamnLibrary.Debugs;
 using DamnLibrary.Serializations.Serializables;
 
 namespace DamnLibrary.Serializations
@@ -88,6 +89,11 @@ namespace DamnLibrary.Serializations
         public T[] ReadUnmanagedArray<T>()
         {
             var length = ReadInt();
+            if (length > ushort.MaxValue)
+            {
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(ReadUnmanagedArray)}) Length is too big [{length.ToString()}], probably it's error!");
+                return default;
+            }
             var sizeOfElement = Unsafe_SizeOf<T>();
             var size = length * sizeOfElement;
             var buffer = stackalloc byte[size];
@@ -147,8 +153,6 @@ namespace DamnLibrary.Serializations
         public Type ReadType() => Type.GetType(ReadString());
 
         public (TKey, TValue) ReadKeyValuePair<TKey, TValue>() => (ReadWithReflection<TKey>(), ReadWithReflection<TValue>());
-        public (object, object) ReadKeyValuePair(Type keyType, Type valueType) => 
-            (ReadWithReflection(keyType), ReadWithReflection(valueType));
 
         public SerializationStream ReadContainer()
         {

@@ -146,8 +146,8 @@ namespace DamnLibrary.Serializations
         public void WriteDateTime(DateTime dateTime) =>
             WriteLong(dateTime.Ticks);
 
-        public void WriteType(Type type) => 
-            WriteString(type.FullName);
+        public void WriteType(Type type) =>
+            WriteString(type.AssemblyQualifiedName);
 
         public void WriteBoxed(object value)
         {

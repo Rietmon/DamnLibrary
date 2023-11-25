@@ -1,4 +1,6 @@
 #if ENABLE_ADDRESSABLE && UNITY_5_3_OR_NEWER
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
 using DamnLibrary.Debugs;
@@ -7,6 +9,7 @@ using DamnLibrary.Utilities.Extensions;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.U2D;
+using Object = UnityEngine.Object;
 
 namespace DamnLibrary.Managements.Contents
 {
@@ -18,6 +21,8 @@ namespace DamnLibrary.Managements.Contents
         private const string PathToPrefabs = "Assets/Data/Runtime/Prefabs/{0}.prefab";
         private const string PathToAudio = "Assets/Data/Runtime/Audio/{0}";
         
+        private static readonly Type componentType = typeof(Component);
+        
         public static async Task<Prefab<WindowBehaviour>> GetWindowPrefabAsync(string windowName) =>
             await GetGameObjectOrComponentAsync<WindowBehaviour>(PathToDataWindows.Format(windowName));
         public static Prefab<WindowBehaviour> GetWindowPrefab(string windowName) =>
@@ -28,10 +33,23 @@ namespace DamnLibrary.Managements.Contents
         public static SpriteAtlas GetSpriteAtlas(string atlasPath) =>
             GetAsset<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
         
-        public static async Task<Sprite> GetSpriteAsync(string spritePath) =>
+        public static async Task<Sprite> GetSpriteDirectlyAsync(string spritePath) =>
             await GetAssetAsync<Sprite>(PathToTextures.Format(spritePath));
-        public static Sprite GetSprite(string spritePath) =>
+        
+        public static Sprite GetSpriteDirectly(string spritePath) => 
             GetAsset<Sprite>(PathToTextures.Format(spritePath));
+
+        public static async Task<Sprite> GetSpriteAsync(string spritePath)
+        {
+            var spriteName = Path.GetFileNameWithoutExtension(spritePath);
+            return await GetAssetAsync<Sprite>(PathToTextures.Format($"spriteName[{spriteName}]"));
+        }
+
+        public static Sprite GetSprite(string spritePath)
+        {
+            var spriteName = Path.GetFileNameWithoutExtension(spritePath);
+            return GetAsset<Sprite>(PathToTextures.Format($"spriteName[{spriteName}]"));
+        }
         
         public static async Task<Texture2D> GetTextureAsync(string texturePath) =>
             await GetAssetAsync<Texture2D>(PathToTextures.Format(texturePath));
@@ -51,32 +69,15 @@ namespace DamnLibrary.Managements.Contents
         public static async Task<T> GetAssetAsync<T>(string assetName) where T : Object
         {
             var startLoadingFrame = Time.frameCount;
-            var locations = await Addressables.LoadResourceLocationsAsync(assetName).Task;
-
-            if (locations == null || locations.Count == 0)
-            {
-                UniversalDebugger.LogError(
-                    $"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) Unable to find the location with the name {assetName}");
-                return null;
-            }
-
-            var result = await Addressables.LoadAssetAsync<T>(locations[0]).Task;
+            var result = await Addressables.LoadAssetAsync<T>(assetName).Task;
             UniversalDebugger.Log(
                 $"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) Asset with the name {assetName} was loaded in {Time.frameCount - startLoadingFrame} frames.");
             return VerifyAsset(result, assetName);
         }
+        
         public static T GetAsset<T>(string assetName) where T : Object
         {
-            var locations = Addressables.LoadResourceLocationsAsync(assetName).WaitForCompletion();
-
-            if (locations == null || locations.Count == 0)
-            {
-                UniversalDebugger.LogError(
-                    $"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) Unable to find the location with the name {assetName}");
-                return null;
-            }
-
-            var result = Addressables.LoadAssetAsync<T>(locations[0]).WaitForCompletion();
+            var result = Addressables.LoadAssetAsync<T>(assetName).WaitForCompletion();
             UniversalDebugger.Log($"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) Asset with the name {assetName} was loaded.");
             return VerifyAsset(result, assetName);
         }
@@ -84,14 +85,15 @@ namespace DamnLibrary.Managements.Contents
         private static async Task<T> GetGameObjectOrComponentAsync<T>(string assetName) where T : Object
         {
             var asset = await GetAssetAsync<GameObject>(assetName);
-            if (typeof(Component).IsAssignableFrom(typeof(T)))
+            if (componentType.IsAssignableFrom(typeof(T)))
                 return asset.GetComponent<T>();
             return (T)(Object)asset;
         }
+        
         private static T GetGameObjectOrComponent<T>(string assetName) where T : Object
         {
             var asset = GetAsset<GameObject>(assetName);
-            if (typeof(Component).IsAssignableFrom(typeof(T)))
+            if (componentType.IsAssignableFrom(typeof(T)))
                 return asset.GetComponent<T>();
             return (T)(Object)asset;
         }

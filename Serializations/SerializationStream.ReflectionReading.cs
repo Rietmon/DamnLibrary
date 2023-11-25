@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DamnLibrary.Debugs;
 using DamnLibrary.Serializations.Serializables;
 
 namespace DamnLibrary.Serializations
@@ -53,6 +54,15 @@ namespace DamnLibrary.Serializations
             return result;
         }
 
+        public Array ReadArrayByElementTypeWithReflection(Type elementType)
+        {
+            var length = ReadInt();
+            var result = Array.CreateInstance(elementType, length);
+            for (var i = 0; i < length; i++)
+                result.SetValue(ReadWithReflection(elementType), i);
+            return result;
+        }
+
         public IList ReadListWithReflection(Type type)
         {
             var count = ReadInt();
@@ -68,8 +78,8 @@ namespace DamnLibrary.Serializations
             var keyType = type.GenericTypeArguments[0];
             var valueType = type.GenericTypeArguments[1];
             
-            var keys = ReadArrayWithReflection(keyType);
-            var values = ReadArrayWithReflection(valueType);
+            var keys = ReadArrayByElementTypeWithReflection(keyType);
+            var values = ReadArrayByElementTypeWithReflection(valueType);
             
             var result = (IDictionary)Activator.CreateInstance(type)!;
             for (var i = 0; i < keys.Length; i++)
@@ -91,6 +101,8 @@ namespace DamnLibrary.Serializations
             var type = ReadType();
             return ReadWithReflection(type);
         }
+        
+        public T ReadAnyWithReflection<T>() => (T)ReadAnyWithReflection(typeof(T));
 
         public object ReadAnyWithReflection(Type type)
         {
@@ -115,8 +127,10 @@ namespace DamnLibrary.Serializations
             var keyValues = new List<(string, object)>();
             while (stream.HasToRead)
             {
-                var typeName = stream.ReadType();
-                keyValues.Add(((string, object))stream.ReadKeyValuePair(stringType, typeName));
+                var pairType = stream.ReadType();
+                var pairName = stream.ReadString();
+                var pairValue = stream.ReadWithReflection(pairType);
+                keyValues.Add((pairName, pairValue));
             }
 
             foreach (var (name, value) in keyValues)

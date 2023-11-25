@@ -1,4 +1,5 @@
 #if ENABLE_SERIALIZATION
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -12,7 +13,7 @@ using System.Runtime.CompilerServices;
 
 namespace DamnLibrary.Serializations
 {
-    public unsafe partial class SerializationStream
+    public unsafe partial class SerializationStream : IDisposable
     {
         public Stream BaseStream => Writer?.BaseStream ?? Reader.BaseStream;
         
@@ -80,6 +81,18 @@ namespace DamnLibrary.Serializations
             return bytes?.Encrypt(key);
         }
 
+        public void Dispose()
+        {
+            Writer?.Dispose();
+            Reader?.Dispose();
+            
+            if (Containers.Count == 0) 
+                return;
+            
+            foreach (var container in Containers)
+                container.Dispose();
+        }
+        
         private static int Unsafe_SizeOf<T>() =>
 #if UNITY_5_3_OR_NEWER
             Marshal.SizeOf<T>();

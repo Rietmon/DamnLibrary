@@ -18,17 +18,17 @@ namespace DamnLibrary.Debugs
         /// <summary>
         /// Callback for log
         /// </summary>
-        public static Action<string> OnLog { get; set; }
+        public static Action<object> OnLog { get; set; }
         
         /// <summary>
         /// Callback for warning
         /// </summary>
-        public static Action<string> OnWarning { get; set; }
+        public static Action<object> OnWarning { get; set; }
         
         /// <summary>
         /// Callback for error
         /// </summary>
-        public static Action<string> OnError { get; set; }
+        public static Action<object> OnError { get; set; }
 
         static UniversalDebugger()
         {
@@ -43,11 +43,11 @@ namespace DamnLibrary.Debugs
 #endif
         }
 
-        internal static void Log(string message) => OnLog?.Invoke(message);
-        internal static void LogWarning(string message) => OnWarning?.Invoke(message);
-        internal static void LogError(string message) => OnError?.Invoke(message);
+        internal static void Log(object message) => OnLog?.Invoke(message);
+        internal static void LogWarning(object message) => OnWarning?.Invoke(message);
+        internal static void LogError(object message) => OnError?.Invoke(message);
 
-        private static void WriteToConsole(string message, ConsoleColor color)
+        private static void WriteToConsole(object message, ConsoleColor color)
         {
             var cashedColor = Console.ForegroundColor;
             Console.ForegroundColor = color;

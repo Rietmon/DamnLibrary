@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using DamnLibrary.Debugs;
 using DamnLibrary.Serializations.Serializables;
 
 namespace DamnLibrary.Serializations
@@ -10,6 +11,12 @@ namespace DamnLibrary.Serializations
     {
         public void WriteWithReflection(object value)
         {
+            if (value == null)
+            {
+                UniversalDebugger.LogError($"[{nameof(SerializationStream)}] ({nameof(WriteWithReflection)}) Value is null!");
+                return;
+            }
+            
             var type = value.GetType();
             switch (type)
             {
@@ -87,11 +94,18 @@ namespace DamnLibrary.Serializations
                 if (!Attribute.IsDefined(property, typeof(SerializeIncludeAttribute)))
                     continue;
                 
-                Write(property.PropertyType);
                 if (useKeyValuePair)
-                    WriteKeyValuePair(property.Name, property.GetValue(value));
+                {
+                    var propertyValue = property.GetValue(value);
+                    if (propertyValue == null)
+                        continue;
+                    
+                    Write(property.PropertyType);
+                    WriteString(property.Name);
+                    WriteWithReflection(propertyValue);
+                }
                 else
-                    Write(property.GetValue(value));
+                    WriteWithReflection(property.GetValue(value));
             }
             
             foreach (var field in type.GetFields(flags))
@@ -101,11 +115,16 @@ namespace DamnLibrary.Serializations
                 
                 if (useKeyValuePair)
                 {
+                    var fieldValue = field.GetValue(value);
+                    if (fieldValue == null)
+                        continue;
+
                     Write(field.FieldType);
-                    WriteKeyValuePair(field.Name, field.GetValue(value));
+                    WriteString(field.Name);
+                    WriteWithReflection(fieldValue);
                 }
                 else
-                    Write(field.GetValue(value));
+                    WriteWithReflection(field.GetValue(value));
             }
 
             if (layoutSettings is { WrapToContainer: true })
