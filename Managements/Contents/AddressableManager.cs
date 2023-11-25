@@ -1,14 +1,14 @@
-#if ENABLE_ADDRESSABLE && UNITY_5_3_OR_NEWER 
+#if ENABLE_ADDRESSABLE && UNITY_5_3_OR_NEWER
 using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
-using DamnLibrary.Game;
+using DamnLibrary.Debugs;
+using DamnLibrary.Games;
+using DamnLibrary.Utilities.Extensions;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using DamnLibrary.Debugging;
-using DamnLibrary.Extensions;
 using UnityEngine.U2D;
 
-namespace DamnLibrary.Management.Contents
+namespace DamnLibrary.Managements.Contents
 {
     public static class AddressableManager
     {
