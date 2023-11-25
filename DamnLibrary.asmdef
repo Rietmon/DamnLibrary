@@ -1,0 +1,10 @@
+{
+  "name": "DamnLibrary",
+  "references": [
+    "Unity.TextMeshPro",
+    "Unity.Addressables",
+    "Unity.ResourceManager",
+    "Unity.Localization",
+    "Unity.InputSystem"
+  ]
+}
