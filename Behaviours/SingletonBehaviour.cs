@@ -5,7 +5,7 @@ namespace DamnLibrary.Behaviours
     {
         public static T Instance { get; private set; }
 
-        protected SingletonBehaviour()
+        protected virtual void Awake()
         {
             Instance = this as T;
         }
@@ -15,7 +15,7 @@ namespace DamnLibrary.Behaviours
     {
         protected static T Instance { get; private set; }
 
-        protected ProtectedSingletonBehaviour()
+        protected virtual void Awake()
         {
             Instance = this as T;
         }
