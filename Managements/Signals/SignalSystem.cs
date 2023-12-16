@@ -11,10 +11,13 @@ namespace DamnLibrary.Managements.Signals
     {
         private static readonly Dictionary<Type, List<Pair<SignalSystemId, Action<Signal>>>> signalCallbacks = new();
 
-        public static void Subscribe<T>(Action<T> callback) where T : Signal
+        internal static void Subscribe<T>(Action<T> callback) where T : Signal
         {
             void SignalWrapper(Signal signal) => 
-                callback?.Invoke((T)signal);
+                callback((T)signal);
+
+            if (callback == null)
+                return;
             
             var signalType = typeof(T);
             if (!signalCallbacks.TryGetValue(signalType, out var callbacks))
@@ -26,8 +29,11 @@ namespace DamnLibrary.Managements.Signals
             callbacks.Add(new Pair<SignalSystemId, Action<Signal>>(callback.Method.MethodHandle, SignalWrapper));
         }
 
-        public static void Unsubscribe<T>(Action<T> callback) where T : Signal
+        internal static void Unsubscribe<T>(Action<T> callback) where T : Signal
         {
+            if (callback == null)
+                return;
+            
             var signalType = typeof(T);
             if (!signalCallbacks.TryGetValue(signalType, out var callbacks))
                 return;
@@ -44,7 +50,7 @@ namespace DamnLibrary.Managements.Signals
             }
         }
 
-        public static void Notify<T>(T signal) where T : Signal
+        internal static void Notify<T>(T signal) where T : Signal
         {
             var signalType = signal.GetType();
             if (!signalCallbacks.TryGetValue(signalType, out var callbacks))
@@ -54,7 +60,7 @@ namespace DamnLibrary.Managements.Signals
                 callback.Second?.Invoke(signal);
         }
         
-        public static async Task NotifyAsync<T>(T signal, bool waitForComplete = true) where T : Signal
+        internal static async Task NotifyAsync<T>(T signal, bool waitForComplete = true) where T : Signal
         {
             var signalType = signal.GetType();
             if (!signalCallbacks.TryGetValue(signalType, out var callbacks))

@@ -5,7 +5,9 @@
     "Unity.Addressables",
     "Unity.ResourceManager",
     "Unity.Localization",
-    "Unity.InputSystem"
+    "Unity.InputSystem",
+    "Unity.Mathematics",
+    "DOTween.Modules"
   ],
   "allowUnsafeCode": true
 }

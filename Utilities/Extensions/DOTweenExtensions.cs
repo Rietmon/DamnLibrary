@@ -30,7 +30,7 @@ namespace DamnLibrary.Utilities.Extensions
                 endValue = "";
             }
 
-            var t = DOTween.To(() => target.text, x => target.text = x, endValue, duration);
+            var t = DOTween.To(() => target.text, (x) => target.text = x, endValue, duration);
             t.SetOptions(richTextEnabled, scrambleMode, scrambleChars).SetTarget(target);
             return t;
         }

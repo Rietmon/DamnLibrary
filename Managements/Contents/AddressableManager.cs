@@ -28,31 +28,29 @@ namespace DamnLibrary.Managements.Contents
         public static Prefab<WindowBehaviour> GetWindowPrefab(string windowName) =>
             GetGameObjectOrComponent<WindowBehaviour>(PathToDataWindows.Format(windowName));
 
-        public static async Task<SpriteAtlas> GetSpriteAtlasAsync(string atlasPath) =>
-            await GetAssetAsync<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
+        public static Task<SpriteAtlas> GetSpriteAtlasAsync(string atlasPath) =>
+            GetAssetAsync<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
         public static SpriteAtlas GetSpriteAtlas(string atlasPath) =>
             GetAsset<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
         
-        public static async Task<Sprite> GetSpriteDirectlyAsync(string spritePath) =>
-            await GetAssetAsync<Sprite>(PathToTextures.Format(spritePath));
-        
+        public static Task<Sprite> GetSpriteDirectlyAsync(string spritePath) =>
+            GetAssetAsync<Sprite>(PathToTextures.Format(spritePath));
         public static Sprite GetSpriteDirectly(string spritePath) => 
             GetAsset<Sprite>(PathToTextures.Format(spritePath));
 
-        public static async Task<Sprite> GetSpriteAsync(string spritePath)
+        public static Task<Sprite> GetSpriteAsync(string spritePath)
         {
             var spriteName = Path.GetFileNameWithoutExtension(spritePath);
-            return await GetAssetAsync<Sprite>(PathToTextures.Format($"spriteName[{spriteName}]"));
+            return GetAssetAsync<Sprite>(PathToTextures.Format($"{spritePath}[{spriteName}]"));
         }
-
         public static Sprite GetSprite(string spritePath)
         {
             var spriteName = Path.GetFileNameWithoutExtension(spritePath);
-            return GetAsset<Sprite>(PathToTextures.Format($"spriteName[{spriteName}]"));
+            return GetAsset<Sprite>(PathToTextures.Format($"{spritePath}[{spriteName}]"));
         }
         
-        public static async Task<Texture2D> GetTextureAsync(string texturePath) =>
-            await GetAssetAsync<Texture2D>(PathToTextures.Format(texturePath));
+        public static Task<Texture2D> GetTextureAsync(string texturePath) =>
+            GetAssetAsync<Texture2D>(PathToTextures.Format(texturePath));
         public static Texture2D GetTexture(string texturePath) =>
             GetAsset<Texture2D>(PathToTextures.Format(texturePath));
         
@@ -61,8 +59,8 @@ namespace DamnLibrary.Managements.Contents
         public static Prefab<T> GetPrefab<T>(string prefabPath) where T : Object =>
             GetGameObjectOrComponent<T>(PathToPrefabs.Format(prefabPath));
 
-        public static async Task<AudioClip> GetAudioAsync(string audioName) =>
-            await GetAssetAsync<AudioClip>(PathToAudio.Format(audioName));
+        public static Task<AudioClip> GetAudioAsync(string audioName) =>
+            GetAssetAsync<AudioClip>(PathToAudio.Format(audioName));
         public static AudioClip GetAudio(string audioName) => 
             GetAsset<AudioClip>(PathToAudio.Format(audioName));
         

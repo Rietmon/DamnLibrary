@@ -1,12 +1,12 @@
 #if ENABLE_DOTWEEN
 using System.Threading.Tasks;
-using DamnLibrary.Extensions;
-using DamnLibrary.Types;
+using DamnLibrary.Types.Rangeds;
+using DamnLibrary.Utilities.Extensions;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 
-namespace DamnLibrary.Management.Windows.Animations
+namespace DamnLibrary.Managements.Windows.Animations
 {
 	public class DefaultWindowAnimator : WindowAnimator
 	{

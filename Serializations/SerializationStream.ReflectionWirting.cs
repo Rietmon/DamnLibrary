@@ -91,7 +91,8 @@ namespace DamnLibrary.Serializations
             
             foreach (var property in type.GetProperties(flags))
             {
-                if (!Attribute.IsDefined(property, typeof(SerializeIncludeAttribute)))
+                if ((property.SetMethod.IsPublic || Attribute.IsDefined(property, typeof(SerializeIncludeAttribute))) 
+                    && !property.SetMethod.IsStatic)
                     continue;
                 
                 if (useKeyValuePair)
@@ -110,7 +111,8 @@ namespace DamnLibrary.Serializations
             
             foreach (var field in type.GetFields(flags))
             {
-                if (!Attribute.IsDefined(field, typeof(SerializeIncludeAttribute)))
+                if ((field.IsPublic || Attribute.IsDefined(field, typeof(SerializeIncludeAttribute))) 
+                    && !field.IsStatic)
                     continue;
                 
                 if (useKeyValuePair)

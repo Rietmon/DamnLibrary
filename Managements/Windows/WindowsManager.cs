@@ -12,7 +12,11 @@ namespace DamnLibrary.Managements.Windows
 {
     public class WindowsManager : ProtectedSingletonBehaviour<WindowsManager>
     {
+#if ENABLE_ADDRESSABLE
+        public static WindowsDataProviderType DataProviderType { get; set; } = WindowsDataProviderType.Addressable;
+#else
         public static WindowsDataProviderType DataProviderType { get; set; } = WindowsDataProviderType.Resources;
+#endif
         
         public static int OpenedWindowsCount => openedWindows.Count;
 
