@@ -47,13 +47,15 @@ namespace DamnLibrary.Debugs
         internal static void LogWarning(object message) => OnWarning?.Invoke(message);
         internal static void LogError(object message) => OnError?.Invoke(message);
 
+#if !UNITY_5_3_OR_NEWER
         private static void WriteToConsole(object message, ConsoleColor color)
         {
             var cashedColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
-            Console.WriteLine(message);
+            Console.WriteLine(message);z
             Console.ForegroundColor = cashedColor;
         }
+#endif
 
 #if ENABLE_DAMN_SCRIPT
         private static void RegisterDamnScriptMethods()
