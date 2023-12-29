@@ -4,6 +4,7 @@ using System.Collections;
 using System.Reflection;
 using DamnLibrary.Debugs;
 using DamnLibrary.Serializations.Serializables;
+using UnityEngine;
 
 namespace DamnLibrary.Serializations
 {
@@ -91,19 +92,30 @@ namespace DamnLibrary.Serializations
             
             foreach (var property in type.GetProperties(flags))
             {
-                if ((property.SetMethod.IsPublic || Attribute.IsDefined(property, typeof(SerializeIncludeAttribute))) 
-                    && !property.SetMethod.IsStatic)
+                if (property.SetMethod.IsStatic || Attribute.IsDefined(property, typeof(SerializeIgnoreAttribute)))
+                    continue;
+                
+                if (!property.SetMethod.IsPublic || !Attribute.IsDefined(property, typeof(SerializeIncludeAttribute)))
                     continue;
                 
                 if (useKeyValuePair)
                 {
-                    var propertyValue = property.GetValue(value);
-                    if (propertyValue == null)
-                        continue;
+                    try
+                    {
+                        var propertyValue = property.GetValue(value);
+                        if (propertyValue == null)
+                            continue;
                     
-                    Write(property.PropertyType);
-                    WriteString(property.Name);
-                    WriteWithReflection(propertyValue);
+                        Write(property.PropertyType);
+                        WriteString(property.Name);
+                        WriteWithReflection(propertyValue);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(WriteAnyWithReflection)}) " +
+                                       $"Error while writing property {property.Name} of type {property.PropertyType} " +
+                                       $"of object {value} of type {type}:\n{e}");
+                    }
                 }
                 else
                     WriteWithReflection(property.GetValue(value));
@@ -111,19 +123,30 @@ namespace DamnLibrary.Serializations
             
             foreach (var field in type.GetFields(flags))
             {
-                if ((field.IsPublic || Attribute.IsDefined(field, typeof(SerializeIncludeAttribute))) 
-                    && !field.IsStatic)
+                if (field.IsStatic || Attribute.IsDefined(field, typeof(SerializeIgnoreAttribute)))
+                    continue;
+                
+                if (!(field.IsPublic || Attribute.IsDefined(field, typeof(SerializeIncludeAttribute))))
                     continue;
                 
                 if (useKeyValuePair)
                 {
-                    var fieldValue = field.GetValue(value);
-                    if (fieldValue == null)
-                        continue;
+                    try
+                    {
+                        var fieldValue = field.GetValue(value);
+                        if (fieldValue == null)
+                            continue;
 
-                    Write(field.FieldType);
-                    WriteString(field.Name);
-                    WriteWithReflection(fieldValue);
+                        Write(field.FieldType);
+                        WriteString(field.Name);
+                        WriteWithReflection(fieldValue);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"[{nameof(SerializationStream)}] ({nameof(WriteAnyWithReflection)}) " +
+                                       $"Error while writing property {field.Name} of type {field.FieldType} " +
+                                       $"of object {value} of type {type}:\n{e}");
+                    }
                 }
                 else
                     WriteWithReflection(field.GetValue(value));

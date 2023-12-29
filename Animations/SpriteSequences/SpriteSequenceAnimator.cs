@@ -17,7 +17,7 @@ namespace DamnLibrary.Animations
         [SerializeField] private string defaultAnimationKey;
         [SerializeField] private bool playOnStart = true;
 
-        private float time;
+        private float selfTime;
 
         private void Start()
         {
@@ -59,14 +59,14 @@ namespace DamnLibrary.Animations
             if (!IsPlaying)
                 return;
             
-            time += Time.deltaTime;
+            selfTime += Time.deltaTime;
             TrySetNextFrame();
             spriteRenderer.sprite = CurrentAnimation.Sprites[CurrentFrame];
         }
 
         private void TrySetNextFrame()
         {
-            var frameIndex = (int)(time / CurrentAnimation.FrameDuration);
+            var frameIndex = (int)(selfTime / CurrentAnimation.FrameDuration);
             switch (CurrentAnimation.AnimationType)
             {
                 case SpriteSequenceAnimationType.OneFrame:

@@ -11,6 +11,6 @@ namespace DamnLibrary.Animations
         [field: SerializeField] public SpriteSequenceAnimationType AnimationType { get; set; } = 
             SpriteSequenceAnimationType.ForwardAndRepeat;
 
-        [field: SerializeField] public float FrameDuration { get; set; } = 0.1f;
+        [field: SerializeField] public float FrameDuration { get; set; } = 0.5f;
     }
 }

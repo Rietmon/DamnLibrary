@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using DamnLibrary.Debugs;
 using DamnLibrary.Serializations.Serializables;
+using UnityEngine;
 
 namespace DamnLibrary.Serializations
 {
@@ -157,7 +158,10 @@ namespace DamnLibrary.Serializations
             
             foreach (var property in type.GetProperties(flags))
             {
-                if (!Attribute.IsDefined(property, typeof(SerializeIncludeAttribute)))
+                if (property.GetMethod.IsStatic || Attribute.IsDefined(property, typeof(SerializeIgnoreAttribute)))
+                    continue;
+                
+                if (!property.GetMethod.IsPublic || !Attribute.IsDefined(property, typeof(SerializeIncludeAttribute)))
                     continue;
 
                 var value = stream.ReadWithReflection(property.PropertyType);
@@ -166,7 +170,10 @@ namespace DamnLibrary.Serializations
             
             foreach (var field in type.GetFields(flags))
             {
-                if (!Attribute.IsDefined(field, typeof(SerializeIncludeAttribute)))
+                if (field.IsStatic || Attribute.IsDefined(field, typeof(SerializeIgnoreAttribute)))
+                    continue;
+                
+                if (!(field.IsPublic || Attribute.IsDefined(field, typeof(SerializeIncludeAttribute))))
                     continue;
 
                 var value = stream.ReadWithReflection(field.FieldType);

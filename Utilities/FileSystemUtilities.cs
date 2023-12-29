@@ -14,14 +14,15 @@ namespace DamnLibrary.Utilities
         /// Check if a directory exists, if not, create it
         /// </summary>
         /// <param name="path">Path to directory</param>
-        public static void CheckOrCreateDirectory(string path)
+        public static void ValidateDirectory(string path)
         {
             if (Path.HasExtension(path))
                 path = Path.GetDirectoryName(path);
             
             void CheckDirectory(string p)
             {
-                if (Directory.Exists(p)) return;
+                if (Directory.Exists(p)) 
+                    return;
 
                 CheckDirectory(Directory.GetDirectoryRoot(p));
                 Directory.CreateDirectory(p);
