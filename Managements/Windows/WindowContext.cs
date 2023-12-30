@@ -5,7 +5,7 @@ namespace DamnLibrary.Managements.Windows
 {
     public abstract class WindowContext
     {
-        public WindowBehaviour OwnerWindow { get; internal set; }
+        public Internal_Window Owner { get; internal set; }
     }
 }
 #endif

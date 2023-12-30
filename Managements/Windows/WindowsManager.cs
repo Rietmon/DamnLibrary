@@ -20,12 +20,12 @@ namespace DamnLibrary.Managements.Windows
         
         public static int OpenedWindowsCount => openedWindows.Count;
 
-        private static readonly List<WindowBehaviour> openedWindows = new();
+        private static readonly List<Internal_Window> openedWindows = new();
 
         public static async Task<T> OpenAsync<T>(string windowName, WindowContext windowContext = null) =>
             (await OpenAsync(windowName, windowContext)).GetComponent<T>();
 
-        public static async Task<WindowBehaviour> OpenAsync(string windowName, WindowContext windowContext = null)
+        public static async Task<Internal_Window> OpenAsync(string windowName, WindowContext windowContext = null)
         {
             if (!Instance)
             {
@@ -56,31 +56,31 @@ namespace DamnLibrary.Managements.Windows
         public static async Task ShowAsync(string windowName) =>
             await ShowAsync(GetOpenedWindowByName(windowName));
 
-        public static async Task ShowAsync(WindowBehaviour window)
+        public static async Task ShowAsync(Internal_Window internalWindow)
         {
-            window.SetGameObjectActive(true);
+            internalWindow.SetGameObjectActive(true);
             
-            await window.OnShow();
-            if (window.Animator)
-                await window.Animator.PlayShowAnimationAsync();
-            await window.OnShowAnimationOver();
+            await internalWindow.OnShow();
+            if (internalWindow.Animator)
+                await internalWindow.Animator.PlayShowAnimationAsync();
+            await internalWindow.OnShowAnimationOver();
         }
         
         public static async Task HideAsync(string windowName) =>
             await HideAsync(GetOpenedWindowByName(windowName));
 
-        public static async Task HideAsync(WindowBehaviour window)
+        public static async Task HideAsync(Internal_Window internalWindow)
         {
-            await window.OnHide();
-            if (window.Animator)
-                await window.Animator.PlayHideAnimationAsync();
-            await window.OnHideAnimationOver();
+            await internalWindow.OnHide();
+            if (internalWindow.Animator)
+                await internalWindow.Animator.PlayHideAnimationAsync();
+            await internalWindow.OnHideAnimationOver();
             
-            window.SetGameObjectActive(true);
+            internalWindow.SetGameObjectActive(true);
         }
 
-        public static async Task WaitForClose(WindowBehaviour window) =>
-            await TaskUtilities.WaitUntil(() => !openedWindows.Contains(window));
+        public static async Task WaitForClose(Internal_Window internalWindow) =>
+            await TaskUtilities.WaitUntil(() => !openedWindows.Contains(internalWindow));
 
         public static async Task OpenAsyncAndWaitForClose(string windowName, WindowContext windowContext = null) =>
             await WaitForClose(await OpenAsync(windowName, windowContext));
@@ -88,28 +88,28 @@ namespace DamnLibrary.Managements.Windows
         public static async Task CloseAsync(string windowName) =>
             await CloseAsync(GetOpenedWindowByName(windowName));
 
-        public static async Task CloseAsync(WindowBehaviour window)
+        public static async Task CloseAsync(Internal_Window internalWindow)
         {
-            if (window == null)
+            if (internalWindow == null)
                 return;
 
-            await window.OnClose();
-            if (window.Animator)
-                await window.Animator.PlayCloseAnimationAsync();
-            await window.OnCloseAnimationOver();
+            await internalWindow.OnClose();
+            if (internalWindow.Animator)
+                await internalWindow.Animator.PlayCloseAnimationAsync();
+            await internalWindow.OnCloseAnimationOver();
 
-            openedWindows.Remove(window);
+            openedWindows.Remove(internalWindow);
 
-            window.DestroyThisGameObject();
+            internalWindow.DestroyThisGameObject();
         }
 
-        public static WindowBehaviour GetOpenedWindowByName(string windowName) =>
+        public static Internal_Window GetOpenedWindowByName(string windowName) =>
             openedWindows.Find((window) => window.WindowName == windowName);
         
         public static T GetOpenedWindowByName<T>(string windowName) =>
             openedWindows.Find((window) => window.WindowName == windowName).GetComponent<T>();
         
-        private static async Task<Prefab<WindowBehaviour>> GetPrefabAsync(string windowName)
+        private static async Task<Prefab<Internal_Window>> GetPrefabAsync(string windowName)
         {
             switch (DataProviderType)
             {
@@ -128,13 +128,13 @@ namespace DamnLibrary.Managements.Windows
             return null;
         }
 
-        private static WindowBehaviour PrepareWindow(Prefab<WindowBehaviour> windowPrefab, string windowName, WindowContext windowContext)
+        private static Internal_Window PrepareWindow(Prefab<Internal_Window> windowPrefab, string windowName, WindowContext windowContext)
         {
             var window = windowPrefab.Instantiate(Instance.transform);
             openedWindows.Add(window);
 
             if (windowContext != null)
-                windowContext.OwnerWindow = window;
+                windowContext.Owner = window;
             
             window.WindowName = windowName;
             window.BaseContext = windowContext;

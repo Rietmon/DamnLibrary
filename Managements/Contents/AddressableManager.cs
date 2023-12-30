@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
 using DamnLibrary.Debugs;
 using DamnLibrary.Games;
+using DamnLibrary.Managements.Windows;
 using DamnLibrary.Utilities.Extensions;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -23,10 +24,10 @@ namespace DamnLibrary.Managements.Contents
         
         private static readonly Type componentType = typeof(Component);
         
-        public static async Task<Prefab<WindowBehaviour>> GetWindowPrefabAsync(string windowName) =>
-            await GetGameObjectOrComponentAsync<WindowBehaviour>(PathToDataWindows.Format(windowName));
-        public static Prefab<WindowBehaviour> GetWindowPrefab(string windowName) =>
-            GetGameObjectOrComponent<WindowBehaviour>(PathToDataWindows.Format(windowName));
+        public static async Task<Prefab<Internal_Window>> GetWindowPrefabAsync(string windowName) =>
+            await GetGameObjectOrComponentAsync<Internal_Window>(PathToDataWindows.Format(windowName));
+        public static Prefab<Internal_Window> GetWindowPrefab(string windowName) =>
+            GetGameObjectOrComponent<Internal_Window>(PathToDataWindows.Format(windowName));
 
         public static Task<SpriteAtlas> GetSpriteAtlasAsync(string atlasPath) =>
             GetAssetAsync<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));

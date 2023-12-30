@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
 using DamnLibrary.Debugs;
 using DamnLibrary.Games;
+using DamnLibrary.Managements.Windows;
 using DamnLibrary.Utilities;
 using DamnLibrary.Utilities.Extensions;
 using UnityEngine;
@@ -19,10 +20,10 @@ namespace DamnLibrary.Managements.Contents
         private const string PathToResourcesPrefabs = "Prefabs/{0}";
         private const string PathToResourcesAudio = "Audio/{0}";
         
-        public static async Task<Prefab<WindowBehaviour>> GetWindowPrefabAsync(string windowName) =>
-            await GetAssetAsync<WindowBehaviour>(PathToResourcesWindows.Format(windowName));
-        public static Prefab<WindowBehaviour> GetWindowPrefab(string windowName) => 
-            GetAsset<WindowBehaviour>(PathToResourcesWindows.Format(windowName));
+        public static async Task<Prefab<Internal_Window>> GetWindowPrefabAsync(string windowName) =>
+            await GetAssetAsync<Internal_Window>(PathToResourcesWindows.Format(windowName));
+        public static Prefab<Internal_Window> GetWindowPrefab(string windowName) => 
+            GetAsset<Internal_Window>(PathToResourcesWindows.Format(windowName));
 
         public static async Task<SpriteAtlas> GetSpriteAtlasAsync(string atlasPath) =>
             await GetAssetAsync<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));

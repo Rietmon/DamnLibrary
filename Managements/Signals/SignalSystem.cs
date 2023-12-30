@@ -9,11 +9,11 @@ namespace DamnLibrary.Managements.Signals
 {
     public static class SignalSystem
     {
-        private static readonly Dictionary<Type, List<Pair<SignalSystemId, Action<Signal>>>> signalCallbacks = new();
+        private static readonly Dictionary<Type, List<Pair<SignalSystemId, Action<Internal_Signal>>>> signalCallbacks = new();
 
-        internal static void Subscribe<T>(Action<T> callback) where T : Signal
+        internal static void Subscribe<T>(Action<T> callback) where T : Internal_Signal
         {
-            void SignalWrapper(Signal signal) => 
+            void SignalWrapper(Internal_Signal signal) => 
                 callback((T)signal);
 
             if (callback == null)
@@ -22,14 +22,14 @@ namespace DamnLibrary.Managements.Signals
             var signalType = typeof(T);
             if (!signalCallbacks.TryGetValue(signalType, out var callbacks))
             {
-                callbacks = new List<Pair<SignalSystemId, Action<Signal>>>();
+                callbacks = new List<Pair<SignalSystemId, Action<Internal_Signal>>>();
                 signalCallbacks.Add(signalType, callbacks);
             }
 
-            callbacks.Add(new Pair<SignalSystemId, Action<Signal>>(callback.Method.MethodHandle, SignalWrapper));
+            callbacks.Add(new Pair<SignalSystemId, Action<Internal_Signal>>(callback.Method.MethodHandle, SignalWrapper));
         }
 
-        internal static void Unsubscribe<T>(Action<T> callback) where T : Signal
+        internal static void Unsubscribe<T>(Action<T> callback) where T : Internal_Signal
         {
             if (callback == null)
                 return;
@@ -50,7 +50,7 @@ namespace DamnLibrary.Managements.Signals
             }
         }
 
-        internal static void Notify<T>(T signal) where T : Signal
+        internal static void Notify<T>(T signal) where T : Internal_Signal
         {
             var signalType = signal.GetType();
             if (!signalCallbacks.TryGetValue(signalType, out var callbacks))
@@ -60,7 +60,7 @@ namespace DamnLibrary.Managements.Signals
                 callback.Second?.Invoke(signal);
         }
         
-        internal static async Task NotifyAsync<T>(T signal, bool waitForComplete = true) where T : Signal
+        internal static async Task NotifyAsync<T>(T signal, bool waitForComplete = true) where T : Internal_Signal
         {
             var signalType = signal.GetType();
             if (!signalCallbacks.TryGetValue(signalType, out var callbacks))

@@ -1,12 +1,12 @@
-#if UNITY_5_3_OR_NEWER 
+#if UNITY_5_3_OR_NEWER
 using System.Threading.Tasks;
-using DamnLibrary.Managements.Windows;
+using DamnLibrary.Behaviours;
 using DamnLibrary.Managements.Windows.Animations;
 using UnityEngine;
 
-namespace DamnLibrary.Behaviours
+namespace DamnLibrary.Managements.Windows
 {
-    public abstract class WindowBehaviour : DamnBehaviour
+    public abstract class Internal_Window : DamnBehaviour
     {
         public string WindowName { get; set; }
         
@@ -30,18 +30,15 @@ namespace DamnLibrary.Behaviours
         
         protected internal virtual Task OnCloseAnimationOver() => Task.CompletedTask;
         
-        public virtual async Task ShowAsync() => await WindowsManager.ShowAsync(this);
+        public virtual Task ShowAsync() => WindowsManager.ShowAsync(this);
         
-        public virtual async Task HideAsync() => await WindowsManager.HideAsync(this);
+        public virtual Task HideAsync() => WindowsManager.HideAsync(this);
         
-        public async Task CloseAsync() => await WindowsManager.CloseAsync(this);
+        public Task CloseAsync() => WindowsManager.CloseAsync(this);
     }
     
-    public abstract class WindowBehaviour<TContext> : WindowBehaviour where TContext : WindowContext
+    public abstract class Window<TContext> : Internal_Window where TContext : WindowContext
     {
-        /// <summary>
-        /// Casted context of this window
-        /// </summary>
         protected TContext Context => context ??= BaseContext as TContext;
 
         private TContext context;
