@@ -43,8 +43,11 @@ namespace DamnLibrary.Debugs
 #endif
         }
 
+        [HideInCallstack]
         internal static void Log(object message) => OnLog?.Invoke(message);
+        [HideInCallstack]
         internal static void LogWarning(object message) => OnWarning?.Invoke(message);
+        [HideInCallstack]
         internal static void LogError(object message) => OnError?.Invoke(message);
 
 #if !UNITY_5_3_OR_NEWER

@@ -10,7 +10,7 @@ namespace DamnLibrary.Managements.Windows.Animations
 {
 	public class DefaultWindowAnimator : WindowAnimator
 	{
-		private const float AnimationDuration = 0.3f;
+		private const float AnimationDuration = 0.15f;
 
 		private static readonly Vector3Range horizontalContentScaleValues = new(new Vector3(0.6f, 1), new Vector3(1, 1));
 		private static readonly Vector3Range verticalContentScaleValues = new(new Vector3(1, 0.3f), new Vector3(1, 1));

@@ -71,24 +71,6 @@ namespace DamnLibrary.Utilities.Extensions
 		}
 
 		/// <summary>
-		/// Add element to dictionary if it doesn't exist
-		/// </summary>
-		/// <param name="dictionary">Dictionary</param>
-		/// <param name="key">Key</param>
-		/// <param name="value">Value</param>
-		/// <typeparam name="TKey">Type of the keys</typeparam>
-		/// <typeparam name="TValue">Type of the values</typeparam>
-		/// <returns></returns>
-		public static bool AddIfNotExist<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
-		{
-			if (dictionary.ContainsKey(key))
-				return false;
-
-			dictionary.Add(key, value);
-			return true;
-		}
-
-		/// <summary>
 		/// Get value from dictionary if it exists, otherwise add it
 		/// </summary>
 		/// <param name="dictionary">Dictionary</param>
@@ -121,24 +103,6 @@ namespace DamnLibrary.Utilities.Extensions
 
 			dictionary.Add(key, default);
 			return default;
-		}
-
-		/// <summary>
-		/// Change value in dictionary if it exists
-		/// </summary>
-		/// <param name="dictionary">Dictionary</param>
-		/// <param name="key">Key</param>
-		/// <param name="value">Value</param>
-		/// <typeparam name="TKey">Type of the keys</typeparam>
-		/// <typeparam name="TValue">Type of the values</typeparam>
-		/// <returns></returns>
-		public static bool ChangeIfExist<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
-		{
-			if (dictionary.ContainsKey(key))
-				return false;
-
-			dictionary[key] = value;
-			return true;
 		}
 
 		/// <summary>
@@ -181,5 +145,12 @@ namespace DamnLibrary.Utilities.Extensions
 			this Dictionary<TCurrentKey, TCurrentValue> dictionary,
 			Func<KeyValuePair<TCurrentKey, TCurrentValue>, KeyValuePair<TNewKey, TNewValue>> castFunction) =>
 			dictionary.Select(castFunction.Invoke).ToDictionary(newPair => newPair.Key, newPair => newPair.Value);
+		
+		public static void RemoveAll<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, Func<TKey, TValue, bool> predicate)
+		{
+			var keysToRemove = dictionary.Where(pair => predicate.Invoke(pair.Key, pair.Value)).Select(pair => pair.Key).ToList();
+			foreach (var key in keysToRemove)
+				dictionary.Remove(key);
+		}
 	}
 }

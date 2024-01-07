@@ -161,7 +161,7 @@ namespace DamnLibrary.Serializations
                 if (property.GetMethod.IsStatic || Attribute.IsDefined(property, typeof(SerializeIgnoreAttribute)))
                     continue;
                 
-                if (!property.GetMethod.IsPublic || !Attribute.IsDefined(property, typeof(SerializeIncludeAttribute)))
+                if (!property.GetMethod.IsPublic && !Attribute.IsDefined(property, typeof(SerializeIncludeAttribute)))
                     continue;
 
                 var value = stream.ReadWithReflection(property.PropertyType);
@@ -173,7 +173,7 @@ namespace DamnLibrary.Serializations
                 if (field.IsStatic || Attribute.IsDefined(field, typeof(SerializeIgnoreAttribute)))
                     continue;
                 
-                if (!(field.IsPublic || Attribute.IsDefined(field, typeof(SerializeIncludeAttribute))))
+                if (!field.IsPublic && !Attribute.IsDefined(field, typeof(SerializeIncludeAttribute)))
                     continue;
 
                 var value = stream.ReadWithReflection(field.FieldType);

@@ -1,5 +1,7 @@
 #if ENABLE_ADDRESSABLE && UNITY_5_3_OR_NEWER
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
@@ -18,16 +20,16 @@ namespace DamnLibrary.Managements.Contents
     {
         private const string PathToDataWindows = "Assets/Data/Runtime/Prefabs/Windows/{0}.prefab";
         private const string PathToSpritesAtlases = "Assets/Data/Runtime/Atlases/{0}.spriteatlas";
-        private const string PathToTextures = "Assets/Data/Runtime/Textures/{0}";
+        private const string PathToTextures = "Assets/Data/Runtime/Art/Textures/{0}";
         private const string PathToPrefabs = "Assets/Data/Runtime/Prefabs/{0}.prefab";
         private const string PathToAudio = "Assets/Data/Runtime/Audio/{0}";
         
         private static readonly Type componentType = typeof(Component);
         
-        public static async Task<Prefab<Internal_Window>> GetWindowPrefabAsync(string windowName) =>
-            await GetGameObjectOrComponentAsync<Internal_Window>(PathToDataWindows.Format(windowName));
-        public static Prefab<Internal_Window> GetWindowPrefab(string windowName) =>
-            GetGameObjectOrComponent<Internal_Window>(PathToDataWindows.Format(windowName));
+        public static async Task<Prefab<T>> GetWindowPrefabAsync<T>(string windowName) where T : Internal_Window =>
+            await GetGameObjectOrComponentAsync<T>(PathToDataWindows.Format(windowName));
+        public static Prefab<T> GetWindowPrefab<T>(string windowName) where T : Internal_Window =>
+            GetGameObjectOrComponent<T>(PathToDataWindows.Format(windowName));
 
         public static Task<SpriteAtlas> GetSpriteAtlasAsync(string atlasPath) =>
             GetAssetAsync<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
@@ -67,10 +69,13 @@ namespace DamnLibrary.Managements.Contents
         
         public static async Task<T> GetAssetAsync<T>(string assetName) where T : Object
         {
-            var startLoadingFrame = Time.frameCount;
+            var startLoadingTick = Stopwatch.GetTimestamp();
             var result = await Addressables.LoadAssetAsync<T>(assetName).Task;
+            var ticksCount = Stopwatch.GetTimestamp() - startLoadingTick;
             UniversalDebugger.Log(
-                $"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) Asset with the name {assetName} was loaded in {Time.frameCount - startLoadingFrame} frames.");
+                $"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) " + 
+                $"Asset with the name {assetName} was loaded in {ticksCount.ToString()} ticks " +
+                $"(about {(ticksCount / (double)Stopwatch.Frequency).ToString(CultureInfo.InvariantCulture)} ms).");
             return VerifyAsset(result, assetName);
         }
         

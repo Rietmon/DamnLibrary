@@ -1,4 +1,5 @@
 #if UNITY_5_3_OR_NEWER
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
@@ -22,23 +23,22 @@ namespace DamnLibrary.Managements.Windows
 
         private static readonly List<Internal_Window> openedWindows = new();
 
-        public static async Task<T> OpenAsync<T>(string windowName, WindowContext windowContext = null) =>
-            (await OpenAsync(windowName, windowContext)).GetComponent<T>();
-
-        public static async Task<Internal_Window> OpenAsync(string windowName, WindowContext windowContext = null)
+        public static async Task<T> OpenAsync<T>(WindowContext windowContext) where T : Internal_Window
         {
             if (!Instance)
             {
-                UniversalDebugger.LogError(
-                    $"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Unable to instantiate window because there is no instance of {nameof(WindowsManager)}!");
+                UniversalDebugger.LogError($"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) " +
+                                           $"Unable to instantiate window because there is no instance of {nameof(WindowsManager)}!");
                 return null;
             }
-            
-            var windowPrefab = await GetPrefabAsync(windowName);
+
+            var windowName = typeof(T).Name;
+            var windowPrefab = await GetPrefabAsync<T>(windowName);
             if (!windowPrefab)
             {
                 UniversalDebugger.LogError(
-                    $"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Unable to open window, because prefab is equal null!");
+                    $"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) " +
+                    $"Unable to open window, because prefab is equal null!");
                 return null;
             }
 
@@ -53,10 +53,10 @@ namespace DamnLibrary.Managements.Windows
             return window;
         }
         
-        public static async Task ShowAsync(string windowName) =>
-            await ShowAsync(GetOpenedWindowByName(windowName));
+        public static async Task ShowAsync<T>() =>
+            await ShowAsync(GetOpenedWindowByName(typeof(T).Name));
 
-        public static async Task ShowAsync(Internal_Window internalWindow)
+        public static async Task ShowAsync<T>(T internalWindow) where T : Internal_Window
         {
             internalWindow.SetGameObjectActive(true);
             
@@ -66,8 +66,8 @@ namespace DamnLibrary.Managements.Windows
             await internalWindow.OnShowAnimationOver();
         }
         
-        public static async Task HideAsync(string windowName) =>
-            await HideAsync(GetOpenedWindowByName(windowName));
+        public static async Task HideAsync<T>() =>
+            await HideAsync(GetOpenedWindowByName(typeof(T).Name));
 
         public static async Task HideAsync(Internal_Window internalWindow)
         {
@@ -79,16 +79,16 @@ namespace DamnLibrary.Managements.Windows
             internalWindow.SetGameObjectActive(true);
         }
 
-        public static async Task WaitForClose(Internal_Window internalWindow) =>
+        public static async Task WaitForClose<T>(T internalWindow) where T : Internal_Window =>
             await TaskUtilities.WaitUntil(() => !openedWindows.Contains(internalWindow));
 
-        public static async Task OpenAsyncAndWaitForClose(string windowName, WindowContext windowContext = null) =>
-            await WaitForClose(await OpenAsync(windowName, windowContext));
+        public static async Task OpenAsyncAndWaitForClose<T>(WindowContext windowContext) where T : Internal_Window =>
+            await WaitForClose(await OpenAsync<T>(windowContext));
 
-        public static async Task CloseAsync(string windowName) =>
-            await CloseAsync(GetOpenedWindowByName(windowName));
+        public static async Task CloseAsync<T>() where T : Internal_Window =>
+            await CloseAsync(GetOpenedWindowByName<T>());
 
-        public static async Task CloseAsync(Internal_Window internalWindow)
+        public static async Task CloseAsync<T>(T internalWindow) where T : Internal_Window
         {
             if (internalWindow == null)
                 return;
@@ -105,30 +105,25 @@ namespace DamnLibrary.Managements.Windows
 
         public static Internal_Window GetOpenedWindowByName(string windowName) =>
             openedWindows.Find((window) => window.WindowName == windowName);
-        
-        public static T GetOpenedWindowByName<T>(string windowName) =>
-            openedWindows.Find((window) => window.WindowName == windowName).GetComponent<T>();
-        
-        private static async Task<Prefab<Internal_Window>> GetPrefabAsync(string windowName)
-        {
-            switch (DataProviderType)
-            {
-                case WindowsDataProviderType.Resources:
-                {
-                    return await ResourcesManager.GetWindowPrefabAsync(windowName);
-                }
-#if ENABLE_ADDRESSABLE
-                case WindowsDataProviderType.Addressable:
-                {
-                    return await AddressableManager.GetWindowPrefabAsync(windowName);
-                }
-#endif
-            }
 
-            return null;
+        public static T GetOpenedWindowByName<T>() where T : Internal_Window
+        {
+            var windowName = typeof(T).Name;
+            return (T)openedWindows.Find((window) => window.WindowName == windowName);
         }
 
-        private static Internal_Window PrepareWindow(Prefab<Internal_Window> windowPrefab, string windowName, WindowContext windowContext)
+        private static async Task<Prefab<T>> GetPrefabAsync<T>(string windowName) where T : Internal_Window =>
+            DataProviderType switch
+            {
+                WindowsDataProviderType.Resources => await ResourcesManager.GetWindowPrefabAsync<T>(windowName),
+#if ENABLE_ADDRESSABLE
+                WindowsDataProviderType.Addressable => await AddressableManager.GetWindowPrefabAsync<T>(windowName),
+#endif
+                _ => null
+            };
+
+        private static T PrepareWindow<T>(Prefab<T> windowPrefab, string windowName, WindowContext windowContext) 
+            where T : Internal_Window
         {
             var window = windowPrefab.Instantiate(Instance.transform);
             openedWindows.Add(window);

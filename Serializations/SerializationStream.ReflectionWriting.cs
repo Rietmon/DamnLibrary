@@ -95,7 +95,7 @@ namespace DamnLibrary.Serializations
                 if (property.SetMethod.IsStatic || Attribute.IsDefined(property, typeof(SerializeIgnoreAttribute)))
                     continue;
                 
-                if (!property.SetMethod.IsPublic || !Attribute.IsDefined(property, typeof(SerializeIncludeAttribute)))
+                if (!property.SetMethod.IsPublic && !Attribute.IsDefined(property, typeof(SerializeIncludeAttribute)))
                     continue;
                 
                 if (useKeyValuePair)
@@ -126,7 +126,7 @@ namespace DamnLibrary.Serializations
                 if (field.IsStatic || Attribute.IsDefined(field, typeof(SerializeIgnoreAttribute)))
                     continue;
                 
-                if (!(field.IsPublic || Attribute.IsDefined(field, typeof(SerializeIncludeAttribute))))
+                if (!field.IsPublic && !Attribute.IsDefined(field, typeof(SerializeIncludeAttribute)))
                     continue;
                 
                 if (useKeyValuePair)

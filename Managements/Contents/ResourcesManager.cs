@@ -16,14 +16,14 @@ namespace DamnLibrary.Managements.Contents
     {
         private const string PathToResourcesWindows = "Prefabs/Windows/{0}";
         private const string PathToSpritesAtlases = "Atlases/{0}";
-        private const string PathToResourcesTextures = "Textures/{0}";
+        private const string PathToResourcesTextures = "Art/Textures/{0}";
         private const string PathToResourcesPrefabs = "Prefabs/{0}";
         private const string PathToResourcesAudio = "Audio/{0}";
         
-        public static async Task<Prefab<Internal_Window>> GetWindowPrefabAsync(string windowName) =>
-            await GetAssetAsync<Internal_Window>(PathToResourcesWindows.Format(windowName));
-        public static Prefab<Internal_Window> GetWindowPrefab(string windowName) => 
-            GetAsset<Internal_Window>(PathToResourcesWindows.Format(windowName));
+        public static async Task<Prefab<T>> GetWindowPrefabAsync<T>(string windowName) where T : Internal_Window =>
+            await GetAssetAsync<T>(PathToResourcesWindows.Format(windowName));
+        public static Prefab<T> GetWindowPrefab<T>(string windowName) where T : Internal_Window => 
+            GetAsset<T>(PathToResourcesWindows.Format(windowName));
 
         public static async Task<SpriteAtlas> GetSpriteAtlasAsync(string atlasPath) =>
             await GetAssetAsync<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
