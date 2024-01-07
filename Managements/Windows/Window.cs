@@ -1,4 +1,5 @@
 #if UNITY_5_3_OR_NEWER
+using System;
 using System.Threading.Tasks;
 using DamnLibrary.Behaviours;
 using DamnLibrary.Managements.Windows.Animations;
@@ -35,13 +36,24 @@ namespace DamnLibrary.Managements.Windows
         public virtual Task HideAsync() => WindowsManager.HideAsync(this);
         
         public Task CloseAsync() => WindowsManager.CloseAsync(this);
+
+#if UNITY_EDITOR
+        protected virtual void Reset()
+        {
+            Animator = GetComponent<WindowAnimator>();
+        }
+#endif
     }
     
-    public abstract class Window<TContext> : Internal_Window where TContext : WindowContext
+    public abstract class Window<TContext, TWindow> : Internal_Window 
+        where TContext : WindowContext 
+        where TWindow : Internal_Window
     {
         protected TContext Context => context ??= BaseContext as TContext;
 
         private TContext context;
+        
+        public static Task<TWindow> OpenAsync(TContext context) => WindowsManager.OpenAsync<TWindow>(context);
     }
 }
 #endif

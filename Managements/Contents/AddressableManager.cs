@@ -24,10 +24,10 @@ namespace DamnLibrary.Managements.Contents
         
         private static readonly Type componentType = typeof(Component);
         
-        public static async Task<Prefab<Internal_Window>> GetWindowPrefabAsync(string windowName) =>
-            await GetGameObjectOrComponentAsync<Internal_Window>(PathToDataWindows.Format(windowName));
-        public static Prefab<Internal_Window> GetWindowPrefab(string windowName) =>
-            GetGameObjectOrComponent<Internal_Window>(PathToDataWindows.Format(windowName));
+        public static async Task<Prefab<T>> GetWindowPrefabAsync<T>(string windowName) where T : Internal_Window =>
+            await GetGameObjectOrComponentAsync<T>(PathToDataWindows.Format(windowName));
+        public static Prefab<T> GetWindowPrefab<T>(string windowName) where T : Internal_Window =>
+            GetGameObjectOrComponent<T>(PathToDataWindows.Format(windowName));
 
         public static Task<SpriteAtlas> GetSpriteAtlasAsync(string atlasPath) =>
             GetAssetAsync<SpriteAtlas>(PathToSpritesAtlases.Format(atlasPath));
