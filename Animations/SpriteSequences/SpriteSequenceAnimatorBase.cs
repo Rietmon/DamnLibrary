@@ -1,4 +1,3 @@
-#if UNITY_5_3_OR_NEWER
 using DamnLibrary.Animations.SpriteSequences;
 using DamnLibrary.Behaviours;
 using DamnLibrary.Utilities.Extensions;
@@ -6,13 +5,14 @@ using UnityEngine;
 
 namespace DamnLibrary.Animations
 {
-    public sealed class SpriteSequenceAnimator : DamnBehaviour
+    public abstract class BaseSpriteSequenceAnimator : DamnBehaviour
     {
         public bool IsPlaying { get; set; }
         public SpriteSequenceAnimation CurrentAnimation { get; private set; }
         public int CurrentFrame { get; private set; }
         
-        [SerializeField] private SpriteRenderer spriteRenderer;
+        protected abstract Sprite Sprite { set; }
+        
         [SerializeField] private SpriteSequenceAnimation[] animations;
         [SerializeField] private string defaultAnimationKey;
         [SerializeField] private bool playOnStart = true;
@@ -34,7 +34,7 @@ namespace DamnLibrary.Animations
             if (animation == null)
             {
                 Debug.LogError(
-                    $"[{nameof(SpriteSequenceAnimator)}] ({nameof(DoTransition)} Animation with key {animationKey} not found!");
+                    $"[{nameof(SpriteSequenceAnimator2D)}] ({nameof(DoTransition)} Animation with key {animationKey} not found!");
                 return;
             }
             CurrentAnimation = animation;
@@ -46,7 +46,7 @@ namespace DamnLibrary.Animations
             if (animationIndex < 0 || animationIndex >= animations.Length)
             {
                 Debug.LogError(
-                    $"[{nameof(SpriteSequenceAnimator)}] ({nameof(DoTransition)} Animation with index {animationIndex} not found!");
+                    $"[{nameof(SpriteSequenceAnimator2D)}] ({nameof(DoTransition)} Animation with index {animationIndex} not found!");
                 return;
             }
             
@@ -61,7 +61,7 @@ namespace DamnLibrary.Animations
             
             selfTime += Time.deltaTime;
             TrySetNextFrame();
-            spriteRenderer.sprite = CurrentAnimation.Sprites[CurrentFrame];
+            Sprite = CurrentAnimation.Sprites[CurrentFrame];
         }
 
         private void TrySetNextFrame()
@@ -84,20 +84,12 @@ namespace DamnLibrary.Animations
                     break;
                 default:
                     Debug.LogError(
-                        $"[{nameof(SpriteSequenceAnimator)}] ({nameof(TrySetNextFrame)}) Unknown animation type {CurrentAnimation.AnimationType}!");
+                        $"[{nameof(SpriteSequenceAnimator2D)}] ({nameof(TrySetNextFrame)}) Unknown animation type {CurrentAnimation.AnimationType}!");
                     CurrentFrame = 0;
                     return;
             }
 
             CurrentFrame = frameIndex;
         }
-        
-#if UNITY_EDITOR
-        private void Reset()
-        {
-            spriteRenderer = GetComponent<SpriteRenderer>();
-        }
-#endif
     }
 }
-#endif
