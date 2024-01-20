@@ -1,4 +1,3 @@
-using DamnLibrary.Animations.SpriteSequences;
 using UnityEngine;
 
 namespace DamnLibrary.Animations
@@ -7,6 +6,8 @@ namespace DamnLibrary.Animations
     public class SpriteSequenceAnimation : ScriptableObject
     {
         [field: SerializeField] public Sprite[] Sprites { get; set; }
+
+        public int Length => Sprites.Length;
         
         [field: SerializeField] public SpriteSequenceAnimationType AnimationType { get; set; } = 
             SpriteSequenceAnimationType.ForwardAndRepeat;

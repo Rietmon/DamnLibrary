@@ -1,6 +1,6 @@
-using DamnLibrary.Animations.SpriteSequences;
 using DamnLibrary.Behaviours;
 using DamnLibrary.Utilities.Extensions;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace DamnLibrary.Animations
@@ -10,6 +10,8 @@ namespace DamnLibrary.Animations
         public bool IsPlaying { get; set; }
         public SpriteSequenceAnimation CurrentAnimation { get; private set; }
         public int CurrentFrame { get; private set; }
+        public bool IsAnimationFinished => CurrentAnimation.AnimationType == SpriteSequenceAnimationType.OnlyForward 
+                                           && CurrentFrame == CurrentAnimation.Length - 1;
         
         protected abstract Sprite Sprite { set; }
         
@@ -31,13 +33,16 @@ namespace DamnLibrary.Animations
         public void DoTransition(string animationKey)
         {
             var animation = animations.FindOrDefault((data) => data.name == animationKey);
-            if (animation == null)
+            if (animation is null)
             {
                 Debug.LogError(
                     $"[{nameof(SpriteSequenceAnimator2D)}] ({nameof(DoTransition)} Animation with key {animationKey} not found!");
                 return;
             }
+
+            IsPlaying = true;
             CurrentAnimation = animation;
+            selfTime = 0;
             CurrentFrame = 0;
         }
         
@@ -50,8 +55,25 @@ namespace DamnLibrary.Animations
                 return;
             }
             
+            IsPlaying = true;
             CurrentAnimation = animations[animationIndex];
+            selfTime = 0;
             CurrentFrame = 0;
+        }
+
+        public void SetFrame(string animationKey, int frame)
+        {
+            IsPlaying = false;
+            var animation = animations.FindOrDefault((data) => data.name == animationKey);
+            if (animation is null)
+            {
+                Debug.LogError(
+                    $"[{nameof(SpriteSequenceAnimator2D)}] ({nameof(DoTransition)} Animation with key {animationKey} not found!");
+                return;
+            }
+            
+            frame = math.clamp(0, animation.Length - 1, frame);
+            Sprite = animation.Sprites[frame];
         }
 
         private void LateUpdate()
@@ -67,18 +89,25 @@ namespace DamnLibrary.Animations
         private void TrySetNextFrame()
         {
             var frameIndex = (int)(selfTime / CurrentAnimation.FrameDuration);
+            var length = CurrentAnimation.Length;
             switch (CurrentAnimation.AnimationType)
             {
                 case SpriteSequenceAnimationType.OneFrame:
-                    frameIndex %= CurrentAnimation.Sprites.Length;
+                    frameIndex = 0;
                     break;
                 case SpriteSequenceAnimationType.ForwardAndRepeat:
-                    frameIndex %= CurrentAnimation.Sprites.Length;
+                    frameIndex = (frameIndex + 1) % length;
                     break;
                 case SpriteSequenceAnimationType.ForwardAndBackward:
-                    frameIndex %= CurrentAnimation.Sprites.Length * 2;
-                    if (frameIndex >= CurrentAnimation.Sprites.Length)
-                        frameIndex = CurrentAnimation.Sprites.Length - (frameIndex - CurrentAnimation.Sprites.Length) - 1;
+                    length *= 2;
+                    frameIndex = (frameIndex + 1) % length;
+                    if (frameIndex >= CurrentAnimation.Length)
+                        frameIndex = length - frameIndex - 1;
+                    break;
+                case SpriteSequenceAnimationType.OnlyForward:
+                    frameIndex++;
+                    if (frameIndex >= CurrentAnimation.Length)
+                        frameIndex = CurrentAnimation.Length - 1;
                     break;
                 case SpriteSequenceAnimationType.None:
                     break;

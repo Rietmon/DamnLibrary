@@ -1,5 +1,5 @@
 #if UNITY_5_3_OR_NEWER 
-namespace DamnLibrary.Animations.SpriteSequences
+namespace DamnLibrary.Animations
 {
     public enum SpriteSequenceAnimationType : byte
     {
@@ -18,7 +18,11 @@ namespace DamnLibrary.Animations.SpriteSequences
         /// <summary>
         /// Indexing example 0-1-2-1-0...
         /// </summary>
-        ForwardAndBackward
+        ForwardAndBackward,
+        /// <summary>
+        /// Indexing example 0-1-2.
+        /// </summary>
+        OnlyForward
     }
 }
 #endif

@@ -8,6 +8,7 @@ using DamnLibrary.Games;
 using DamnLibrary.Managements.Contents;
 using DamnLibrary.Utilities;
 using DamnLibrary.Utilities.Extensions;
+using UnityEngine;
 
 namespace DamnLibrary.Managements.Windows
 {
@@ -90,9 +91,10 @@ namespace DamnLibrary.Managements.Windows
 
         public static async Task CloseAsync<T>(T internalWindow) where T : Internal_Window
         {
-            if (internalWindow == null)
+            if (internalWindow == null || internalWindow.IsClosing)
                 return;
 
+            internalWindow.IsClosing = true;
             await internalWindow.OnClose();
             if (internalWindow.Animator)
                 await internalWindow.Animator.PlayCloseAnimationAsync();

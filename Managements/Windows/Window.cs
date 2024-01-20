@@ -10,6 +10,7 @@ namespace DamnLibrary.Managements.Windows
     public abstract class Internal_Window : DamnBehaviour
     {
         public string WindowName { get; set; }
+        public bool IsClosing { get; internal set; }
         
         [field: SerializeField] public WindowAnimator Animator { get; set; }
         
