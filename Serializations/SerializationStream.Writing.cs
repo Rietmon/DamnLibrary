@@ -95,11 +95,7 @@ namespace DamnLibrary.Serializations
             foreach (var value in enumerable)
             {
                 var v = value;
-#if !UNITY_5_3_OR_NEWER
                 Unsafe_MemoryCopy(buffer, ref Unsafe_AsRef(ref v));
-#else
-                Unsafe_MemoryCopy(buffer, ref Unsafe_AsRef(ref v));
-#endif
                 buffer += sizeOfElement;
             }
 
@@ -152,7 +148,7 @@ namespace DamnLibrary.Serializations
         public void WriteBoxed(object value)
         {
             WriteType(value.GetType());
-            WriteWithReflection(value);
+            Write(value);
         }
         
         public void WriteKeyValuePair<TKey, TValue>(KeyValuePair<TKey, TValue> pair) =>

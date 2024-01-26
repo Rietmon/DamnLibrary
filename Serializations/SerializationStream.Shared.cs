@@ -101,10 +101,10 @@ namespace DamnLibrary.Serializations
 #endif
 
 #if !UNITY_5_3_OR_NEWER
-        private static T Unsafe_ReadNetCore<T>(void* buffer, int index, int sizeOfElement) =>
+        private static T Unsafe_Read<T>(void* buffer, int index, int sizeOfElement) =>
             Unsafe.Read<T>((byte*)buffer + index * sizeOfElement);
 #else
-        private T Unsafe_ReadUnity<T>(void* buffer, int index) => 
+        private T Unsafe_Read<T>(void* buffer, int index) => 
             UnsafeUtility.ReadArrayElement<T>(buffer, index);
 #endif
 

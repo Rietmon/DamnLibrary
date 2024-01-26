@@ -7,31 +7,19 @@ namespace DamnLibrary.Managements.Signals
 {
     internal readonly struct SignalSystemId
     {
-        private readonly IntPtr originalMethodPointer;
+        private readonly IntPtr methodPointer;
 
-        private SignalSystemId(IntPtr originalMethodPointer)
+        private SignalSystemId(IntPtr methodPointer)
         {
-            this.originalMethodPointer = originalMethodPointer;
+            this.methodPointer = methodPointer;
         }
-
-        public static implicit operator SignalSystemId(IntPtr originalMethodPointer) =>
-            new(originalMethodPointer);
         
         public static implicit operator SignalSystemId(RuntimeMethodHandle handler) =>
             new(handler.Value);
 
-        public static bool operator ==(SignalSystemId left, SignalSystemId right)
-        {
-            var preCompare = CompareUtilities.PreCompare(left, right);
-            if (preCompare != null)
-                return preCompare.Value;
+        public static bool operator ==(SignalSystemId left, SignalSystemId right) =>
+            left.methodPointer == right.methodPointer;
 
-            return left.originalMethodPointer == right.originalMethodPointer;
-        }
-
-        public static bool operator !=(SignalSystemId left, SignalSystemId right)
-        {
-            return !(left == right);
-        }
+        public static bool operator !=(SignalSystemId left, SignalSystemId right) => !(left == right);
     }
 }

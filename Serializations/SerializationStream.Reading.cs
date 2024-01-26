@@ -107,7 +107,7 @@ namespace DamnLibrary.Serializations
 #if !UNITY_5_3_OR_NEWER
                 result[i] = Unsafe_ReadNetCore<T>(buffer, i, sizeOfElement);
 #else
-                result[i] = Unsafe_ReadUnity<T>(buffer, i);
+                result[i] = Unsafe_Read<T>(buffer, i);
 #endif
             }
             return result;

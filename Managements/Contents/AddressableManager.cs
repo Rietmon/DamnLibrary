@@ -19,7 +19,7 @@ namespace DamnLibrary.Managements.Contents
     public static class AddressableManager
     {
         private const string PathToDataWindows = "Assets/Data/Runtime/Prefabs/Windows/{0}.prefab";
-        private const string PathToSpritesAtlases = "Assets/Data/Runtime/Atlases/{0}.spriteatlas";
+        private const string PathToSpritesAtlases = "Assets/Data/Runtime/Art/Textures/{0}.spriteatlasv2";
         private const string PathToTextures = "Assets/Data/Runtime/Art/Textures/{0}";
         private const string PathToPrefabs = "Assets/Data/Runtime/Prefabs/{0}.prefab";
         private const string PathToAudio = "Assets/Data/Runtime/Audio/{0}";
@@ -69,13 +69,17 @@ namespace DamnLibrary.Managements.Contents
         
         public static async Task<T> GetAssetAsync<T>(string assetName) where T : Object
         {
+#if !DISABLE_LOGS
             var startLoadingTick = Stopwatch.GetTimestamp();
+#endif
             var result = await Addressables.LoadAssetAsync<T>(assetName).Task;
+#if !DISABLE_LOGS
             var ticksCount = Stopwatch.GetTimestamp() - startLoadingTick;
             UniversalDebugger.Log(
                 $"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) " + 
                 $"Asset with the name {assetName} was loaded in {ticksCount.ToString()} ticks " +
                 $"(about {(ticksCount / (double)Stopwatch.Frequency).ToString(CultureInfo.InvariantCulture)} ms).");
+#endif
             return VerifyAsset(result, assetName);
         }
         

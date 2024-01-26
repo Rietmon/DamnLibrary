@@ -29,7 +29,6 @@ namespace DamnLibrary.Serializations
         private static readonly Type iDictionaryType = typeof(IDictionary);
         private static readonly Type dateTimeType = typeof(DateTime);
         private static readonly Type typeType = typeof(Type);
-        private static readonly Type objectType = typeof(object);
     }
 }
 #endif

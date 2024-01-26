@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using DamnLibrary.Utilities.Extensions;
+using Debug = UnityEngine.Debug;
 #if ENABLE_DAMN_SCRIPT
 using DamnLibrary.DamnScript.Parsers;
 using DamnLibrary.DamnScript.Runtime;
@@ -44,11 +46,27 @@ namespace DamnLibrary.Debugs
         }
 
         [HideInCallstack]
-        internal static void Log(object message) => OnLog?.Invoke(message);
+        internal static void Log(object message) 
+#if !DISABLE_LOGS
+            => OnLog?.Invoke(message);
+#else 
+            { }
+#endif
         [HideInCallstack]
-        internal static void LogWarning(object message) => OnWarning?.Invoke(message);
+        internal static void LogWarning(object message) 
+#if !DISABLE_LOGS
+            => OnWarning?.Invoke(message);
+#else 
+            { }
+#endif
+        
         [HideInCallstack]
-        internal static void LogError(object message) => OnError?.Invoke(message);
+        internal static void LogError(object message) 
+#if !DISABLE_LOGS
+            => OnError?.Invoke(message);
+#else 
+            { }
+#endif
 
 #if !UNITY_5_3_OR_NEWER
         private static void WriteToConsole(object message, ConsoleColor color)
