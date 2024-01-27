@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using DamnLibrary.Debugs;
 using DamnLibrary.Serializations.Serializables;
+using DamnLibrary.Utilities.Extensions;
 using UnityEngine;
 
 namespace DamnLibrary.Serializations
@@ -117,6 +118,15 @@ namespace DamnLibrary.Serializations
                     return Internal_ReadKeyValuesWithReflection(stream, type);
             }
             
+#if ENABLE_SERIALIZATION_CHECKS
+            if (!type.Namespace.IsNullOrEmpty() && !type.Namespace.Contains("Unity") && !type.Namespace.Contains("System."))
+            {
+                UniversalDebugger.LogWarning($"[{nameof(SerializationStream)}] ({nameof(ReadAnyWithReflection)}) " +
+                                             $"Reading with reflection type {type.FullName} which is not have {nameof(SerializableLayoutAttribute)}." +
+                                             $"Basically it's ok but you can get unexpected results be cause serializing will write fields one by one in order of declaration." +
+                                             $"This is always safe for models which is often changed.");
+            }
+#endif
             return Internal_ReadAnyWithReflection(stream, type);
         }
 

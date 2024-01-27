@@ -4,6 +4,7 @@ using System.Collections;
 using System.Reflection;
 using DamnLibrary.Debugs;
 using DamnLibrary.Serializations.Serializables;
+using DamnLibrary.Utilities.Extensions;
 using UnityEngine;
 
 namespace DamnLibrary.Serializations
@@ -84,6 +85,16 @@ namespace DamnLibrary.Serializations
         {
             const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
             var layoutSettings = (SerializableLayoutAttribute)Attribute.GetCustomAttribute(type, typeof(SerializableLayoutAttribute));
+
+#if ENABLE_SERIALIZATION_CHECKS
+            if (layoutSettings == null && !type.Namespace.IsNullOrEmpty() && !type.Namespace.Contains("Unity") && !type.Namespace.Contains("System."))
+            {
+                UniversalDebugger.LogWarning($"[{nameof(SerializationStream)}] ({nameof(WriteAnyWithReflection)}) " +
+                                             $"Writing with reflection type {type.FullName} which is not have {nameof(SerializableLayoutAttribute)}." +
+                                             $"Basically it's ok but you can get unexpected results be cause serializing will write fields one by one in order of declaration." +
+                                             $"This is not always safe for models which is often changed.");
+            }
+#endif
             
             if (layoutSettings is { WrapToContainer: true })
                 BeginContainer();
