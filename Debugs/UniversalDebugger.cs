@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using DamnLibrary.Utilities.Extensions;
-using Debug = UnityEngine.Debug;
 #if ENABLE_DAMN_SCRIPT
 using DamnLibrary.DamnScript.Parsers;
 using DamnLibrary.DamnScript.Runtime;
 #endif
 #if UNITY_5_3_OR_NEWER
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 #endif
 
 namespace DamnLibrary.Debugs
@@ -73,7 +73,7 @@ namespace DamnLibrary.Debugs
         {
             var cashedColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
-            Console.WriteLine(message);z
+            Console.WriteLine(message);
             Console.ForegroundColor = cashedColor;
         }
 #endif

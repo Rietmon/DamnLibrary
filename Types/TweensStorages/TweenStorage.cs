@@ -1,9 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 
-namespace DamnLibrary.Types.TweensStorages
+namespace DamnLibrary.Types
 {
     public class TweenStorage : List<Tween>
     {

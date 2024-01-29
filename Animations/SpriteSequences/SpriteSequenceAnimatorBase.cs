@@ -78,7 +78,7 @@ namespace DamnLibrary.Animations
 
         private void LateUpdate()
         {
-            if (!IsPlaying)
+            if (!IsPlaying || CurrentAnimation is null)
                 return;
             
             selfTime += Time.deltaTime;
