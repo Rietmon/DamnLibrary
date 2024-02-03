@@ -3,7 +3,7 @@ using System;
 using DamnLibrary.Utilities;
 using UnityEngine;
 
-namespace DamnLibrary.Types.Rangeds
+namespace DamnLibrary.Types
 {
     [Serializable]
     public struct Vector2Range : IRanged<Vector2>
@@ -19,6 +19,8 @@ namespace DamnLibrary.Types.Rangeds
             get => maximalValue;
             set => maximalValue = value;
         }
+        
+        public Vector2 this[int index] => index == 0 ? minimalValue : maximalValue;
 
         public Vector2 RandomValue => new(RandomUtilities.Range(MinimalValue.x, MaximalValue.x),
             RandomUtilities.Range(MinimalValue.y, MaximalValue.y));

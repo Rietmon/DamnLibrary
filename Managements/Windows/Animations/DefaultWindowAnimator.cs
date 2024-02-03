@@ -1,6 +1,6 @@
 #if ENABLE_DOTWEEN
 using System.Threading.Tasks;
-using DamnLibrary.Types.Rangeds;
+using DamnLibrary.Types;
 using DamnLibrary.Utilities.Extensions;
 using DG.Tweening;
 using UnityEngine;
@@ -18,7 +18,7 @@ namespace DamnLibrary.Managements.Windows.Animations
 
 		[SerializeField] private bool isHorizontalScale = true;
 		[SerializeField] private Image faderImage;
-		[SerializeField] private Color faderColor = new(0, 0, 0, 0.6f);
+		[SerializeField] private Color faderColor = new(0, 0, 0, 0.75f);
 		[SerializeField] private CanvasGroup contentCanvasGroup;
 
 		public override async Task PlayOpenAnimationAsync() =>
@@ -43,13 +43,13 @@ namespace DamnLibrary.Managements.Windows.Animations
 
 			var firstIndex = isAppear ? 0 : 1;
 			var secondIndex = isAppear ? 1 : 0;
-			
-			var contentScaleValues = isHorizontalScale ? horizontalContentScaleValues : verticalContentScaleValues;
-			contentCanvasGroup.transform.localScale = contentScaleValues.GetValue(firstIndex);
-			contentCanvasGroup.transform.DOScale(contentScaleValues.GetValue(secondIndex), AnimationDuration);
 
-			contentCanvasGroup.alpha = contentFadeValues.GetValue(firstIndex);
-			await contentCanvasGroup.DOFade(contentFadeValues.GetValue(secondIndex), AnimationDuration).AsyncWaitForCompletion();
+			var contentScaleValues = isHorizontalScale ? horizontalContentScaleValues : verticalContentScaleValues;
+			contentCanvasGroup.transform.localScale = contentScaleValues[firstIndex];
+			contentCanvasGroup.transform.DOScale(contentScaleValues[secondIndex], AnimationDuration);
+
+			contentCanvasGroup.alpha = contentFadeValues[firstIndex];
+			await contentCanvasGroup.DOFade(contentFadeValues[secondIndex], AnimationDuration).AsyncWaitForCompletion();
 		}
 
 		private async Task Internal_PlayShowHideAnimation(bool isAppear)
@@ -63,8 +63,8 @@ namespace DamnLibrary.Managements.Windows.Animations
 			var firstIndex = isAppear ? 0 : 1;
 			var secondIndex = isAppear ? 1 : 0;
 
-			contentCanvasGroup.alpha = contentFadeValues.GetValue(firstIndex);
-			await contentCanvasGroup.DOFade(contentFadeValues.GetValue(secondIndex), AnimationDuration).AsyncWaitForCompletion();
+			contentCanvasGroup.alpha = contentFadeValues[firstIndex];
+			await contentCanvasGroup.DOFade(contentFadeValues[secondIndex], AnimationDuration).AsyncWaitForCompletion();
 		}
 	}
 }

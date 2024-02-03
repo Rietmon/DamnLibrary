@@ -1,11 +1,8 @@
 #if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
-using DamnLibrary.Types.Rangeds;
 using UnityEditor;
 using UnityEngine;
 
-namespace DamnLibrary.Types
+namespace DamnLibrary.Types.Editor
 {
     [CustomPropertyDrawer(typeof(IRanged<>), true)]
     public class EditorRanged : PropertyDrawer

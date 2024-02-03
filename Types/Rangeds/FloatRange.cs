@@ -1,25 +1,25 @@
 using System;
 using DamnLibrary.Utilities;
-#if UNITY_5_3_OR_NEWER
 using UnityEngine;
-#endif
 
-namespace DamnLibrary.Types.Rangeds
+namespace DamnLibrary.Types
 {
     [Serializable]
     public struct FloatRange : IRanged<float>
     {
         public float MinimalValue
-        {
+        { 
             get => minimalValue;
             set => minimalValue = value;
         }
 
         public float MaximalValue
-        {
+        { 
             get => maximalValue;
             set => maximalValue = value;
         }
+        
+        public float this[int index] => index == 0 ? minimalValue : maximalValue;
 
         public float RandomValue => RandomUtilities.Range(MinimalValue, MaximalValue);
 
