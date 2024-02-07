@@ -19,7 +19,7 @@ namespace DamnLibrary.Managements.Windows
 #else
         public static WindowsDataProviderType DataProviderType { get; set; } = WindowsDataProviderType.Resources;
 #endif
-        
+
         public static int OpenedWindowsCount => openedWindows.Count;
 
         private static readonly List<Internal_Window> openedWindows = new();
@@ -33,40 +33,53 @@ namespace DamnLibrary.Managements.Windows
                 return null;
             }
 
-            var windowName = typeof(T).Name;
-            var windowPrefab = await GetPrefabAsync<T>(windowName);
-            if (!windowPrefab)
+#if DEBUG
+            try
+#endif
             {
-                UniversalDebugger.LogError(
-                    $"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) " +
-                    $"Unable to open window, because prefab is equal null!");
+                var windowName = typeof(T).Name;
+                var windowPrefab = await GetPrefabAsync<T>(windowName);
+                if (!windowPrefab)
+                {
+                    UniversalDebugger.LogError(
+                        $"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) " +
+                        $"Unable to open window, because prefab is equal null!");
+                    return null;
+                }
+
+                var window = PrepareWindow(windowPrefab, windowName, windowContext);
+
+                await window.OnOpen();
+                if (window.Animator)
+                    await window.Animator.PlayOpenAnimationAsync();
+                await window.OnOpenAnimationOver();
+                UniversalDebugger.Log($"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Opened {windowName}");
+
+                return window;
+            }
+#if DEBUG
+            catch (Exception e)
+            {
+                UniversalDebugger.LogError($"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) " +
+                                           $"An error occurred while opening the window: {e}");
                 return null;
             }
-
-            var window = PrepareWindow(windowPrefab, windowName, windowContext);
-
-            await window.OnOpen();
-            if (window.Animator)
-                await window.Animator.PlayOpenAnimationAsync();
-            await window.OnOpenAnimationOver();
-            UniversalDebugger.Log($"[{nameof(WindowsManager)}] ({nameof(OpenAsync)}) Opened {windowName}");
-
-            return window;
+#endif
         }
-        
+
         public static async Task ShowAsync<T>() =>
             await ShowAsync(GetOpenedWindowByName(typeof(T).Name));
 
         public static async Task ShowAsync<T>(T internalWindow) where T : Internal_Window
         {
             internalWindow.SetGameObjectActive(true);
-            
+
             await internalWindow.OnShow();
             if (internalWindow.Animator)
                 await internalWindow.Animator.PlayShowAnimationAsync();
             await internalWindow.OnShowAnimationOver();
         }
-        
+
         public static async Task HideAsync<T>() =>
             await HideAsync(GetOpenedWindowByName(typeof(T).Name));
 
@@ -76,7 +89,7 @@ namespace DamnLibrary.Managements.Windows
             if (internalWindow.Animator)
                 await internalWindow.Animator.PlayHideAnimationAsync();
             await internalWindow.OnHideAnimationOver();
-            
+
             internalWindow.SetGameObjectActive(true);
         }
 
@@ -124,7 +137,7 @@ namespace DamnLibrary.Managements.Windows
                 _ => null
             };
 
-        private static T PrepareWindow<T>(Prefab<T> windowPrefab, string windowName, WindowContext windowContext) 
+        private static T PrepareWindow<T>(Prefab<T> windowPrefab, string windowName, WindowContext windowContext)
             where T : Internal_Window
         {
             var window = windowPrefab.Instantiate(Instance.transform);
@@ -132,7 +145,7 @@ namespace DamnLibrary.Managements.Windows
 
             if (windowContext != null)
                 windowContext.Owner = window;
-            
+
             window.WindowName = windowName;
             window.BaseContext = windowContext;
             if (window.Animator)
