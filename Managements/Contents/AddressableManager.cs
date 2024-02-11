@@ -52,6 +52,29 @@ namespace DamnLibrary.Managements.Contents
             return GetAsset<Sprite>(PathToTextures.Format($"{spritePath}[{spriteName}]"));
         }
         
+        public static async Task<Sprite> GetSpriteFromAtlasAsync(string atlasPath, string spriteName)
+        {
+            var atlas = await GetSpriteAtlasAsync(atlasPath);
+            var sprite = atlas.GetSprite(spriteName);
+            if (!sprite)
+            {
+                UniversalDebugger.LogError(
+                    $"[{nameof(AddressableManager)}] ({nameof(GetSpriteFromAtlas)}) Error at loading sprite with the name {spriteName} from the atlas {atlasPath}!");
+            }
+            return sprite;
+        }
+        public static Sprite GetSpriteFromAtlas(string atlasPath, string spriteName)
+        {
+            var atlas = GetSpriteAtlas(atlasPath);
+            var sprite = atlas.GetSprite(spriteName);
+            if (!sprite)
+            {
+                UniversalDebugger.LogError(
+                    $"[{nameof(AddressableManager)}] ({nameof(GetSpriteFromAtlas)}) Error at loading sprite with the name {spriteName} from the atlas {atlasPath}!");
+            }
+            return sprite;
+        }
+        
         public static Task<Texture2D> GetTextureAsync(string texturePath) =>
             GetAssetAsync<Texture2D>(PathToTextures.Format(texturePath));
         public static Texture2D GetTexture(string texturePath) =>
@@ -69,11 +92,11 @@ namespace DamnLibrary.Managements.Contents
         
         public static async Task<T> GetAssetAsync<T>(string assetName) where T : Object
         {
-#if !DISABLE_LOGS
+#if !DISABLE_ADDITIONAL_LOGS
             var startLoadingTick = Stopwatch.GetTimestamp();
 #endif
             var result = await Addressables.LoadAssetAsync<T>(assetName).Task;
-#if !DISABLE_LOGS
+#if !DISABLE_ADDITIONAL_LOGS
             var ticksCount = Stopwatch.GetTimestamp() - startLoadingTick;
             UniversalDebugger.Log(
                 $"[{nameof(AddressableManager)}] ({nameof(GetAssetAsync)}) " + 
